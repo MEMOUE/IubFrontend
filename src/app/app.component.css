@@ -1,0 +1,382 @@
+/* Variables CSS basées sur les couleurs officielles IUB */
+:host {
+  --primary-color: #00BCD4; /* Bleu turquoise de la toque */
+  --primary-color-dark: #00ACC1;
+  --primary-color-light: #B2EBF2;
+  --secondary-color: #FF9800; /* Orange de la flèche */
+  --secondary-color-dark: #F57C00;
+  --accent-color: #4A4A4A; /* Gris du globe */
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --text-color-light: #666666;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Container principal du header */
+.header-container {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark) 50%, var(--accent-color) 100%);
+  box-shadow: 0 4px 20px var(--shadow-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  position: relative;
+}
+
+/* Section logo */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.logo {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition);
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.university-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.university-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.university-subtitle {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Navigation principale */
+.main-navigation {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+/* Styles pour PrimeNG MenuBar */
+:host ::ng-deep .p-menubar {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+:host ::ng-deep .p-menubar .p-menubar-root-list {
+  background: transparent;
+  border: none;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem {
+  margin: 0 0.25rem;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition);
+  font-weight: 500;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link:hover,
+:host ::ng-deep .p-menubar .p-menuitem-link:focus {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+:host ::ng-deep .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Styles pour les sous-menus */
+:host ::ng-deep .p-submenu-list {
+  background: white !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  min-width: 200px;
+  margin-top: 0.5rem;
+}
+
+:host ::ng-deep .p-submenu-list .p-menuitem-link {
+  color: var(--text-color) !important;
+  background: white !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 4px !important;
+  margin: 0.25rem !important;
+}
+
+:host ::ng-deep .p-submenu-list .p-menuitem-link:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+  transform: none !important;
+}
+
+/* Bouton admin */
+.admin-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  transition: var(--transition);
+}
+
+.admin-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: scale(1.05);
+}
+
+/* Menu mobile toggle */
+.mobile-menu-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  padding: 0.5rem !important;
+  border-radius: 8px !important;
+  transition: var(--transition);
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: rotate(90deg);
+}
+
+/* Menu mobile */
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  max-height: 0;
+  overflow: hidden;
+}
+
+.mobile-menu.active {
+  display: block;
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  max-height: 500px;
+}
+
+.mobile-menu-items {
+  padding: 1rem;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: var(--transition);
+  margin-bottom: 0.25rem;
+}
+
+.mobile-menu-item:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.mobile-menu-item i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+/* Sous-menu mobile */
+.mobile-submenu {
+  margin-bottom: 0.25rem;
+}
+
+.mobile-submenu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.mobile-submenu-header:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.mobile-submenu-header i.rotated {
+  transform: rotate(180deg);
+}
+
+.mobile-submenu-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: rgba(33, 150, 243, 0.05);
+  border-radius: 8px;
+  margin-top: 0.25rem;
+}
+
+.mobile-submenu-content.active {
+  max-height: 300px;
+  padding: 0.5rem;
+}
+
+.mobile-submenu-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: var(--transition);
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.mobile-submenu-item:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Contenu principal */
+.main-content {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+}
+
+/* Responsivité */
+@media (max-width: 992px) {
+  .main-navigation {
+    display: none;
+  }
+  
+  .mobile-menu-toggle {
+    display: inline-flex;
+  }
+  
+  .mobile-menu {
+    display: block;
+  }
+  
+  .university-name {
+    font-size: 1.25rem;
+  }
+  
+  .university-subtitle {
+    font-size: 0.6rem;
+  }
+  
+  .logo {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-content {
+    padding: 0.5rem 1rem;
+  }
+  
+  .university-name {
+    font-size: 1.1rem;
+  }
+  
+  .university-subtitle {
+    display: none; /* Masquer le sous-titre sur très petits écrans */
+  }
+  
+  .logo {
+    height: 35px;
+    width: 35px;
+  }
+}
+
+/* Animations supplémentaires */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-content {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Amélioration de l'accessibilité */
+.mobile-menu-toggle:focus,
+.admin-btn:focus,
+.mobile-menu-item:focus,
+.mobile-submenu-header:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Style pour le routerLinkActive */
+:host ::ng-deep .p-menubar .p-menuitem-link.router-link-active {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}

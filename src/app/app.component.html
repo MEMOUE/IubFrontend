@@ -1,2 +1,94 @@
-<p>New page</p>
-<router-outlet />
+<!-- Header moderne avec navigation -->
+<header class="header-container">
+  <div class="header-content">
+    <!-- Logo et nom de l'université -->
+    <div class="logo-section">
+      <img src="logo.jpg" alt="Logo IUB" class="logo" />
+      <div class="university-info">
+        <span class="university-name">IUB</span>
+        <span class="university-subtitle">International University of Bouake</span>
+      </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="main-navigation">
+      <p-menubar [model]="menuItems" [style]="{'background': 'transparent', 'border': 'none'}">
+        <ng-template pTemplate="start">
+          <span></span>
+        </ng-template>
+        <ng-template pTemplate="end">
+          <button pButton pRipple type="button" icon="pi pi-user" class="p-button-text p-button-rounded admin-btn" 
+                  (click)="navigateToAdmin()" 
+                  pTooltip="Administration" 
+                  tooltipPosition="bottom">
+          </button>
+        </ng-template>
+      </p-menubar>
+    </nav>
+
+    <!-- Menu mobile toggle -->
+    <button pButton pRipple type="button" 
+            icon="pi pi-bars" 
+            class="p-button-text mobile-menu-toggle"
+            (click)="toggleMobileMenu()"
+            [class.active]="mobileMenuVisible">
+    </button>
+  </div>
+
+  <!-- Menu mobile -->
+  <div class="mobile-menu" [class.active]="mobileMenuVisible">
+    <div class="mobile-menu-items">
+      <a routerLink="/accueil" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <i class="pi pi-home"></i>
+        <span>Accueil</span>
+      </a>
+      
+      <div class="mobile-submenu">
+        <div class="mobile-submenu-header" (click)="toggleSubmenu('universite')">
+          <span>Université</span>
+          <i class="pi pi-chevron-down" [class.rotated]="activeSubmenu === 'universite'"></i>
+        </div>
+        <div class="mobile-submenu-content" [class.active]="activeSubmenu === 'universite'">
+          <a routerLink="/universite/presentation" class="mobile-submenu-item" (click)="closeMobileMenu()">
+            Qui Sommes Nous ?
+          </a>
+          <a routerLink="/universite/directeur" class="mobile-submenu-item" (click)="closeMobileMenu()">
+            Les Mots du Directeur
+          </a>
+          <a routerLink="/universite/temoingnages" class="mobile-submenu-item" (click)="closeMobileMenu()">
+            Témoignages
+          </a>
+          <a routerLink="/universite/ecoles-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
+            Écoles Partenaires
+          </a>
+          <a routerLink="/universite/entreprises-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
+            Entreprises Partenaires
+          </a>
+        </div>
+      </div>
+
+      <a routerLink="/formations" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <i class="pi pi-book"></i>
+        <span>Formations</span>
+      </a>
+      
+      <a routerLink="/actualites" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <i class="pi pi-calendar"></i>
+        <span>Actualités</span>
+      </a>
+      
+      <a routerLink="/contacts" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <i class="pi pi-phone"></i>
+        <span>Contacts</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Contenu principal -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>
