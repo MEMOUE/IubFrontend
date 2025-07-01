@@ -1,1 +1,209 @@
-<p>accueil works!</p>
+<!-- Hero Section avec Carousel -->
+<section class="hero-section">
+  <div class="hero-carousel">
+    <p-carousel [value]="carouselImages" 
+                [numVisible]="1" 
+                [numScroll]="1" 
+                [circular]="true"
+                [autoplayInterval]="5000"
+                [responsiveOptions]="responsiveOptions"
+                [showIndicators]="true"
+                [showNavigators]="true">
+      <ng-template pTemplate="item" let-image>
+        <div class="hero-slide">
+          <div class="hero-image" [style.background-image]="'url(' + image.image + ')'">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <div class="hero-text animate-on-scroll">
+                <h1 class="hero-title">{{ image.title }}</h1>
+                <h2 class="hero-subtitle">{{ image.subtitle }}</h2>
+                <p class="hero-description">{{ image.description }}</p>
+                <div class="hero-actions">
+                  <button pButton 
+                          type="button" 
+                          label="Découvrir nos formations" 
+                          icon="pi pi-arrow-right"
+                          class="p-button-lg hero-btn-primary"
+                          (click)="navigateToFormations()">
+                  </button>
+                  <button pButton 
+                          type="button" 
+                          label="En savoir plus" 
+                          icon="pi pi-info-circle"
+                          class="p-button-lg p-button-outlined hero-btn-secondary"
+                          (click)="navigateToPresentation()">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+  
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator" (click)="scrollToSection('about-section')">
+    <i class="pi pi-chevron-down"></i>
+  </div>
+</section>
+
+<!-- Section À Propos -->
+<section id="about-section" class="about-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2 class="section-title">International University of Bouake</h2>
+      <p class="section-subtitle">Excellence, Innovation et Ouverture sur le Monde</p>
+    </div>
+    
+    <div class="about-content">
+      <div class="about-text animate-on-scroll">
+        <p class="about-description">
+          L'IUB est un établissement d'enseignement supérieur privé de référence en Côte d'Ivoire, 
+          offrant des formations de qualité internationale dans un environnement moderne et dynamique. 
+          Notre mission est de former les leaders de demain grâce à un enseignement d'excellence 
+          et des partenariats stratégiques avec des universités prestigieuses.
+        </p>
+        
+        <div class="about-highlights">
+          <div class="highlight-item" *ngFor="let stat of statistics">
+            <span class="highlight-number">{{ stat.number }}</span>
+            <span class="highlight-label">{{ stat.label }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-image animate-on-scroll">
+        <img src="logo.jpg" alt="Logo IUB" class="university-logo">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Vidéo de Présentation -->
+<section class="video-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2 class="section-title text-white">Découvrez l'IUB en Vidéo</h2>
+      <p class="section-subtitle text-white">Plongez au cœur de notre université</p>
+    </div>
+    
+    <div class="video-container animate-on-scroll">
+      <div class="video-wrapper">
+        <iframe 
+          src="https://www.youtube.com/embed/L1At3lCq8Sw?rel=0&modestbranding=1" 
+          title="Présentation IUB"
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Services -->
+<section class="services-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2 class="section-title">Nos Atouts</h2>
+      <p class="section-subtitle">Ce qui fait la différence à l'IUB</p>
+    </div>
+    
+    <div class="services-grid">
+      <div class="service-card animate-on-scroll" *ngFor="let service of services; let i = index">
+        <div class="service-icon">
+          <i class="pi {{ service.icon }}"></i>
+        </div>
+        <h3 class="service-title">{{ service.title }}</h3>
+        <p class="service-description">{{ service.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Timeline -->
+<section class="timeline-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2 class="section-title">Notre Histoire</h2>
+      <p class="section-subtitle">Les étapes clés de notre développement</p>
+    </div>
+    
+    <div class="custom-timeline animate-on-scroll">
+      <div class="timeline-item" *ngFor="let event of timelineEvents; let i = index">
+        <div class="timeline-marker">
+          <span class="timeline-year">{{ event.date }}</span>
+        </div>
+        <div class="timeline-content">
+          <h4 class="timeline-title">{{ event.title }}</h4>
+          <p class="timeline-description">{{ event.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Actualités -->
+<section class="news-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2 class="section-title">Actualités & Événements</h2>
+      <p class="section-subtitle">Restez informé de la vie universitaire</p>
+    </div>
+    
+    <div class="news-grid">
+      <div class="news-card animate-on-scroll" *ngFor="let news of actualites">
+        <div class="news-image">
+          <img [src]="news.image" [alt]="news.title">
+          <div class="news-date">
+            <span>{{ news.date }}</span>
+          </div>
+        </div>
+        <div class="news-content">
+          <h3 class="news-title">{{ news.title }}</h3>
+          <p class="news-description">{{ news.description }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="news-actions animate-on-scroll">
+      <button pButton 
+              type="button" 
+              label="Voir toutes les actualités" 
+              icon="pi pi-arrow-right"
+              class="p-button-lg"
+              (click)="navigateToActualites()">
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Section CTA (Call to Action) -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content animate-on-scroll">
+      <h2 class="cta-title">Prêt à Rejoindre l'IUB ?</h2>
+      <p class="cta-description">
+        Donnez un nouvel élan à votre carrière avec nos formations d'excellence. 
+        Contactez-nous dès aujourd'hui pour en savoir plus sur nos programmes.
+      </p>
+      <div class="cta-actions">
+        <button pButton 
+                type="button" 
+                label="Nous Contacter" 
+                icon="pi pi-phone"
+                class="p-button-lg cta-btn-primary"
+                (click)="navigateToContact()">
+        </button>
+        <button pButton 
+                type="button" 
+                label="Voir nos formations" 
+                icon="pi pi-book"
+                class="p-button-lg p-button-outlined cta-btn-secondary"
+                (click)="navigateToFormations()">
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
