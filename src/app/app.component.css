@@ -1,16 +1,34 @@
-/* Variables CSS basées sur les couleurs officielles IUB */
+/* Variables CSS inspirées des couleurs du bâtiment ECOLE SUPERIEURE KONE LASSINAN */
 :host {
-  --primary-color: #00BCD4; /* Bleu turquoise de la toque */
-  --primary-color-dark: #00ACC1;
-  --primary-color-light: #B2EBF2;
-  --secondary-color: #FF9800; /* Orange de la flèche */
-  --secondary-color-dark: #F57C00;
-  --accent-color: #4A4A4A; /* Gris du globe */
-  --background-color: #ffffff;
-  --text-color: #333333;
+  /* Couleurs principales inspirées du bâtiment */
+  --primary-color: #B85450; /* Rouge brique/terre cuite du bâtiment */
+  --primary-color-dark: #A04844;
+  --primary-color-light: #D4928F;
+  
+  --secondary-color: #5A7C59; /* Vert des volets et accents */
+  --secondary-color-dark: #4A6B49;
+  --secondary-color-light: #7A9C79;
+  
+  --accent-color: #6B6B6B; /* Gris moderne de la structure */
+  --accent-color-light: #8B8B8B;
+  --accent-color-dark: #4B4B4B;
+  
+  /* Couleurs neutres inspirées de l'architecture */
+  --background-color: #FAFAFA; /* Blanc cassé comme les murs */
+  --background-secondary: #F5F5F5; /* Gris très clair */
+  --background-tertiary: #E8E8E8; /* Gris clair structure */
+  
+  /* Couleurs de texte */
+  --text-color: #2C2C2C; /* Gris foncé moderne */
   --text-color-light: #666666;
-  --border-color: #e0e0e0;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --text-color-lighter: #999999;
+  
+  /* Couleurs fonctionnelles */
+  --border-color: #D0D0D0;
+  --border-color-light: #E5E5E5;
+  --shadow-color: rgba(184, 84, 80, 0.1); /* Ombre avec ton brique */
+  --shadow-color-heavy: rgba(184, 84, 80, 0.2);
+  
   --transition: all 0.3s ease;
 }
 
@@ -22,6 +40,7 @@
   top: 0;
   z-index: 1000;
   transition: var(--transition);
+  border-bottom: 3px solid var(--secondary-color);
 }
 
 .header-content {
@@ -47,13 +66,15 @@
   width: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
   transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 .logo:hover {
   transform: scale(1.05);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: var(--secondary-color-light);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
 }
 
 .university-info {
@@ -68,15 +89,17 @@
   color: white;
   letter-spacing: 0.5px;
   line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .university-subtitle {
   font-size: 0.7rem;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.3px;
   text-transform: uppercase;
   line-height: 1;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Navigation principale */
@@ -106,83 +129,106 @@
 
 :host ::ng-deep .p-menubar .p-menuitem-link {
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   color: white !important;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   transition: var(--transition);
   font-weight: 500;
   text-decoration: none;
   backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link:hover::before {
+  left: 100%;
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-link:hover,
 :host ::ng-deep .p-menubar .p-menuitem-link:focus {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(90, 124, 89, 0.3) !important;
+  border-color: var(--secondary-color-light) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 :host ::ng-deep .p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(90, 124, 89, 0.4) !important;
+  border-color: var(--secondary-color) !important;
 }
 
 /* Styles pour les sous-menus */
 :host ::ng-deep .p-submenu-list {
-  background: white !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-  min-width: 200px;
+  background: var(--background-color) !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px var(--shadow-color-heavy) !important;
+  min-width: 220px;
   margin-top: 0.5rem;
+  backdrop-filter: blur(15px);
 }
 
 :host ::ng-deep .p-submenu-list .p-menuitem-link {
   color: var(--text-color) !important;
-  background: white !important;
+  background: var(--background-color) !important;
   border: none !important;
   padding: 0.75rem 1rem !important;
-  border-radius: 4px !important;
+  border-radius: 8px !important;
   margin: 0.25rem !important;
+  transition: var(--transition) !important;
 }
 
 :host ::ng-deep .p-submenu-list .p-menuitem-link:hover {
   background: var(--primary-color) !important;
   color: white !important;
-  transform: none !important;
+  transform: translateX(5px) !important;
+  box-shadow: 0 4px 15px var(--shadow-color) !important;
 }
 
 /* Bouton admin */
 .admin-btn {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  background: rgba(90, 124, 89, 0.2) !important;
+  border: 2px solid var(--secondary-color-light) !important;
   color: white !important;
   transition: var(--transition);
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px);
 }
 
 .admin-btn:hover {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  transform: scale(1.05);
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color-dark) !important;
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: 0 6px 20px rgba(90, 124, 89, 0.4);
 }
 
 /* Menu mobile toggle */
 .mobile-menu-toggle {
   display: none;
   background: rgba(255, 255, 255, 0.15) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   color: white !important;
   padding: 0.5rem !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   transition: var(--transition);
 }
 
 .mobile-menu-toggle:hover,
 .mobile-menu-toggle.active {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color-dark) !important;
   transform: rotate(90deg);
 }
 
@@ -193,15 +239,16 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border-top: 1px solid var(--border-color);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: var(--background-color);
+  border-top: 3px solid var(--primary-color);
+  box-shadow: 0 10px 30px var(--shadow-color-heavy);
   transform: translateY(-100%);
   opacity: 0;
   visibility: hidden;
   transition: var(--transition);
   max-height: 0;
   overflow: hidden;
+  backdrop-filter: blur(15px);
 }
 
 .mobile-menu.active {
@@ -223,20 +270,28 @@
   padding: 0.75rem;
   color: var(--text-color);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 10px;
   transition: var(--transition);
   margin-bottom: 0.25rem;
+  border: 2px solid transparent;
 }
 
 .mobile-menu-item:hover {
   background: var(--primary-color);
   color: white;
+  border-color: var(--primary-color-dark);
+  transform: translateX(10px);
 }
 
 .mobile-menu-item i {
   font-size: 1.1rem;
   width: 20px;
   text-align: center;
+  color: var(--secondary-color);
+}
+
+.mobile-menu-item:hover i {
+  color: white;
 }
 
 /* Sous-menu mobile */
@@ -249,9 +304,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem;
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  background: var(--background-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
   cursor: pointer;
   transition: var(--transition);
   font-weight: 600;
@@ -261,6 +316,7 @@
 .mobile-submenu-header:hover {
   background: var(--primary-color);
   color: white;
+  border-color: var(--primary-color-dark);
 }
 
 .mobile-submenu-header i.rotated {
@@ -271,8 +327,8 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  background: rgba(33, 150, 243, 0.05);
-  border-radius: 8px;
+  background: linear-gradient(135deg, var(--secondary-color-light), rgba(90, 124, 89, 0.1));
+  border-radius: 10px;
   margin-top: 0.25rem;
 }
 
@@ -286,21 +342,24 @@
   padding: 0.5rem 1rem;
   color: var(--text-color);
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: var(--transition);
   margin-bottom: 0.25rem;
   font-size: 0.9rem;
+  border: 1px solid transparent;
 }
 
 .mobile-submenu-item:hover {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: white;
+  border-color: var(--secondary-color-dark);
+  transform: translateX(5px);
 }
 
 /* Contenu principal */
 .main-content {
   min-height: calc(100vh - 80px);
-  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+  background: linear-gradient(to bottom, var(--background-color), var(--background-secondary));
 }
 
 /* Responsivité */
@@ -348,6 +407,10 @@
     height: 35px;
     width: 35px;
   }
+  
+  .header-container {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  }
 }
 
 /* Animations supplémentaires */
@@ -362,8 +425,21 @@
   }
 }
 
+@keyframes buildingPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px var(--shadow-color);
+  }
+  50% {
+    box-shadow: 0 6px 30px var(--shadow-color-heavy);
+  }
+}
+
 .main-content {
   animation: fadeInUp 0.6s ease-out;
+}
+
+.header-container {
+  animation: buildingPulse 3s infinite;
 }
 
 /* Amélioration de l'accessibilité */
@@ -371,12 +447,47 @@
 .admin-btn:focus,
 .mobile-menu-item:focus,
 .mobile-submenu-header:focus {
-  outline: 2px solid var(--secondary-color);
+  outline: 3px solid var(--secondary-color);
   outline-offset: 2px;
 }
 
 /* Style pour le routerLinkActive */
 :host ::ng-deep .p-menubar .p-menuitem-link.router-link-active {
-  background: rgba(255, 255, 255, 0.3) !important;
-  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(90, 124, 89, 0.4) !important;
+  border-color: var(--secondary-color) !important;
+  box-shadow: 0 4px 15px rgba(90, 124, 89, 0.3) !important;
+}
+
+/* Effets de texture inspirés du bâtiment */
+.texture-brick::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(45deg, rgba(184, 84, 80, 0.1) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(184, 84, 80, 0.1) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(184, 84, 80, 0.1) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(184, 84, 80, 0.1) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  pointer-events: none;
+}
+
+/* Animation de brique qui se construit */
+@keyframes buildingConstruction {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.construction-animation {
+  animation: buildingConstruction 0.6s ease-out forwards;
 }
