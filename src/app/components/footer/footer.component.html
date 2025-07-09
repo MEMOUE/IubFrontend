@@ -1,0 +1,175 @@
+<!-- Footer moderne -->
+<footer class="modern-footer">
+  <!-- Section principale du footer -->
+  <div class="footer-main">
+    <div class="footer-container">
+      <div class="footer-grid">
+        
+        <!-- Section À propos de l'IUB -->
+        <div class="footer-section footer-animate">
+          <div class="footer-logo-section">
+            <img src="logo.jpg" alt="Logo IUB" class="footer-logo">
+            <h3 class="footer-title">International University of Bouake</h3>
+            <p class="footer-subtitle">Excellence • Innovation • Ouverture</p>
+          </div>
+          
+          <p class="footer-description">
+            L'IUB est un établissement d'enseignement supérieur privé de référence en Côte d'Ivoire, 
+            offrant des formations de qualité internationale dans un environnement moderne et dynamique.
+          </p>
+          
+          <!-- Réseaux sociaux -->
+          <div class="social-links">
+            <h4 class="social-title">Suivez-nous</h4>
+            <div class="social-icons">
+              <button *ngFor="let social of socialLinks" 
+                      pButton 
+                      type="button"
+                      [icon]="social.icon"
+                      class="p-button-rounded p-button-text social-btn"
+                      [style.color]="social.color"
+                      [pTooltip]="social.name"
+                      tooltipPosition="top"
+                      (click)="openSocialLink(social.url)">
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Liens rapides -->
+        <div class="footer-section footer-animate">
+          <h4 class="section-title">
+            <i class="pi pi-link"></i>
+            Liens Rapides
+          </h4>
+          <ul class="footer-links">
+            <li *ngFor="let link of quickLinks">
+              <a (click)="navigateTo(link.route)" 
+                 class="footer-link">
+                <i class="pi pi-angle-right"></i>
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section Université -->
+        <div class="footer-section footer-animate">
+          <h4 class="section-title">
+            <i class="pi pi-building"></i>
+            Université
+          </h4>
+          <ul class="footer-links">
+            <li *ngFor="let link of universityLinks">
+              <a (click)="navigateTo(link.route)" 
+                 class="footer-link">
+                <i class="pi pi-angle-right"></i>
+                {{ link.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section Contact -->
+        <div class="footer-section footer-animate">
+          <h4 class="section-title">
+            <i class="pi pi-phone"></i>
+            Contact
+          </h4>
+          <div class="contact-info">
+            <div *ngFor="let contact of contactInfo" 
+                 class="contact-item">
+              <div class="contact-icon">
+                <i [class]="contact.icon"></i>
+              </div>
+              <div class="contact-details">
+                <span class="contact-label">{{ contact.label }}</span>
+                <span class="contact-value" 
+                      [class.clickable]="contact.link"
+                      (click)="contact.link && openContactLink(contact.link)">
+                  {{ contact.value }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton retour en haut -->
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-angle-up" 
+                  class="p-button-rounded back-to-top-btn"
+                  pTooltip="Retour en haut" 
+                  tooltipPosition="left"
+                  (click)="scrollToTop()">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section newsletter -->
+  <div class="newsletter-section">
+    <div class="footer-container">
+      <div class="newsletter-content footer-animate">
+        <div class="newsletter-text">
+          <h4 class="newsletter-title">
+            <i class="pi pi-envelope"></i>
+            Restez informé
+          </h4>
+          <p class="newsletter-description">
+            Abonnez-vous à notre newsletter pour recevoir les dernières actualités et informations
+          </p>
+        </div>
+        <div class="newsletter-form">
+          <div class="newsletter-input-group">
+            <input type="email" 
+                   placeholder="Votre adresse email" 
+                   class="newsletter-input">
+            <button pButton 
+                    type="button" 
+                    label="S'abonner" 
+                    icon="pi pi-send"
+                    class="newsletter-btn">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section copyright -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-content">
+        <div class="copyright-section">
+          <p class="copyright-text">
+            © {{ currentYear }} International University of Bouake. Tous droits réservés.
+          </p>
+          <div class="legal-links">
+            <a href="#" class="legal-link">Mentions légales</a>
+            <span class="separator">•</span>
+            <a href="#" class="legal-link">Politique de confidentialité</a>
+            <span class="separator">•</span>
+            <a href="#" class="legal-link">CGU</a>
+          </div>
+        </div>
+        
+        <div class="footer-badges">
+          <div class="quality-badge">
+            <i class="pi pi-verified"></i>
+            <span>Certification Qualité</span>
+          </div>
+          <div class="iso-badge">
+            <i class="pi pi-shield"></i>
+            <span>ISO 9001</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particules d'arrière-plan -->
+  <div class="footer-particles">
+    <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></div>
+  </div>
+</footer>

@@ -11,6 +11,9 @@ import { ToastModule } from 'primeng/toast';
 import { MenuItem } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 
+// Import du composant Footer
+import { FooterComponent } from './components/footer/footer.component';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -20,7 +23,8 @@ import { MessageService } from 'primeng/api';
     MenubarModule,
     ButtonModule,
     TooltipModule,
-    ToastModule
+    ToastModule,
+    FooterComponent  // Ajout du FooterComponent
   ],
   providers: [MessageService],
   templateUrl: './app.component.html',
