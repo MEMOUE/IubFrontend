@@ -1,1 +1,268 @@
-<p>contacts works!</p>
+<!-- Hero Section -->
+<section class="contact-hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="container">
+      <div class="hero-text animate-on-scroll">
+        <h1 class="hero-title">Contactez-nous</h1>
+        <p class="hero-subtitle">
+          Nous sommes là pour vous accompagner dans votre parcours académique
+        </p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <i class="pi pi-clock"></i>
+            <span>Réponse sous 24h</span>
+          </div>
+          <div class="stat-item">
+            <i class="pi pi-users"></i>
+            <span>Équipe dédiée</span>
+          </div>
+          <div class="stat-item">
+            <i class="pi pi-phone"></i>
+            <span>Support personnalisé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section principale de contact -->
+<section class="contact-main">
+  <div class="container">
+    
+    <!-- Messages d'erreur/succès -->
+    <div class="messages-container animate-on-scroll" *ngIf="messages.length > 0">
+      <p-messages [value]="messages" [enableService]="false"></p-messages>
+    </div>
+
+    <div class="contact-grid">
+      
+      <!-- Formulaire de contact -->
+      <div class="contact-form-section animate-on-scroll">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-send"></i>
+            Envoyez-nous un message
+          </h2>
+          <p class="section-description">
+            Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais
+          </p>
+        </div>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+          
+          <!-- Nom et Prénom -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">
+                Prénom <span class="required">*</span>
+              </label>
+              <input type="text" 
+                     id="firstName"
+                     pInputText 
+                     formControlName="firstName"
+                     placeholder="Votre prénom"
+                     [class]="getFieldClass('firstName')"
+                     class="form-input">
+              <small class="form-error" *ngIf="hasError('firstName')">
+                {{ getErrorMessage('firstName') }}
+              </small>
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName" class="form-label">
+                Nom <span class="required">*</span>
+              </label>
+              <input type="text" 
+                     id="lastName"
+                     pInputText 
+                     formControlName="lastName"
+                     placeholder="Votre nom"
+                     [class]="getFieldClass('lastName')"
+                     class="form-input">
+              <small class="form-error" *ngIf="hasError('lastName')">
+                {{ getErrorMessage('lastName') }}
+              </small>
+            </div>
+          </div>
+
+          <!-- Email et Téléphone -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email" class="form-label">
+                Email <span class="required">*</span>
+              </label>
+              <input type="email" 
+                     id="email"
+                     pInputText 
+                     formControlName="email"
+                     placeholder="votre.email@exemple.com"
+                     [class]="getFieldClass('email')"
+                     class="form-input">
+              <small class="form-error" *ngIf="hasError('email')">
+                {{ getErrorMessage('email') }}
+              </small>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone" class="form-label">Téléphone</label>
+              <input type="tel" 
+                     id="phone"
+                     pInputText 
+                     formControlName="phone"
+                     placeholder="+225 XX XX XX XX XX"
+                     [class]="getFieldClass('phone')"
+                     class="form-input">
+              <small class="form-error" *ngIf="hasError('phone')">
+                {{ getErrorMessage('phone') }}
+              </small>
+            </div>
+          </div>
+
+          <!-- Département -->
+          <div class="form-group">
+            <label for="department" class="form-label">
+              Département concerné <span class="required">*</span>
+            </label>
+            <p-dropdown formControlName="department"
+                        [options]="departments"
+                        placeholder="Sélectionnez un département"
+                        optionLabel="label"
+                        optionValue="value"
+                        [showClear]="true"
+                        class="form-dropdown">
+            </p-dropdown>
+            <small class="form-error" *ngIf="hasError('department')">
+              {{ getErrorMessage('department') }}
+            </small>
+          </div>
+
+          <!-- Sujet -->
+          <div class="form-group">
+            <label for="subject" class="form-label">
+              Sujet <span class="required">*</span>
+            </label>
+            <input type="text" 
+                   id="subject"
+                   pInputText 
+                   formControlName="subject"
+                   placeholder="Objet de votre message"
+                   [class]="getFieldClass('subject')"
+                   class="form-input">
+            <small class="form-error" *ngIf="hasError('subject')">
+              {{ getErrorMessage('subject') }}
+            </small>
+          </div>
+
+          <!-- Message -->
+          <div class="form-group">
+            <label for="message" class="form-label">
+              Message <span class="required">*</span>
+            </label>
+            <textarea id="message"
+                      pInputTextarea
+                      formControlName="message"
+                      placeholder="Décrivez votre demande en détail..."
+                      rows="6"
+                      [class]="getFieldClass('message')"
+                      class="form-textarea">
+            </textarea>
+            <div class="message-footer">
+              <small class="form-error" *ngIf="hasError('message')">
+                {{ getErrorMessage('message') }}
+              </small>
+              <span class="char-count" [style.color]="getCharCountColor()">
+                {{ getMessageCharCount() }}/1000 caractères
+              </span>
+            </div>
+          </div>
+
+          <!-- Bouton de soumission -->
+          <div class="form-actions">
+            <button type="submit" 
+                    pButton 
+                    [disabled]="isSubmitting"
+                    [loading]="isSubmitting"
+                    loadingIcon="pi pi-spin pi-spinner"
+                    icon="pi pi-send"
+                    label="Envoyer le message"
+                    class="submit-btn">
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Informations de contact -->
+      <div class="contact-info-section animate-on-scroll">
+        
+        <!-- Informations de contact -->
+        <div class="contact-info-block">
+          <h3 class="block-title">
+            <i class="pi pi-info-circle"></i>
+            Informations de contact
+          </h3>
+          
+          <div class="contact-cards">
+            <div class="contact-card" 
+                 *ngFor="let info of contactInfos"
+                 [class.clickable]="info.link"
+                 (click)="info.link && openContactLink(info.link)">
+              <div class="contact-icon" [style.background-color]="info.color">
+                <i [class]="info.icon"></i>
+              </div>
+              <div class="contact-details">
+                <h4 class="contact-title">{{ info.title }}</h4>
+                <p class="contact-value">{{ info.value }}</p>
+                <p class="contact-description">{{ info.description }}</p>
+              </div>
+              <i class="pi pi-external-link contact-link-icon" *ngIf="info.link"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Heures d'ouverture -->
+        <div class="opening-hours-block">
+          <h3 class="block-title">
+            <i class="pi pi-clock"></i>
+            Heures d'ouverture
+          </h3>
+          
+          <div class="hours-list">
+            <div class="hours-item" *ngFor="let hours of openingHours">
+              <span class="hours-day">{{ hours.day }}</span>
+              <span class="hours-time" [class.closed]="hours.hours === 'Fermé'">
+                {{ hours.hours }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Réseaux sociaux -->
+        <div class="social-block">
+          <h3 class="block-title">
+            <i class="pi pi-share-alt"></i>
+            Suivez-nous
+          </h3>
+          
+          <div class="social-links">
+            <button *ngFor="let social of socialLinks"
+                    pButton
+                    type="button"
+                    [icon]="social.icon"
+                    class="p-button-rounded p-button-outlined social-btn"
+                    [style.border-color]="social.color"
+                    [style.color]="social.color"
+                    [pTooltip]="social.name"
+                    tooltipPosition="top"
+                    (click)="openSocialLink(social.url)">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>
