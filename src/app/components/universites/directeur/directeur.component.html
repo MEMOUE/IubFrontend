@@ -1,1 +1,87 @@
-<p>directeur works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Les Mots du Directeur</h1>
+    <p class="hero-description">
+      Message du Directeur Général de l'International University of Bouake
+    </p>
+  </div>
+</section>
+
+<!-- Section Présentation du Directeur -->
+<section class="director-presentation">
+  <div class="container">
+    <div class="director-card">
+      <div class="director-photo">
+        <img [src]="directeur.photo" [alt]="directeur.nom" />
+      </div>
+      <div class="director-info">
+        <h2 class="director-name">{{ directeur.nom }}</h2>
+        <h3 class="director-title">{{ directeur.titre }}</h3>
+        <p class="director-experience">{{ directeur.experience }}</p>
+        
+        <div class="director-credentials">
+          <h4>Qualifications :</h4>
+          <ul>
+            <li *ngFor="let diplome of directeur.diplomes">{{ diplome }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Message -->
+<section class="message-section">
+  <div class="container">
+    <div class="message-content">
+      <div class="message-block" *ngFor="let section of messageSections">
+        <h3 class="message-title">{{ section.titre }}</h3>
+        <div class="message-text">
+          <p *ngFor="let paragraphe of section.contenu.split('\n\n')">
+            {{ paragraphe }}
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Signature -->
+    <div class="signature-section">
+      <div class="signature">
+        <p class="signature-text">Cordialement,</p>
+        <p class="signature-name">{{ directeur.nom }}</p>
+        <p class="signature-title">{{ directeur.titre }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Découvrez l'IUB</h2>
+    <p>Explorez nos programmes et rejoignez notre communauté d'excellence</p>
+    <div class="cta-buttons">
+      <button pButton 
+              type="button" 
+              label="Nos Formations" 
+              icon="pi pi-book"
+              (click)="navigateToFormations()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="En Savoir Plus" 
+              icon="pi pi-info-circle"
+              class="p-button-outlined"
+              (click)="navigateToPresentation()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Nous Contacter" 
+              icon="pi pi-phone"
+              class="p-button-text"
+              (click)="navigateToContact()">
+      </button>
+    </div>
+  </div>
+</section>

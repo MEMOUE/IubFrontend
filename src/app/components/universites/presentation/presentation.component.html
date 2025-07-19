@@ -1,1 +1,90 @@
-<p>presentation works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Qui Sommes-Nous ?</h1>
+    <p class="hero-description">
+      L'International University of Bouake (IUB) est un établissement d'enseignement supérieur privé 
+      de référence en Côte d'Ivoire, fondé en 2010 et engagé dans l'excellence académique.
+    </p>
+  </div>
+</section>
+
+<!-- Section Présentation -->
+<section class="about-section">
+  <div class="container">
+    <div class="about-content">
+      <!-- Texte de présentation -->
+      <div class="about-text">
+        <h2>Notre Engagement</h2>
+        <p>
+          Depuis plus de 15 ans, l'IUB forme des professionnels compétents et responsables. 
+          Notre mission est d'offrir une éducation de qualité qui prépare nos étudiants 
+          aux défis du marché du travail moderne.
+        </p>
+        <p>
+          Située à Bouaké, notre université combine excellence académique, innovation 
+          pédagogique et ouverture internationale pour offrir le meilleur à nos étudiants.
+        </p>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="stats-container">
+        <div class="stats-grid">
+          <div class="stat-item" *ngFor="let stat of stats">
+            <div class="stat-number">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Mission -->
+<section class="mission-section">
+  <div class="container">
+    <h2>Notre Mission</h2>
+    <p class="mission-text">
+      Former les leaders de demain en dispensant un enseignement d'excellence, 
+      favoriser l'innovation et contribuer au développement de la Côte d'Ivoire et de l'Afrique.
+    </p>
+    
+    <div class="values-simple">
+      <div class="value-item">
+        <h4>Excellence</h4>
+        <p>Formation de qualité internationale</p>
+      </div>
+      <div class="value-item">
+        <h4>Innovation</h4>
+        <p>Méthodes pédagogiques modernes</p>
+      </div>
+      <div class="value-item">
+        <h4>Ouverture</h4>
+        <p>Partenariats internationaux</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Rejoignez-nous</h2>
+    <p>Découvrez nos formations et donnez un nouvel élan à votre carrière</p>
+    <div class="cta-buttons">
+      <button pButton 
+              type="button" 
+              label="Voir les Formations" 
+              icon="pi pi-book"
+              (click)="navigateToFormations()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Nous Contacter" 
+              icon="pi pi-phone"
+              class="p-button-outlined"
+              (click)="navigateToContact()">
+      </button>
+    </div>
+  </div>
+</section>

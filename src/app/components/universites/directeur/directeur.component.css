@@ -1,0 +1,341 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Section Présentation du Directeur */
+.director-presentation {
+  padding: 4rem 0;
+  background: white;
+}
+
+.director-card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  align-items: start;
+  background: var(--background-color);
+  padding: 3rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.director-photo {
+  text-align: center;
+}
+
+.director-photo img {
+  width: 100%;
+  max-width: 250px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border: 3px solid white;
+}
+
+.director-info {
+  padding: 1rem 0;
+}
+
+.director-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.director-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.director-experience {
+  font-size: 1.1rem;
+  color: var(--text-color-light);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.director-credentials h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.director-credentials ul {
+  list-style: none;
+  padding: 0;
+}
+
+.director-credentials li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--text-color-light);
+  line-height: 1.5;
+}
+
+.director-credentials li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+/* Section Message */
+.message-section {
+  padding: 4rem 0;
+  background: var(--background-color);
+}
+
+.message-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.message-block {
+  background: white;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.message-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.message-text {
+  line-height: 1.8;
+}
+
+.message-text p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.message-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Section Signature */
+.signature-section {
+  margin-top: 3rem;
+  text-align: right;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.signature {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  display: inline-block;
+  box-shadow: var(--shadow);
+}
+
+.signature-text {
+  font-size: 1.1rem;
+  color: var(--text-color-light);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.signature-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.signature-title {
+  font-size: 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Section CTA */
+.cta-section {
+  padding: 4rem 0;
+  background: var(--accent-color);
+  color: white;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .director-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .director-photo img {
+    max-width: 200px;
+    height: 240px;
+  }
+  
+  .signature-section {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .director-card {
+    padding: 2rem;
+  }
+
+  .director-name {
+    font-size: 1.6rem;
+  }
+
+  .director-title {
+    font-size: 1.1rem;
+  }
+
+  .message-block {
+    padding: 2rem;
+  }
+
+  .message-title {
+    font-size: 1.3rem;
+  }
+
+  .message-text p {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-buttons button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .director-card {
+    padding: 1.5rem;
+  }
+
+  .director-photo img {
+    max-width: 150px;
+    height: 180px;
+  }
+
+  .director-name {
+    font-size: 1.4rem;
+  }
+
+  .message-block {
+    padding: 1.5rem;
+  }
+
+  .message-title {
+    font-size: 1.2rem;
+  }
+
+  .signature {
+    padding: 1.5rem;
+  }
+
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Animation hover pour la photo du directeur */
+.director-photo img {
+  transition: transform 0.3s ease;
+}
+
+.director-photo:hover img {
+  transform: scale(1.05);
+}

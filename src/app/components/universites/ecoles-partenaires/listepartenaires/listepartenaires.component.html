@@ -1,1 +1,200 @@
-<p>listepartenaires works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Nos Écoles Partenaires</h1>
+    <p class="hero-description">
+      L'IUB développe des partenariats stratégiques avec des universités prestigieuses du monde entier 
+      pour offrir à nos étudiants une ouverture internationale et des opportunités d'échanges uniques.
+    </p>
+  </div>
+</section>
+
+<!-- Section Statistiques -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of statistiques">
+        <div class="stat-value">{{ stat.valeur }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Partenaires -->
+<section class="partenaires-section">
+  <div class="container">
+    <!-- Filtres par région -->
+    <div class="region-filters">
+      <h2 class="section-title">Partenaires par Région</h2>
+      <div class="filter-buttons">
+        <button pButton 
+                type="button" 
+                label="Europe" 
+                icon="pi pi-globe"
+                [class]="'filter-btn ' + (regionActive === 'europe' ? 'active' : '')"
+                (click)="changerRegion('europe')">
+        </button>
+        <button pButton 
+                type="button" 
+                label="Amérique" 
+                icon="pi pi-flag"
+                [class]="'filter-btn ' + (regionActive === 'amerique' ? 'active' : '')"
+                (click)="changerRegion('amerique')">
+        </button>
+        <button pButton 
+                type="button" 
+                label="Afrique" 
+                icon="pi pi-sun"
+                [class]="'filter-btn ' + (regionActive === 'afrique' ? 'active' : '')"
+                (click)="changerRegion('afrique')">
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste des partenaires -->
+    <div class="partenaires-grid">
+      <div class="partenaire-card" *ngFor="let partenaire of getPartenairesActifs()">
+        <!-- Header du partenaire -->
+        <div class="partenaire-header">
+          <div class="partenaire-info">
+            <h3 class="partenaire-nom">{{ partenaire.nom }}</h3>
+            <div class="partenaire-localisation">
+              <span class="pays">{{ partenaire.pays }}</span>
+              <span class="ville">{{ partenaire.ville }}</span>
+            </div>
+            <span class="partenaire-type">{{ partenaire.type }}</span>
+          </div>
+          <div class="partenariat-duree">
+            <span>{{ partenaire.dureePartenariat }}</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="partenaire-description">
+          <p>{{ partenaire.description }}</p>
+        </div>
+
+        <!-- Domaines -->
+        <div class="partenaire-section">
+          <h4>Domaines de collaboration :</h4>
+          <div class="domaines-tags">
+            <span class="domaine-tag" *ngFor="let domaine of partenaire.domaines">
+              {{ domaine }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Programmes -->
+        <div class="partenaire-section">
+          <h4>Programmes disponibles :</h4>
+          <ul class="programmes-list">
+            <li *ngFor="let programme of partenaire.programmes">{{ programme }}</li>
+          </ul>
+        </div>
+
+        <!-- Avantages -->
+        <div class="partenaire-section">
+          <h4>Avantages pour nos étudiants :</h4>
+          <ul class="avantages-list">
+            <li *ngFor="let avantage of partenaire.avantages">{{ avantage }}</li>
+          </ul>
+        </div>
+
+        <!-- Footer avec action -->
+        <div class="partenaire-footer">
+          <button pButton 
+                  type="button" 
+                  label="Plus d'informations" 
+                  icon="pi pi-arrow-right"
+                  class="details-btn"
+                  (click)="voirDetails(partenaire.id)">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Avantages Partenariats -->
+<section class="benefits-section">
+  <div class="container">
+    <h2 class="section-title">Pourquoi des Partenariats Internationaux ?</h2>
+    
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i class="pi pi-globe"></i>
+        </div>
+        <h4>Ouverture Internationale</h4>
+        <p>Élargissez vos horizons grâce à des échanges culturels et académiques enrichissants dans le monde entier.</p>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i class="pi pi-certificate"></i>
+        </div>
+        <h4>Double Diplôme</h4>
+        <p>Obtenez deux diplômes reconnus internationalement pour maximiser vos opportunités professionnelles.</p>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i class="pi pi-users"></i>
+        </div>
+        <h4>Réseau International</h4>
+        <p>Construisez un réseau professionnel mondial qui vous ouvrira de nombreuses portes dans votre carrière.</p>
+      </div>
+      
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <i class="pi pi-language"></i>
+        </div>
+        <h4>Compétences Linguistiques</h4>
+        <p>Perfectionnez vos langues étrangères dans un environnement académique authentique et multiculturel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Témoignage -->
+<section class="testimonial-section">
+  <div class="container">
+    <div class="testimonial-content">
+      <div class="quote-icon">
+        <i class="pi pi-quote-left"></i>
+      </div>
+      <blockquote>
+        "Mon semestre d'échange à l'Université Paris-Dauphine a été une expérience transformatrice. 
+        J'ai non seulement enrichi mes connaissances académiques, mais j'ai aussi développé une vision 
+        internationale qui m'aide aujourd'hui dans ma carrière."
+      </blockquote>
+      <div class="testimonial-author">
+        <strong>Sarah KOUASSI</strong> - Diplômée Master Management 2023
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Intéressé par nos Programmes d'Échange ?</h2>
+    <p>Découvrez comment profiter de nos partenariats internationaux pour enrichir votre parcours académique</p>
+    <div class="cta-buttons">
+      <button pButton 
+              type="button" 
+              label="Voir nos Formations" 
+              icon="pi pi-book"
+              (click)="navigateToFormations()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Nous Contacter" 
+              icon="pi pi-phone"
+              class="p-button-outlined"
+              (click)="navigateToContact()">
+      </button>
+    </div>
+  </div>
+</section>

@@ -1,1 +1,162 @@
-<p>listeformation works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Nos Formations</h1>
+    <p class="hero-description">
+      Découvrez nos programmes d'études conçus pour vous préparer aux défis du marché du travail moderne. 
+      De la Licence au Master, choisissez la formation qui correspond à vos ambitions.
+    </p>
+  </div>
+</section>
+
+<!-- Section Statistiques -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of statistiques">
+        <div class="stat-value">{{ stat.valeur }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Formations -->
+<section class="formations-section">
+  <div class="container">
+    <!-- Filtres par catégorie -->
+    <div class="category-filters">
+      <h2 class="section-title">Choisissez votre niveau d'études</h2>
+      <div class="filter-buttons">
+        <button pButton 
+                type="button" 
+                label="Licence (Bac+3)" 
+                [class]="'filter-btn ' + (categorieActive === 'licence' ? 'active' : '')"
+                (click)="changerCategorie('licence')">
+        </button>
+        <button pButton 
+                type="button" 
+                label="Master (Bac+5)" 
+                [class]="'filter-btn ' + (categorieActive === 'master' ? 'active' : '')"
+                (click)="changerCategorie('master')">
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste des formations -->
+    <div class="formations-grid">
+      <div class="formation-card" *ngFor="let formation of getFormationsActives()">
+        <!-- Header de la formation -->
+        <div class="formation-header">
+          <h3 class="formation-title">{{ formation.nom }}</h3>
+          <div class="formation-meta">
+            <span class="formation-diplome">{{ formation.diplome }}</span>
+            <span class="formation-duree">{{ formation.duree }}</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="formation-description">
+          <p>{{ formation.description }}</p>
+        </div>
+
+        <!-- Objectifs -->
+        <div class="formation-section">
+          <h4>Objectifs de formation :</h4>
+          <ul class="objectifs-list">
+            <li *ngFor="let objectif of formation.objectifs">{{ objectif }}</li>
+          </ul>
+        </div>
+
+        <!-- Débouchés -->
+        <div class="formation-section">
+          <h4>Débouchés professionnels :</h4>
+          <div class="debouches-tags">
+            <span class="debouche-tag" *ngFor="let debouche of formation.debouches">
+              {{ debouche }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Footer avec prix et action -->
+        <div class="formation-footer">
+          <div class="formation-prix">
+            <span class="prix-label">Frais de scolarité :</span>
+            <span class="prix-value">{{ formation.frais }}</span>
+          </div>
+          <button pButton 
+                  type="button" 
+                  label="Plus de détails" 
+                  icon="pi pi-arrow-right"
+                  class="details-btn"
+                  (click)="voirDetails(formation.id)">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Avantages -->
+<section class="advantages-section">
+  <div class="container">
+    <h2 class="section-title">Pourquoi Choisir l'IUB ?</h2>
+    
+    <div class="advantages-grid">
+      <div class="advantage-item">
+        <div class="advantage-icon">
+          <i class="pi pi-users"></i>
+        </div>
+        <h4>Encadrement Personnalisé</h4>
+        <p>Suivi individualisé avec des classes à effectifs réduits pour garantir la qualité de l'apprentissage.</p>
+      </div>
+      
+      <div class="advantage-item">
+        <div class="advantage-icon">
+          <i class="pi pi-briefcase"></i>
+        </div>
+        <h4>Stages & Emploi</h4>
+        <p>Partenariats avec des entreprises leaders pour faciliter les stages et l'insertion professionnelle.</p>
+      </div>
+      
+      <div class="advantage-item">
+        <div class="advantage-icon">
+          <i class="pi pi-globe"></i>
+        </div>
+        <h4>Ouverture Internationale</h4>
+        <p>Programmes d'échanges et partenariats avec des universités étrangères reconnues.</p>
+      </div>
+      
+      <div class="advantage-item">
+        <div class="advantage-icon">
+          <i class="pi pi-desktop"></i>
+        </div>
+        <h4>Technologies Modernes</h4>
+        <p>Laboratoires équipés et plateformes numériques pour un apprentissage à la pointe de l'innovation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Prêt à Commencer Votre Parcours ?</h2>
+    <p>Contactez-nous pour plus d'informations sur nos formations et les modalités d'admission</p>
+    <div class="cta-buttons">
+      <button pButton 
+              type="button" 
+              label="Nous Contacter" 
+              icon="pi pi-phone"
+              (click)="navigateToContact()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="En Savoir Plus" 
+              icon="pi pi-info-circle"
+              class="p-button-outlined"
+              (click)="navigateToPresentation()">
+      </button>
+    </div>
+  </div>
+</section>

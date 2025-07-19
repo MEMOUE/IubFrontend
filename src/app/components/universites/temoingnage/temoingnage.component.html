@@ -1,1 +1,118 @@
-<p>temoingnage works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Témoignages</h1>
+    <p class="hero-description">
+      Découvrez les expériences de nos étudiants et diplômés qui témoignent de la qualité 
+      de l'enseignement et de l'accompagnement à l'IUB
+    </p>
+  </div>
+</section>
+
+<!-- Section Statistiques -->
+<section class="stats-section">
+  <div class="container">
+    <h2 class="section-title">Nos Résultats</h2>
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of statistiques">
+        <div class="stat-value">{{ stat.valeur }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Témoignages -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">Ce qu'ils disent de l'IUB</h2>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let temoignage of temoignages">
+        <!-- Infos de base -->
+        <div class="testimonial-header">
+          <div class="student-info">
+            <h3 class="student-name">{{ temoignage.nom }}</h3>
+            <p class="student-formation">{{ temoignage.formation }}</p>
+            <p class="student-promotion">{{ temoignage.promotion }}</p>
+            <p class="student-poste">{{ temoignage.poste }}</p>
+          </div>
+        </div>
+
+        <!-- Témoignage -->
+        <div class="testimonial-content">
+          <div class="testimonial-quote">
+            <i class="pi pi-quote-left quote-icon"></i>
+            <p class="testimonial-text">{{ temoignage.temoignage }}</p>
+          </div>
+          
+          <!-- Notation -->
+          <div class="testimonial-rating">
+            <span class="rating-label">Satisfaction :</span>
+            <div class="stars">
+              <i *ngFor="let star of getStars(temoignage.note)" 
+                 class="pi pi-star" 
+                 [class.filled]="star === 'filled'">
+              </i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Encouragement -->
+<section class="encouragement-section">
+  <div class="container">
+    <div class="encouragement-content">
+      <h2>Votre Success Story Commence Ici</h2>
+      <p>
+        Rejoignez nos nombreux diplômés qui excellent dans leurs carrières grâce à la formation 
+        d'excellence de l'IUB. Votre réussite professionnelle est notre priorité.
+      </p>
+      
+      <div class="success-points">
+        <div class="success-point">
+          <i class="pi pi-check-circle"></i>
+          <span>Formation pratique et professionnalisante</span>
+        </div>
+        <div class="success-point">
+          <i class="pi pi-check-circle"></i>
+          <span>Accompagnement personnalisé</span>
+        </div>
+        <div class="success-point">
+          <i class="pi pi-check-circle"></i>
+          <span>Réseau professionnel solide</span>
+        </div>
+        <div class="success-point">
+          <i class="pi pi-check-circle"></i>
+          <span>Insertion professionnelle garantie</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Écrivez Votre Propre Histoire de Succès</h2>
+    <p>Découvrez nos formations et commencez votre parcours vers l'excellence</p>
+    <div class="cta-buttons">
+      <button pButton 
+              type="button" 
+              label="Voir les Formations" 
+              icon="pi pi-book"
+              (click)="navigateToFormations()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Nous Contacter" 
+              icon="pi pi-phone"
+              class="p-button-outlined"
+              (click)="navigateToContact()">
+      </button>
+    </div>
+  </div>
+</section>
