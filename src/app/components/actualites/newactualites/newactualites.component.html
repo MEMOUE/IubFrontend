@@ -1,1 +1,267 @@
-<p>newactualites works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">
+      {{ isEditMode ? 'Modifier l\'Actualité' : 'Nouvelle Actualité' }}
+    </h1>
+    <p class="hero-description">
+      {{ isEditMode ? 'Modifiez les informations de l\'actualité' : 'Créez une nouvelle actualité pour votre université' }}
+    </p>
+  </div>
+</section>
+
+<!-- Section Formulaire -->
+<section class="form-section">
+  <div class="container">
+    <div class="form-container">
+      
+      <!-- Chargement -->
+      <div class="loading-overlay" *ngIf="loading">
+        <div class="loading-content">
+          <i class="pi pi-spin pi-spinner"></i>
+          <p>Chargement de l'actualité...</p>
+        </div>
+      </div>
+
+      <!-- Formulaire principal -->
+      <form [formGroup]="actualiteForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <div class="form-grid">
+          
+          <!-- Colonne Gauche - Contenu Principal -->
+          <div class="main-content">
+            <p-card header="Informations Principales" styleClass="main-card">
+              
+              <!-- Titre -->
+              <div class="form-group">
+                <label for="title" class="form-label">
+                  Titre de l'actualité <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="title"
+                       pInputText 
+                       formControlName="title"
+                       placeholder="Entrez le titre de l'actualité"
+                       [class]="getFieldClass('title')"
+                       class="form-input">
+                <div class="field-footer">
+                  <small class="form-error" *ngIf="hasError('title')">
+                    {{ getErrorMessage('title') }}
+                  </small>
+                  <span class="char-count" 
+                        [style.color]="getCharCountColor(titleCharCount, 200)">
+                    {{ titleCharCount }}/200 caractères
+                  </span>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="form-group">
+                <label for="description" class="form-label">
+                  Description courte <span class="required">*</span>
+                </label>
+                <textarea id="description"
+                          pInputTextarea
+                          formControlName="description"
+                          placeholder="Résumé de l'actualité qui apparaîtra dans la liste"
+                          rows="3"
+                          [class]="getFieldClass('description')"
+                          class="form-textarea">
+                </textarea>
+                <div class="field-footer">
+                  <small class="form-error" *ngIf="hasError('description')">
+                    {{ getErrorMessage('description') }}
+                  </small>
+                  <span class="char-count" 
+                        [style.color]="getCharCountColor(descriptionCharCount, 500)">
+                    {{ descriptionCharCount }}/500 caractères
+                  </span>
+                </div>
+              </div>
+
+              <!-- Contenu complet -->
+              <div class="form-group">
+                <label for="content" class="form-label">
+                  Contenu détaillé
+                </label>
+                <textarea id="content"
+                          pInputTextarea
+                          formControlName="content"
+                          placeholder="Contenu complet de l'actualité (optionnel)"
+                          rows="8"
+                          [class]="getFieldClass('content')"
+                          class="form-textarea">
+                </textarea>
+                <div class="field-footer">
+                  <small class="form-error" *ngIf="hasError('content')">
+                    {{ getErrorMessage('content') }}
+                  </small>
+                  <span class="char-count" 
+                        [style.color]="getCharCountColor(contentCharCount, 2000)">
+                    {{ contentCharCount }}/2000 caractères
+                  </span>
+                </div>
+              </div>
+
+            </p-card>
+          </div>
+
+          <!-- Colonne Droite - Paramètres -->
+          <div class="sidebar-content">
+            
+            <!-- Image -->
+            <p-card header="Image de l'actualité" styleClass="sidebar-card">
+              <div class="image-section">
+                
+                <!-- Prévisualisation -->
+                <div class="image-preview" *ngIf="imagePreview">
+                  <img [src]="imagePreview" alt="Aperçu de l'image">
+                  <button type="button" 
+                          pButton 
+                          icon="pi pi-times" 
+                          class="p-button-rounded p-button-danger p-button-sm remove-image-btn"
+                          (click)="onFileRemove()">
+                  </button>
+                </div>
+
+                <!-- Upload d'image -->
+                <div class="upload-section" *ngIf="!imagePreview">
+                  <p-fileUpload mode="basic" 
+                                chooseLabel="Choisir une image" 
+                                accept="image/*" 
+                                maxFileSize="5000000"
+                                (onSelect)="onFileSelect($event)"
+                                styleClass="upload-btn">
+                  </p-fileUpload>
+                  <small class="upload-hint">
+                    Formats acceptés: JPG, PNG, WebP (max 5MB)
+                  </small>
+                </div>
+
+                <!-- Zone de drop alternative -->
+                <div class="drop-zone" *ngIf="!imagePreview">
+                  <i class="pi pi-cloud-upload drop-icon"></i>
+                  <p class="drop-text">Glissez-déposez une image ici</p>
+                </div>
+              </div>
+            </p-card>
+
+            <!-- Paramètres de publication -->
+            <p-card header="Paramètres" styleClass="sidebar-card">
+              
+              <!-- Catégorie -->
+              <div class="form-group">
+                <label for="category" class="form-label">
+                  Catégorie <span class="required">*</span>
+                </label>
+                <p-dropdown id="category"
+                            formControlName="category"
+                            [options]="categories"
+                            placeholder="Sélectionnez une catégorie"
+                            optionLabel="label"
+                            optionValue="value"
+                            [class]="getFieldClass('category')"
+                            styleClass="w-full">
+                  <ng-template pTemplate="selectedItem" let-option>
+                    <div class="category-option" *ngIf="option">
+                      <i [class]="option.icon"></i>
+                      <span>{{ option.label }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-option>
+                    <div class="category-option">
+                      <i [class]="option.icon"></i>
+                      <span>{{ option.label }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <small class="form-error" *ngIf="hasError('category')">
+                  {{ getErrorMessage('category') }}
+                </small>
+              </div>
+
+              <!-- Date -->
+              <div class="form-group">
+                <label for="date" class="form-label">
+                  Date de publication <span class="required">*</span>
+                </label>
+                <p-calendar id="date"
+                            formControlName="date"
+                            dateFormat="dd/mm/yy"
+                            placeholder="Sélectionnez une date"
+                            [class]="getFieldClass('date')"
+                            styleClass="w-full">
+                </p-calendar>
+                <small class="form-error" *ngIf="hasError('date')">
+                  {{ getErrorMessage('date') }}
+                </small>
+              </div>
+
+              <!-- État de publication -->
+              <div class="form-group">
+                <div class="publish-toggle">
+                  <p-checkbox formControlName="published"
+                              binary="true"
+                              inputId="published">
+                  </p-checkbox>
+                  <label for="published" class="checkbox-label">
+                    Publier immédiatement
+                  </label>
+                </div>
+                <small class="publish-hint">
+                  Si décoché, l'actualité sera sauvegardée en brouillon
+                </small>
+              </div>
+
+            </p-card>
+
+          </div>
+        </div>
+
+        <!-- Actions du formulaire -->
+        <div class="form-actions">
+          <div class="actions-left">
+            <button type="button" 
+                    pButton 
+                    label="Annuler" 
+                    icon="pi pi-times"
+                    class="p-button-text p-button-secondary cancel-btn"
+                    (click)="cancel()">
+            </button>
+          </div>
+
+          <div class="actions-right">
+            <button type="button" 
+                    pButton 
+                    label="Enregistrer en brouillon" 
+                    icon="pi pi-save"
+                    class="p-button-outlined draft-btn"
+                    (click)="saveDraft()"
+                    [disabled]="submitting">
+            </button>
+            
+            <button type="button" 
+                    pButton 
+                    label="Aperçu" 
+                    icon="pi pi-eye"
+                    class="p-button-help preview-btn"
+                    (click)="preview()"
+                    [disabled]="actualiteForm.invalid">
+            </button>
+            
+            <button type="submit" 
+                    pButton 
+                    [label]="isEditMode ? 'Mettre à jour' : 'Créer l\'actualité'"
+                    [icon]="submitting ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"
+                    class="submit-btn"
+                    [disabled]="actualiteForm.invalid || submitting">
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>

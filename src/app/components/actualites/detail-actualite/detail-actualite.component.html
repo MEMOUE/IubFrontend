@@ -1,2 +1,252 @@
-<p>detail-actualite works!</p>
+<!-- Chargement -->
+<div class="loading-state" *ngIf="loading">
+  <div class="loading-content">
+    <i class="pi pi-spin pi-spinner loading-icon"></i>
+    <p>Chargement de l'actualité...</p>
+  </div>
+</div>
 
+<!-- Contenu principal -->
+<div class="actualite-detail-container" *ngIf="!loading && actualite">
+  
+  <!-- Barre de navigation -->
+  <div class="navigation-bar">
+    <div class="container">
+      <div class="nav-content">
+        <button pButton 
+                type="button" 
+                icon="pi pi-arrow-left" 
+                label="Retour à la liste"
+                class="p-button-text p-button-secondary back-btn"
+                (click)="navigateToList()">
+        </button>
+        
+        <div class="nav-actions">
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-share-alt" 
+                  class="p-button-text p-button-help share-btn"
+                  pTooltip="Partager"
+                  tooltipPosition="bottom"
+                  (click)="shareActualite()">
+          </button>
+          
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-print" 
+                  class="p-button-text p-button-secondary print-btn"
+                  pTooltip="Imprimer"
+                  tooltipPosition="bottom"
+                  (click)="printActualite()">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- En-tête de l'actualité -->
+  <section class="actualite-header">
+    <div class="header-image" *ngIf="actualite.image">
+      <img [src]="actualite.image" [alt]="actualite.title">
+      <div class="header-overlay"></div>
+    </div>
+    
+    <div class="header-content">
+      <div class="container">
+        <div class="header-meta">
+          <p-tag [value]="getCategorieLabel(actualite.category || '')"
+                 [severity]="getSeverityForCategory(actualite.category || '')"
+                 class="category-badge">
+          </p-tag>
+          
+          <p-tag *ngIf="actualite.category === 'evenement'"
+                 [value]="getEventStatus().label"
+                 [severity]="getEventStatus().severity"
+                 class="event-status">
+          </p-tag>
+        </div>
+        
+        <h1 class="actualite-title">{{ actualite.title }}</h1>
+        
+        <div class="actualite-meta">
+          <div class="meta-item">
+            <i class="pi pi-calendar"></i>
+            <span>{{ formatDate(actualite.date) }}</span>
+          </div>
+          
+          <div class="meta-item" *ngIf="actualite.category === 'evenement'">
+            <i class="pi pi-clock"></i>
+            <span>{{ formatTime(actualite.date) }}</span>
+          </div>
+          
+          <div class="meta-item">
+            <p-tag [value]="actualite.published ? 'Publié' : 'Brouillon'"
+                   [severity]="actualite.published ? 'success' : 'warning'">
+            </p-tag>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenu principal -->
+  <section class="actualite-content">
+    <div class="container">
+      <div class="content-grid">
+        
+        <!-- Contenu principal -->
+        <div class="main-content">
+          <div class="content-card">
+            
+            <!-- Description -->
+            <div class="description-section">
+              <p class="description-text">{{ actualite.description }}</p>
+            </div>
+            
+            <p-divider></p-divider>
+            
+            <!-- Contenu complet -->
+            <div class="full-content" *ngIf="actualite.content">
+              <div class="content-text" [innerHTML]="actualite.content"></div>
+            </div>
+            
+            <!-- Message si pas de contenu complet -->
+            <div class="no-content" *ngIf="!actualite.content">
+              <i class="pi pi-info-circle"></i>
+              <p>Cette actualité ne contient pas de contenu détaillé supplémentaire.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Barre latérale -->
+        <div class="sidebar-content">
+          
+          <!-- Actions administrateur -->
+          <div class="admin-actions-card">
+            <h3 class="card-title">Actions</h3>
+            
+            <div class="actions-grid">
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-pencil" 
+                      label="Modifier"
+                      class="p-button-outlined edit-action-btn"
+                      (click)="navigateToEdit()">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      [icon]="actualite.published ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                      [label]="actualite.published ? 'Dépublier' : 'Publier'"
+                      [class]="actualite.published ? 'p-button-warning unpublish-btn' : 'p-button-success publish-btn'"
+                      (click)="togglePublication()">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-trash" 
+                      label="Supprimer"
+                      class="p-button-danger delete-action-btn"
+                      (click)="confirmDelete()">
+              </button>
+            </div>
+          </div>
+
+          <!-- Informations supplémentaires -->
+          <div class="info-card" *ngIf="actualite.category === 'evenement'">
+            <h3 class="card-title">Détails de l'événement</h3>
+            
+            <div class="info-items">
+              <div class="info-item">
+                <span class="info-label">Date :</span>
+                <span class="info-value">{{ formatDate(actualite.date) }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Heure :</span>
+                <span class="info-value">{{ formatTime(actualite.date) }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Statut :</span>
+                <p-tag [value]="getEventStatus().label"
+                       [severity]="getEventStatus().severity">
+                </p-tag>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Actualités similaires -->
+  <section class="similar-actualites" *ngIf="actualitesSimilaires.length > 0">
+    <div class="container">
+      <h2 class="section-title">Actualités similaires</h2>
+      
+      <div class="similar-grid">
+        <div class="similar-card" 
+             *ngFor="let similar of actualitesSimilaires"
+             (click)="navigateToActualite(similar.id!)">
+          
+          <div class="similar-image" *ngIf="similar.image">
+            <img [src]="similar.image" [alt]="similar.title">
+          </div>
+          
+          <div class="similar-content">
+            <div class="similar-meta">
+              <span class="similar-date">{{ formatDate(similar.date) }}</span>
+              <p-tag [value]="getCategorieLabel(similar.category || '')"
+                     [severity]="getSeverityForCategory(similar.category || '')"
+                     class="similar-category">
+              </p-tag>
+            </div>
+            
+            <h3 class="similar-title">{{ similar.title }}</h3>
+            <p class="similar-description">{{ similar.description }}</p>
+            
+            <div class="similar-action">
+              <span class="read-more">Lire la suite</span>
+              <i class="pi pi-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- État d'erreur -->
+<div class="error-state" *ngIf="!loading && !actualite">
+  <div class="error-content">
+    <i class="pi pi-exclamation-circle error-icon"></i>
+    <h2 class="error-title">Actualité non trouvée</h2>
+    <p class="error-description">
+      L'actualité que vous recherchez n'existe pas ou n'est plus disponible.
+    </p>
+    <button pButton 
+            type="button" 
+            label="Retour à la liste" 
+            icon="pi pi-arrow-left"
+            class="error-action-btn"
+            (click)="navigateToList()">
+    </button>
+  </div>
+</div>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>
+
+<!-- Dialog de confirmation -->
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="pi pi-exclamation-triangle"
+  acceptButtonStyleClass="p-button-danger"
+  acceptIcon="pi pi-trash"
+  rejectButtonStyleClass="p-button-secondary"
+  rejectIcon="pi pi-times">
+</p-confirmDialog>

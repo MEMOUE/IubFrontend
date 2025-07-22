@@ -1,1 +1,189 @@
-<p>listeactualites works!</p>
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Gestion des Actualités</h1>
+    <p class="hero-description">
+      Gérez les actualités, événements et annonces de l'International University of Bouake
+    </p>
+  </div>
+</section>
+
+<!-- Section Statistiques -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of statistiques">
+        <div class="stat-value">{{ stat.valeur }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Outils et Filtres -->
+<section class="tools-section">
+  <div class="container">
+    <div class="tools-header">
+      <h2 class="section-title">Actualités</h2>
+      <button pButton 
+              type="button" 
+              label="Nouvelle Actualité" 
+              icon="pi pi-plus"
+              class="create-btn"
+              (click)="navigateToNew()">
+      </button>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters-section">
+      <div class="filters-row">
+        <div class="search-container">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input type="text" 
+                   pInputText 
+                   [(ngModel)]="searchKeyword"
+                   (input)="onSearch()"
+                   placeholder="Rechercher une actualité..."
+                   class="search-input">
+          </span>
+        </div>
+
+        <div class="filter-container">
+          <p-dropdown [options]="categories"
+                      [(ngModel)]="selectedCategorie"
+                      (onChange)="onCategorieChange()"
+                      placeholder="Filtrer par catégorie"
+                      optionLabel="label"
+                      optionValue="value"
+                      [showClear]="true"
+                      class="category-filter">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Liste des Actualités -->
+<section class="actualites-section">
+  <div class="container">
+    <div class="actualites-grid" *ngIf="!loading">
+      <div class="actualite-card" *ngFor="let actualite of actualitesFiltrees">
+        <!-- Image de l'actualité -->
+        <div class="actualite-image">
+          <img #newsImg [src]="actualite.image" 
+               [alt]="actualite.title" 
+               (error)="newsImg.src='assets/images/default-news.jpg'">
+          <div class="actualite-overlay">
+            <p-tag [value]="getCategorieLabel(actualite.category || '')"
+                   [severity]="getSeverityForCategory(actualite.category || '')"
+                   class="category-tag">
+            </p-tag>
+          </div>
+        </div>
+
+        <!-- Contenu de l'actualité -->
+        <div class="actualite-content">
+          <div class="actualite-header">
+            <h3 class="actualite-title">{{ actualite.title }}</h3>
+            <div class="actualite-meta">
+              <span class="actualite-date">
+                <i class="pi pi-calendar"></i>
+                {{ formatDate(actualite.date) }}
+              </span>
+              <div class="publication-status">
+                <p-tag [value]="actualite.published ? 'Publié' : 'Brouillon'"
+                       [severity]="actualite.published ? 'success' : 'warning'">
+                </p-tag>
+              </div>
+            </div>
+          </div>
+
+          <p class="actualite-description">{{ actualite.description }}</p>
+
+          <!-- Actions -->
+          <div class="actualite-actions">
+            <div class="primary-actions">
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-eye"
+                      class="p-button-text p-button-rounded action-btn view-btn"
+                      pTooltip="Voir les détails"
+                      tooltipPosition="top"
+                      (click)="navigateToDetail(actualite.id!)">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-pencil"
+                      class="p-button-text p-button-rounded action-btn edit-btn"
+                      pTooltip="Modifier"
+                      tooltipPosition="top"
+                      (click)="navigateToEdit(actualite.id!)">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      [icon]="actualite.published ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                      class="p-button-text p-button-rounded action-btn publish-btn"
+                      [pTooltip]="actualite.published ? 'Dépublier' : 'Publier'"
+                      tooltipPosition="top"
+                      (click)="togglePublication(actualite)">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-trash"
+                      class="p-button-text p-button-rounded action-btn delete-btn"
+                      pTooltip="Supprimer"
+                      tooltipPosition="top"
+                      (click)="confirmDelete(actualite)">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message si aucune actualité -->
+    <div class="empty-state" *ngIf="!loading && actualitesFiltrees.length === 0">
+      <div class="empty-icon">
+        <i class="pi pi-info-circle"></i>
+      </div>
+      <h3 class="empty-title">Aucune actualité trouvée</h3>
+      <p class="empty-description">
+        {{ searchKeyword || selectedCategorie ? 'Aucune actualité ne correspond à vos critères de recherche.' : 'Commencez par créer votre première actualité.' }}
+      </p>
+      <button pButton 
+              type="button" 
+              label="Créer une actualité" 
+              icon="pi pi-plus"
+              class="empty-action-btn"
+              (click)="navigateToNew()"
+              *ngIf="!searchKeyword && !selectedCategorie">
+      </button>
+    </div>
+
+    <!-- Chargement -->
+    <div class="loading-state" *ngIf="loading">
+      <div class="loading-content">
+        <i class="pi pi-spin pi-spinner loading-icon"></i>
+        <p>Chargement des actualités...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>
+
+<!-- Dialog de confirmation -->
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="pi pi-exclamation-triangle"
+  acceptButtonStyleClass="p-button-danger"
+  acceptIcon="pi pi-trash"
+  rejectButtonStyleClass="p-button-secondary"
+  rejectIcon="pi pi-times">
+</p-confirmDialog>
