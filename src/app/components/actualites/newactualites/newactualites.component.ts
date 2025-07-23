@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 // PrimeFaces imports
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -25,6 +25,7 @@ import { Actualite, CreateActualiteDto } from '../../../shared/models/actualite.
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     ButtonModule,
     InputTextModule,
     DropdownModule,
@@ -48,9 +49,15 @@ export class NewactualitesComponent implements OnInit {
   loading = false;
   submitting = false;
   
-  // Preview
+  // Gestion d'image améliorée
   imagePreview: string | null = null;
   selectedFile: File | null = null;
+  externalImageUrl: string = '';
+  useExternalUrl: boolean = true; // Par défaut, utiliser URL externe
+
+  // Constantes pour la validation
+  private readonly MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+  private readonly MAX_IMAGE_DATA_URL_LENGTH = 10000; // ~10KB en base64
 
   constructor(
     private formBuilder: FormBuilder,
@@ -77,12 +84,15 @@ export class NewactualitesComponent implements OnInit {
 
   createForm(): FormGroup {
     return this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      // Utiliser les noms de champs du backend
+      titre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(500)]],
-      content: ['', [Validators.minLength(50)]],
-      category: ['', Validators.required],
-      published: [false],
-      date: [new Date(), Validators.required]
+      contenu: ['', [Validators.minLength(50)]],
+      categorie: ['', Validators.required],
+      publie: [false],
+      datePublication: [new Date(), Validators.required],
+      dateEvenement: [null],
+      auteur: ['', Validators.required] // Rendu obligatoire
     });
   }
 
@@ -120,17 +130,20 @@ export class NewactualitesComponent implements OnInit {
 
   populateForm(actualite: Actualite) {
     this.actualiteForm.patchValue({
-      title: actualite.title,
+      titre: actualite.titre,
       description: actualite.description,
-      content: actualite.content || '',
-      category: actualite.category,
-      published: actualite.published,
-      date: new Date(actualite.date)
+      contenu: actualite.contenu || '',
+      categorie: actualite.categorie,
+      publie: actualite.publie,
+      datePublication: actualite.datePublication ? new Date(actualite.datePublication) : new Date(),
+      dateEvenement: actualite.dateEvenement ? new Date(actualite.dateEvenement) : null,
+      auteur: actualite.auteur || ''
     });
 
     // Charger l'image existante
-    if (actualite.image) {
-      this.imagePreview = actualite.image;
+    if (actualite.imageUrl) {
+      this.imagePreview = actualite.imageUrl;
+      this.externalImageUrl = actualite.imageUrl;
     }
   }
 
@@ -139,14 +152,47 @@ export class NewactualitesComponent implements OnInit {
       this.submitting = true;
 
       const formData = this.actualiteForm.value;
+      
+      // CORRECTION PRINCIPALE : Gestion sécurisée de l'URL d'image
+      let imageUrl = this.imagePreview || '';
+      
+      // Si l'image est en base64 et trop longue, ne pas l'inclure
+      if (imageUrl.startsWith('data:') && imageUrl.length > this.MAX_IMAGE_DATA_URL_LENGTH) {
+        imageUrl = ''; // Remplacer par une chaîne vide
+        
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Image ignorée',
+          detail: 'L\'image était trop volumineuse et n\'a pas été sauvegardée. Utilisez une URL d\'image externe.'
+        });
+      }
+      
+      // Validation finale des données
+      if (!formData.titre || !formData.description || !formData.categorie || !formData.auteur) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur de validation',
+          detail: 'Veuillez remplir tous les champs obligatoires'
+        });
+        this.submitting = false;
+        return;
+      }
+
       const actualiteData: CreateActualiteDto = {
-        title: formData.title,
-        description: formData.description,
-        content: formData.content,
-        category: formData.category,
-        published: formData.published,
-        image: this.imagePreview || 'assets/images/default-news.jpg'
+        titre: formData.titre.trim(),
+        description: formData.description.trim(),
+        contenu: formData.contenu?.trim() || '',
+        categorie: formData.categorie,
+        publie: formData.publie,
+        imageUrl: imageUrl, // URL corrigée et limitée
+        datePublication: this.formatDateForBackend(formData.datePublication),
+        dateEvenement: formData.dateEvenement ? this.formatDateForBackend(formData.dateEvenement) : undefined,
+        auteur: formData.auteur.trim()
       };
+
+      // Debug log
+      console.log('Données envoyées:', actualiteData);
+      console.log('Taille imageUrl:', actualiteData.imageUrl?.length || 0);
 
       if (this.isEditMode && this.actualiteId) {
         this.updateActualite(actualiteData);
@@ -155,12 +201,45 @@ export class NewactualitesComponent implements OnInit {
       }
     } else {
       this.markFormGroupTouched();
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Attention',
-        detail: 'Veuillez corriger les erreurs du formulaire'
-      });
+      this.showValidationErrors();
     }
+  }
+
+  // Méthode pour formater la date pour le backend
+  private formatDateForBackend(date: Date): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Afficher les erreurs de validation
+  private showValidationErrors() {
+    const errors = [];
+    
+    if (this.actualiteForm.get('titre')?.errors) {
+      errors.push('Le titre est requis (5-200 caractères)');
+    }
+    if (this.actualiteForm.get('description')?.errors) {
+      errors.push('La description est requise (20-500 caractères)');
+    }
+    if (this.actualiteForm.get('categorie')?.errors) {
+      errors.push('La catégorie est requise');
+    }
+    if (this.actualiteForm.get('auteur')?.errors) {
+      errors.push('L\'auteur est requis');
+    }
+    if (this.actualiteForm.get('datePublication')?.errors) {
+      errors.push('La date de publication est requise');
+    }
+
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Erreurs de validation',
+      detail: errors.join(', ')
+    });
   }
 
   createActualite(data: CreateActualiteDto) {
@@ -178,7 +257,7 @@ export class NewactualitesComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Impossible de créer l\'actualité'
+          detail: error.message || 'Impossible de créer l\'actualité'
         });
         this.submitting = false;
       }
@@ -200,42 +279,117 @@ export class NewactualitesComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erreur',
-          detail: 'Impossible de modifier l\'actualité'
+          detail: error.message || 'Impossible de modifier l\'actualité'
         });
         this.submitting = false;
       }
     });
   }
 
+  // Gestion de l'URL d'image externe
+  onExternalImageUrlChange() {
+    if (this.externalImageUrl && this.externalImageUrl.trim()) {
+      try {
+        new URL(this.externalImageUrl);
+        this.imagePreview = this.externalImageUrl;
+        this.selectedFile = null; // Réinitialiser le fichier sélectionné
+        
+        this.messageService.add({
+          severity: 'success',
+          summary: 'URL d\'image valide',
+          detail: 'L\'image externe a été chargée'
+        });
+      } catch {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'URL invalide',
+          detail: 'Veuillez entrer une URL d\'image valide'
+        });
+      }
+    } else {
+      this.imagePreview = null;
+    }
+  }
+
+  // Gestion du fichier avec compression
   onFileSelect(event: any) {
     const file = event.files[0];
     if (file) {
-      this.selectedFile = file;
-      
-      // Créer une prévisualisation
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      // Vérifications de base
+      if (file.size > this.MAX_IMAGE_SIZE) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Fichier trop volumineux',
+          detail: 'L\'image ne doit pas dépasser 2MB'
+        });
+        return;
+      }
 
+      if (!file.type.startsWith('image/')) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Type de fichier invalide',
+          detail: 'Veuillez sélectionner une image'
+        });
+        return;
+      }
+
+      this.selectedFile = file;
+      this.externalImageUrl = ''; // Réinitialiser l'URL externe
+      
+      // Avertir l'utilisateur de la limitation
       this.messageService.add({
         severity: 'info',
-        summary: 'Image sélectionnée',
-        detail: `${file.name} - ${this.formatFileSize(file.size)}`
+        summary: 'Limitation d\'image',
+        detail: 'Pour éviter les erreurs, utilisez de préférence des URLs d\'images externes'
       });
+
+      // Créer une prévisualisation sans sauvegarder en base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        
+        // Si l'image est trop grande en base64, ne pas l'utiliser
+        if (dataUrl.length > this.MAX_IMAGE_DATA_URL_LENGTH) {
+          this.imagePreview = URL.createObjectURL(file); // Préview temporaire
+          
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Image trop volumineuse',
+            detail: 'Cette image ne sera pas sauvegardée. Utilisez une URL externe.'
+          });
+        } else {
+          this.imagePreview = dataUrl;
+        }
+      };
+      reader.readAsDataURL(file);
     }
   }
 
   onFileRemove() {
     this.selectedFile = null;
     this.imagePreview = null;
+    this.externalImageUrl = '';
     
     this.messageService.add({
       severity: 'info',
       summary: 'Image supprimée',
       detail: 'L\'image a été supprimée'
     });
+  }
+
+  // Gestion d'erreur d'image
+  onImageError() {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Image non accessible',
+      detail: 'L\'image à cette URL n\'est pas accessible'
+    });
+    this.imagePreview = null;
+  }
+
+  onImageLoad() {
+    // Image chargée avec succès - pas de message pour éviter le spam
   }
 
   formatFileSize(bytes: number): string {
@@ -285,7 +439,6 @@ export class NewactualitesComponent implements OnInit {
 
   preview() {
     if (this.actualiteForm.valid) {
-      // Logique de prévisualisation
       this.messageService.add({
         severity: 'info',
         summary: 'Prévisualisation',
@@ -295,22 +448,22 @@ export class NewactualitesComponent implements OnInit {
   }
 
   saveDraft() {
-    const formData = { ...this.actualiteForm.value, published: false };
-    this.actualiteForm.patchValue({ published: false });
+    // Forcer la sauvegarde en brouillon
+    this.actualiteForm.patchValue({ publie: false });
     this.onSubmit();
   }
 
   // Getters pour faciliter l'accès aux contrôles du formulaire
-  get titleCharCount(): number {
-    return this.actualiteForm.get('title')?.value?.length || 0;
+  get titreCharCount(): number {
+    return this.actualiteForm.get('titre')?.value?.length || 0;
   }
 
   get descriptionCharCount(): number {
     return this.actualiteForm.get('description')?.value?.length || 0;
   }
 
-  get contentCharCount(): number {
-    return this.actualiteForm.get('content')?.value?.length || 0;
+  get contenuCharCount(): number {
+    return this.actualiteForm.get('contenu')?.value?.length || 0;
   }
 
   getCharCountColor(count: number, max: number): string {

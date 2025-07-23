@@ -1,21 +1,28 @@
 export interface Actualite {
-  id: number;
-  title: string;
+  id?: number;
+  titre: string;
   description: string;
-  content?: string;
-  image: string;
-  date: string;
-  category?: string;
-  published: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  contenu?: string;
+  imageUrl?: string;
+  datePublication: string;  // Obligatoire selon le backend
+  dateEvenement?: string;
+  categorie: string;        // Obligatoire selon le backend
+  auteur: string;           // Obligatoire selon le backend
+  nombreVues?: number;
+  publie?: boolean;
+  actif?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateActualiteDto {
-  title: string;
-  description: string;
-  content?: string;
-  image: string;
-  category?: string;
-  published: boolean;
+  titre: string;                    // Obligatoire
+  description: string;              // Obligatoire
+  contenu?: string;
+  imageUrl?: string;
+  categorie: string;                // Obligatoire
+  datePublication: string;          // Obligatoire
+  dateEvenement?: string;
+  auteur: string;                   // Obligatoire
+  publie?: boolean;
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-
 // PrimeFaces imports
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -13,7 +12,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
-
 
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ActualiteService } from '../../../core/services/actualite.service';
@@ -104,16 +102,16 @@ export class ListeactualitesComponent implements OnInit {
   applyFilters() {
     let filtered = [...this.actualites];
 
-    // Filtrer par catégorie
+    // Filtrer par catégorie - CORRECTION: utiliser 'categorie' au lieu de 'category'
     if (this.selectedCategorie) {
-      filtered = filtered.filter(a => a.category === this.selectedCategorie);
+      filtered = filtered.filter(a => a.categorie === this.selectedCategorie);
     }
 
-    // Filtrer par mot-clé
+    // Filtrer par mot-clé - CORRECTION: utiliser 'titre' au lieu de 'title'
     if (this.searchKeyword.trim()) {
       const keyword = this.searchKeyword.toLowerCase();
       filtered = filtered.filter(a => 
-        a.title.toLowerCase().includes(keyword) ||
+        a.titre.toLowerCase().includes(keyword) ||
         a.description.toLowerCase().includes(keyword)
       );
     }
@@ -141,19 +139,21 @@ export class ListeactualitesComponent implements OnInit {
       },
       { 
         valeur: this.actualites.filter(a => {
-          const date = new Date(a.date);
+          // CORRECTION: utiliser 'datePublication' au lieu de 'date'
+          const date = new Date(a.datePublication);
           return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
         }).length.toString(), 
         label: 'Publiées ce mois' 
       },
       { 
         valeur: this.actualites.filter(a => 
-          new Date(a.date) > now
+          // CORRECTION: utiliser 'datePublication' ou 'dateEvenement' selon le contexte
+          new Date(a.dateEvenement || a.datePublication) > now
         ).length.toString(), 
         label: 'Événements à venir' 
       },
       { 
-        valeur: '1.2K', 
+        valeur: this.actualites.reduce((total, a) => total + (a.nombreVues || 0), 0).toString(), 
         label: 'Vues totales' 
       }
     ];
@@ -173,7 +173,8 @@ export class ListeactualitesComponent implements OnInit {
 
   confirmDelete(actualite: Actualite) {
     this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer l'actualité "${actualite.title}" ?`,
+      // CORRECTION: utiliser 'titre' au lieu de 'title'
+      message: `Êtes-vous sûr de vouloir supprimer l'actualité "${actualite.titre}" ?`,
       header: 'Confirmer la suppression',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Supprimer',
@@ -206,11 +207,13 @@ export class ListeactualitesComponent implements OnInit {
   }
 
   togglePublication(actualite: Actualite) {
-    const updatedActualite = { ...actualite, published: !actualite.published };
+    // CORRECTION: utiliser 'publie' au lieu de 'published'
+    const updatedActualite = { ...actualite, publie: !actualite.publie };
     
     this.actualiteService.updateActualite(actualite.id!, updatedActualite).subscribe({
       next: () => {
-        const action = updatedActualite.published ? 'publiée' : 'dépubliée';
+        // CORRECTION: utiliser 'publie' au lieu de 'published'
+        const action = updatedActualite.publie ? 'publiée' : 'dépubliée';
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
@@ -230,6 +233,7 @@ export class ListeactualitesComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString('fr-FR', {
       year: 'numeric',
@@ -238,12 +242,12 @@ export class ListeactualitesComponent implements OnInit {
     });
   }
 
-  getCategorieLabel(category: string): string {
-    const cat = this.categories.find(c => c.value === category);
-    return cat ? cat.label : category;
+  getCategorieLabel(categorie: string): string {
+    const cat = this.categories.find(c => c.value === categorie);
+    return cat ? cat.label : categorie;
   }
 
-  getSeverityForCategory(category: string): string {
+  getSeverityForCategory(categorie: string): string {
     const severityMap: { [key: string]: string } = {
       'evenement': 'info',
       'news': 'success',
@@ -252,6 +256,6 @@ export class ListeactualitesComponent implements OnInit {
       'partenariat': 'help',
       'recherche': 'contrast'
     };
-    return severityMap[category] || 'info';
+    return severityMap[categorie] || 'info';
   }
 }

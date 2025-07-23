@@ -5,7 +5,7 @@
       {{ isEditMode ? 'Modifier l\'Actualité' : 'Nouvelle Actualité' }}
     </h1>
     <p class="hero-description">
-      {{ isEditMode ? 'Modifiez les informations de l\'actualité' : 'Créez une nouvelle actualité pour votre université' }}
+      {{ isEditMode ? 'Modifiez les informations de l\'actualité' : 'Créez une nouvelle actualité avec upload d\'images depuis votre machine' }}
     </p>
   </div>
 </section>
@@ -33,23 +33,23 @@
               
               <!-- Titre -->
               <div class="form-group">
-                <label for="title" class="form-label">
+                <label for="titre" class="form-label">
                   Titre de l'actualité <span class="required">*</span>
                 </label>
                 <input type="text" 
-                       id="title"
+                       id="titre"
                        pInputText 
-                       formControlName="title"
+                       formControlName="titre"
                        placeholder="Entrez le titre de l'actualité"
-                       [class]="getFieldClass('title')"
+                       [class]="getFieldClass('titre')"
                        class="form-input">
                 <div class="field-footer">
-                  <small class="form-error" *ngIf="hasError('title')">
-                    {{ getErrorMessage('title') }}
+                  <small class="form-error" *ngIf="hasError('titre')">
+                    {{ getErrorMessage('titre') }}
                   </small>
                   <span class="char-count" 
-                        [style.color]="getCharCountColor(titleCharCount, 200)">
-                    {{ titleCharCount }}/200 caractères
+                        [style.color]="getCharCountColor(titreCharCount, 200)">
+                    {{ titreCharCount }}/200 caractères
                   </span>
                 </div>
               </div>
@@ -80,26 +80,43 @@
 
               <!-- Contenu complet -->
               <div class="form-group">
-                <label for="content" class="form-label">
+                <label for="contenu" class="form-label">
                   Contenu détaillé
                 </label>
-                <textarea id="content"
+                <textarea id="contenu"
                           pInputTextarea
-                          formControlName="content"
+                          formControlName="contenu"
                           placeholder="Contenu complet de l'actualité (optionnel)"
                           rows="8"
-                          [class]="getFieldClass('content')"
+                          [class]="getFieldClass('contenu')"
                           class="form-textarea">
                 </textarea>
                 <div class="field-footer">
-                  <small class="form-error" *ngIf="hasError('content')">
-                    {{ getErrorMessage('content') }}
+                  <small class="form-error" *ngIf="hasError('contenu')">
+                    {{ getErrorMessage('contenu') }}
                   </small>
                   <span class="char-count" 
-                        [style.color]="getCharCountColor(contentCharCount, 2000)">
-                    {{ contentCharCount }}/2000 caractères
+                        [style.color]="getCharCountColor(contenuCharCount, 2000)">
+                    {{ contenuCharCount }}/2000 caractères
                   </span>
                 </div>
+              </div>
+
+              <!-- Auteur -->
+              <div class="form-group">
+                <label for="auteur" class="form-label">
+                  Auteur <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="auteur"
+                       pInputText 
+                       formControlName="auteur"
+                       placeholder="Nom de l'auteur"
+                       [class]="getFieldClass('auteur')"
+                       class="form-input">
+                <small class="form-error" *ngIf="hasError('auteur')">
+                  {{ getErrorMessage('auteur') }}
+                </small>
               </div>
 
             </p-card>
@@ -108,58 +125,123 @@
           <!-- Colonne Droite - Paramètres -->
           <div class="sidebar-content">
             
-            <!-- Image -->
-            <p-card header="Image de l'actualité" styleClass="sidebar-card">
+            <!-- Upload d'Image Locale -->
+            <p-card header="📷 Image de l'actualité" styleClass="sidebar-card">
               <div class="image-section">
-                
-                <!-- Prévisualisation -->
-                <div class="image-preview" *ngIf="imagePreview">
-                  <img [src]="imagePreview" alt="Aperçu de l'image">
-                  <button type="button" 
-                          pButton 
-                          icon="pi pi-times" 
-                          class="p-button-rounded p-button-danger p-button-sm remove-image-btn"
-                          (click)="onFileRemove()">
-                  </button>
-                </div>
 
-                <!-- Upload d'image -->
-                <div class="upload-section" *ngIf="!imagePreview">
-                  <p-fileUpload mode="basic" 
-                                chooseLabel="Choisir une image" 
-                                accept="image/*" 
-                                maxFileSize="5000000"
-                                (onSelect)="onFileSelect($event)"
-                                styleClass="upload-btn">
+                <!-- Zone d'Upload -->
+                <div class="upload-zone" *ngIf="!imagePreview && !isCompressing">
+                  <p-fileUpload 
+                    mode="basic" 
+                    chooseLabel="📁 Choisir une image" 
+                    accept="image/*" 
+                    maxFileSize="5000000"
+                    (onSelect)="onFileSelect($event)"
+                    [auto]="false"
+                    styleClass="upload-btn">
                   </p-fileUpload>
-                  <small class="upload-hint">
-                    Formats acceptés: JPG, PNG, WebP (max 5MB)
-                  </small>
+                  
+                  <div class="upload-info">
+                    <p class="upload-title">📤 Téléchargez votre image</p>
+                    <ul class="upload-specs">
+                      <li>✅ Formats supportés : JPG, PNG, WebP, GIF</li>
+                      <li>📏 Taille max : 5MB (sera automatiquement compressée)</li>
+                      <li>📐 Dimensions recommandées : 1200x800 pixels</li>
+                      <li>⚡ Compression automatique pour optimiser la performance</li>
+                    </ul>
+                  </div>
                 </div>
 
-                <!-- Zone de drop alternative -->
-                <div class="drop-zone" *ngIf="!imagePreview">
-                  <i class="pi pi-cloud-upload drop-icon"></i>
-                  <p class="drop-text">Glissez-déposez une image ici</p>
+                <!-- Progression de Compression -->
+                <div class="compression-section" *ngIf="isCompressing">
+                  <div class="compression-info">
+                    <h4>🔄 Optimisation de l'image en cours...</h4>
+                    <p>Compression et redimensionnement automatique</p>
+                  </div>
+                  
+                  <p-progressBar 
+                    [value]="compressionProgress" 
+                    [showValue]="true"
+                    styleClass="compression-progress">
+                  </p-progressBar>
+                  
+                  <div class="compression-steps">
+                    <div class="step" [class.active]="compressionProgress >= 20">
+                      <span class="step-icon">📖</span>
+                      <span class="step-text">Lecture du fichier</span>
+                    </div>
+                    <div class="step" [class.active]="compressionProgress >= 40">
+                      <span class="step-icon">📐</span>
+                      <span class="step-text">Calcul des dimensions</span>
+                    </div>
+                    <div class="step" [class.active]="compressionProgress >= 60">
+                      <span class="step-icon">🗜️</span>
+                      <span class="step-text">Compression</span>
+                    </div>
+                    <div class="step" [class.active]="compressionProgress >= 80">
+                      <span class="step-icon">✅</span>
+                      <span class="step-text">Validation</span>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Prévisualisation de l'Image -->
+                <div class="image-preview-section" *ngIf="imagePreview && !isCompressing">
+                  <div class="image-preview">
+                    <img [src]="imagePreview" alt="Aperçu de l'image" class="preview-image">
+                    <div class="image-overlay">
+                      <button type="button" 
+                              pButton 
+                              icon="pi pi-times" 
+                              class="p-button-rounded p-button-danger p-button-sm remove-btn"
+                              pTooltip="Supprimer l'image"
+                              (click)="onFileRemove()">
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="image-info">
+                    <p class="image-status">✅ Image optimisée et prête</p>
+                    <div class="image-actions">
+                      <button type="button" 
+                              pButton 
+                              label="🔄 Changer d'image" 
+                              class="p-button-outlined p-button-sm"
+                              (click)="onFileRemove()">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Conseils d'optimisation -->
+                <div class="optimization-tips" *ngIf="!isCompressing">
+                  <h5>💡 Conseils pour de meilleures images :</h5>
+                  <ul>
+                    <li><strong>📏 Format :</strong> Privilégiez le format paysage (16:9 ou 4:3)</li>
+                    <li><strong>🎨 Qualité :</strong> Images nettes et bien éclairées</li>
+                    <li><strong>📐 Taille :</strong> Plus c'est grand, mieux c'est (on compresse après)</li>
+                    <li><strong>🚀 Performance :</strong> La compression automatique optimise le chargement</li>
+                  </ul>
+                </div>
+
               </div>
             </p-card>
 
             <!-- Paramètres de publication -->
-            <p-card header="Paramètres" styleClass="sidebar-card">
+            <p-card header="⚙️ Paramètres" styleClass="sidebar-card">
               
               <!-- Catégorie -->
               <div class="form-group">
-                <label for="category" class="form-label">
+                <label for="categorie" class="form-label">
                   Catégorie <span class="required">*</span>
                 </label>
-                <p-dropdown id="category"
-                            formControlName="category"
+                <p-dropdown id="categorie"
+                            formControlName="categorie"
                             [options]="categories"
                             placeholder="Sélectionnez une catégorie"
                             optionLabel="label"
                             optionValue="value"
-                            [class]="getFieldClass('category')"
+                            [class]="getFieldClass('categorie')"
                             styleClass="w-full">
                   <ng-template pTemplate="selectedItem" let-option>
                     <div class="category-option" *ngIf="option">
@@ -174,36 +256,52 @@
                     </div>
                   </ng-template>
                 </p-dropdown>
-                <small class="form-error" *ngIf="hasError('category')">
-                  {{ getErrorMessage('category') }}
+                <small class="form-error" *ngIf="hasError('categorie')">
+                  {{ getErrorMessage('categorie') }}
                 </small>
               </div>
 
-              <!-- Date -->
+              <!-- Date de publication -->
               <div class="form-group">
-                <label for="date" class="form-label">
+                <label for="datePublication" class="form-label">
                   Date de publication <span class="required">*</span>
                 </label>
-                <p-calendar id="date"
-                            formControlName="date"
+                <p-calendar id="datePublication"
+                            formControlName="datePublication"
                             dateFormat="dd/mm/yy"
                             placeholder="Sélectionnez une date"
-                            [class]="getFieldClass('date')"
+                            [class]="getFieldClass('datePublication')"
                             styleClass="w-full">
                 </p-calendar>
-                <small class="form-error" *ngIf="hasError('date')">
-                  {{ getErrorMessage('date') }}
+                <small class="form-error" *ngIf="hasError('datePublication')">
+                  {{ getErrorMessage('datePublication') }}
+                </small>
+              </div>
+
+              <!-- Date d'événement -->
+              <div class="form-group">
+                <label for="dateEvenement" class="form-label">
+                  Date d'événement
+                </label>
+                <p-calendar id="dateEvenement"
+                            formControlName="dateEvenement"
+                            dateFormat="dd/mm/yy"
+                            placeholder="Date de l'événement (optionnel)"
+                            styleClass="w-full">
+                </p-calendar>
+                <small class="form-hint">
+                  Uniquement pour les événements
                 </small>
               </div>
 
               <!-- État de publication -->
               <div class="form-group">
                 <div class="publish-toggle">
-                  <p-checkbox formControlName="published"
+                  <p-checkbox formControlName="publie"
                               binary="true"
-                              inputId="published">
+                              inputId="publie">
                   </p-checkbox>
-                  <label for="published" class="checkbox-label">
+                  <label for="publie" class="checkbox-label">
                     Publier immédiatement
                   </label>
                 </div>
@@ -222,7 +320,7 @@
           <div class="actions-left">
             <button type="button" 
                     pButton 
-                    label="Annuler" 
+                    label="❌ Annuler" 
                     icon="pi pi-times"
                     class="p-button-text p-button-secondary cancel-btn"
                     (click)="cancel()">
@@ -232,28 +330,28 @@
           <div class="actions-right">
             <button type="button" 
                     pButton 
-                    label="Enregistrer en brouillon" 
+                    label="💾 Brouillon" 
                     icon="pi pi-save"
                     class="p-button-outlined draft-btn"
                     (click)="saveDraft()"
-                    [disabled]="submitting">
+                    [disabled]="submitting || isCompressing">
             </button>
             
             <button type="button" 
                     pButton 
-                    label="Aperçu" 
+                    label="👁️ Aperçu" 
                     icon="pi pi-eye"
                     class="p-button-help preview-btn"
                     (click)="preview()"
-                    [disabled]="actualiteForm.invalid">
+                    [disabled]="actualiteForm.invalid || isCompressing">
             </button>
             
             <button type="submit" 
                     pButton 
-                    [label]="isEditMode ? 'Mettre à jour' : 'Créer l\'actualité'"
+                    [label]="isEditMode ? '✏️ Mettre à jour' : '✨ Créer l\'actualité'"
                     [icon]="submitting ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"
                     class="submit-btn"
-                    [disabled]="actualiteForm.invalid || submitting">
+                    [disabled]="actualiteForm.invalid || submitting || isCompressing">
             </button>
           </div>
         </div>
