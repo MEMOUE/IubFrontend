@@ -17,6 +17,7 @@ import { NewactualitesComponent } from './components/actualites/newactualites/ne
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { LoginComponent } from './components/admin/login/login.component';
 import { AccueilAdminComponent } from './components/admin/accueil-admin/accueil-admin.component';
+import { DetailActualiteComponent } from './components/actualites/detail-actualite/detail-actualite.component';
 
 export const routes: Routes = [
     // Route par défaut - Page d'accueil
@@ -53,6 +54,10 @@ export const routes: Routes = [
     // Routes Admin
     { path: 'admin/login', component: LoginComponent },
     { path: 'admin', component: AccueilAdminComponent },
+
+    { path: 'actualites/details/:id', component: DetailActualiteComponent },
+    { path: 'actualites/modifier/:id', component: NewactualitesComponent },
+
     
     // Route wildcard - doit être en dernier
     { path: '**', redirectTo: '/accueil' }

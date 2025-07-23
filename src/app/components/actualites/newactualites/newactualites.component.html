@@ -5,7 +5,7 @@
       {{ isEditMode ? 'Modifier l\'Actualité' : 'Nouvelle Actualité' }}
     </h1>
     <p class="hero-description">
-      {{ isEditMode ? 'Modifiez les informations de l\'actualité' : 'Créez une nouvelle actualité avec upload d\'images depuis votre machine' }}
+      {{ isEditMode ? 'Modifiez les informations de l\'actualité' : 'Créez une nouvelle actualité pour votre université' }}
     </p>
   </div>
 </section>
@@ -111,12 +111,14 @@
                        id="auteur"
                        pInputText 
                        formControlName="auteur"
-                       placeholder="Nom de l'auteur"
+                       placeholder="Nom de l'auteur de l'actualité"
                        [class]="getFieldClass('auteur')"
                        class="form-input">
-                <small class="form-error" *ngIf="hasError('auteur')">
-                  {{ getErrorMessage('auteur') }}
-                </small>
+                <div class="field-footer">
+                  <small class="form-error" *ngIf="hasError('auteur')">
+                    {{ getErrorMessage('auteur') }}
+                  </small>
+                </div>
               </div>
 
             </p-card>
@@ -125,110 +127,58 @@
           <!-- Colonne Droite - Paramètres -->
           <div class="sidebar-content">
             
-            <!-- Upload d'Image Locale -->
-            <p-card header="📷 Image de l'actualité" styleClass="sidebar-card">
+            <!-- Image -->
+            <p-card header="Image de l'actualité" styleClass="sidebar-card">
               <div class="image-section">
+                
+                <!-- Indicateur d'upload en cours -->
+                <div class="upload-progress" *ngIf="uploadingImage">
+                  <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: var(--primary-color);"></i>
+                  <p style="margin-top: 0.5rem; color: var(--text-color-light);">Upload en cours...</p>
+                </div>
 
-                <!-- Zone d'Upload -->
-                <div class="upload-zone" *ngIf="!imagePreview && !isCompressing">
-                  <p-fileUpload 
-                    mode="basic" 
-                    chooseLabel="📁 Choisir une image" 
-                    accept="image/*" 
-                    maxFileSize="5000000"
-                    (onSelect)="onFileSelect($event)"
-                    [auto]="false"
-                    styleClass="upload-btn">
+                <!-- Prévisualisation -->
+                <div class="image-preview" *ngIf="imagePreview && !uploadingImage">
+                  <img [src]="imagePreview" alt="Aperçu de l'image">
+                  <button type="button" 
+                          pButton 
+                          icon="pi pi-times" 
+                          class="p-button-rounded p-button-danger p-button-sm remove-image-btn"
+                          (click)="onFileRemove()">
+                  </button>
+                  
+                  <!-- Indicateur de statut d'upload -->
+                  <div class="upload-status" *ngIf="uploadedImageUrl">
+                    <i class="pi pi-check-circle" style="color: #28a745; margin-right: 0.5rem;"></i>
+                    <span style="color: #28a745; font-size: 0.85rem;">Image uploadée</span>
+                  </div>
+                </div>
+
+                <!-- Upload d'image -->
+                <div class="upload-section" *ngIf="!imagePreview && !uploadingImage">
+                  <p-fileUpload mode="basic" 
+                                chooseLabel="Choisir une image" 
+                                accept="image/*" 
+                                maxFileSize="5000000"
+                                (onSelect)="onFileSelect($event)"
+                                [disabled]="uploadingImage"
+                                styleClass="upload-btn">
                   </p-fileUpload>
-                  
-                  <div class="upload-info">
-                    <p class="upload-title">📤 Téléchargez votre image</p>
-                    <ul class="upload-specs">
-                      <li>✅ Formats supportés : JPG, PNG, WebP, GIF</li>
-                      <li>📏 Taille max : 5MB (sera automatiquement compressée)</li>
-                      <li>📐 Dimensions recommandées : 1200x800 pixels</li>
-                      <li>⚡ Compression automatique pour optimiser la performance</li>
-                    </ul>
-                  </div>
+                  <small class="upload-hint">
+                    Formats acceptés: JPG, PNG, WebP (max 5MB)
+                  </small>
                 </div>
 
-                <!-- Progression de Compression -->
-                <div class="compression-section" *ngIf="isCompressing">
-                  <div class="compression-info">
-                    <h4>🔄 Optimisation de l'image en cours...</h4>
-                    <p>Compression et redimensionnement automatique</p>
-                  </div>
-                  
-                  <p-progressBar 
-                    [value]="compressionProgress" 
-                    [showValue]="true"
-                    styleClass="compression-progress">
-                  </p-progressBar>
-                  
-                  <div class="compression-steps">
-                    <div class="step" [class.active]="compressionProgress >= 20">
-                      <span class="step-icon">📖</span>
-                      <span class="step-text">Lecture du fichier</span>
-                    </div>
-                    <div class="step" [class.active]="compressionProgress >= 40">
-                      <span class="step-icon">📐</span>
-                      <span class="step-text">Calcul des dimensions</span>
-                    </div>
-                    <div class="step" [class.active]="compressionProgress >= 60">
-                      <span class="step-icon">🗜️</span>
-                      <span class="step-text">Compression</span>
-                    </div>
-                    <div class="step" [class.active]="compressionProgress >= 80">
-                      <span class="step-icon">✅</span>
-                      <span class="step-text">Validation</span>
-                    </div>
-                  </div>
+                <!-- Zone de drop alternative -->
+                <div class="drop-zone" *ngIf="!imagePreview && !uploadingImage">
+                  <i class="pi pi-cloud-upload drop-icon"></i>
+                  <p class="drop-text">Glissez-déposez une image ici</p>
                 </div>
-
-                <!-- Prévisualisation de l'Image -->
-                <div class="image-preview-section" *ngIf="imagePreview && !isCompressing">
-                  <div class="image-preview">
-                    <img [src]="imagePreview" alt="Aperçu de l'image" class="preview-image">
-                    <div class="image-overlay">
-                      <button type="button" 
-                              pButton 
-                              icon="pi pi-times" 
-                              class="p-button-rounded p-button-danger p-button-sm remove-btn"
-                              pTooltip="Supprimer l'image"
-                              (click)="onFileRemove()">
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div class="image-info">
-                    <p class="image-status">✅ Image optimisée et prête</p>
-                    <div class="image-actions">
-                      <button type="button" 
-                              pButton 
-                              label="🔄 Changer d'image" 
-                              class="p-button-outlined p-button-sm"
-                              (click)="onFileRemove()">
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Conseils d'optimisation -->
-                <div class="optimization-tips" *ngIf="!isCompressing">
-                  <h5>💡 Conseils pour de meilleures images :</h5>
-                  <ul>
-                    <li><strong>📏 Format :</strong> Privilégiez le format paysage (16:9 ou 4:3)</li>
-                    <li><strong>🎨 Qualité :</strong> Images nettes et bien éclairées</li>
-                    <li><strong>📐 Taille :</strong> Plus c'est grand, mieux c'est (on compresse après)</li>
-                    <li><strong>🚀 Performance :</strong> La compression automatique optimise le chargement</li>
-                  </ul>
-                </div>
-
               </div>
             </p-card>
 
             <!-- Paramètres de publication -->
-            <p-card header="⚙️ Paramètres" styleClass="sidebar-card">
+            <p-card header="Paramètres" styleClass="sidebar-card">
               
               <!-- Catégorie -->
               <div class="form-group">
@@ -266,31 +216,30 @@
                 <label for="datePublication" class="form-label">
                   Date de publication <span class="required">*</span>
                 </label>
-                <p-calendar id="datePublication"
-                            formControlName="datePublication"
-                            dateFormat="dd/mm/yy"
-                            placeholder="Sélectionnez une date"
-                            [class]="getFieldClass('datePublication')"
-                            styleClass="w-full">
-                </p-calendar>
+                <input type="date" 
+                       id="datePublication"
+                       pInputText 
+                       formControlName="datePublication"
+                       [class]="getFieldClass('datePublication')"
+                       class="form-input">
                 <small class="form-error" *ngIf="hasError('datePublication')">
                   {{ getErrorMessage('datePublication') }}
                 </small>
               </div>
 
-              <!-- Date d'événement -->
-              <div class="form-group">
+              <!-- Date d'événement (optionnelle) -->
+              <div class="form-group" *ngIf="actualiteForm.get('categorie')?.value === 'evenement'">
                 <label for="dateEvenement" class="form-label">
-                  Date d'événement
+                  Date de l'événement
                 </label>
-                <p-calendar id="dateEvenement"
-                            formControlName="dateEvenement"
-                            dateFormat="dd/mm/yy"
-                            placeholder="Date de l'événement (optionnel)"
-                            styleClass="w-full">
-                </p-calendar>
-                <small class="form-hint">
-                  Uniquement pour les événements
+                <input type="date" 
+                       id="dateEvenement"
+                       pInputText 
+                       formControlName="dateEvenement"
+                       [class]="getFieldClass('dateEvenement')"
+                       class="form-input">
+                <small class="form-error" *ngIf="hasError('dateEvenement')">
+                  {{ getErrorMessage('dateEvenement') }}
                 </small>
               </div>
 
@@ -320,7 +269,7 @@
           <div class="actions-left">
             <button type="button" 
                     pButton 
-                    label="❌ Annuler" 
+                    label="Annuler" 
                     icon="pi pi-times"
                     class="p-button-text p-button-secondary cancel-btn"
                     (click)="cancel()">
@@ -330,28 +279,28 @@
           <div class="actions-right">
             <button type="button" 
                     pButton 
-                    label="💾 Brouillon" 
+                    label="Enregistrer en brouillon" 
                     icon="pi pi-save"
                     class="p-button-outlined draft-btn"
                     (click)="saveDraft()"
-                    [disabled]="submitting || isCompressing">
+                    [disabled]="submitting">
             </button>
             
-            <button type="button" 
+           <!--  <button type="button" 
                     pButton 
-                    label="👁️ Aperçu" 
+                    label="Aperçu" 
                     icon="pi pi-eye"
                     class="p-button-help preview-btn"
                     (click)="preview()"
-                    [disabled]="actualiteForm.invalid || isCompressing">
-            </button>
+                    [disabled]="actualiteForm.invalid">
+            </button> -->
             
             <button type="submit" 
                     pButton 
-                    [label]="isEditMode ? '✏️ Mettre à jour' : '✨ Créer l\'actualité'"
+                    [label]="isEditMode ? 'Mettre à jour' : 'Créer l\'actualité'"
                     [icon]="submitting ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-check' : 'pi pi-plus')"
                     class="submit-btn"
-                    [disabled]="actualiteForm.invalid || submitting || isCompressing">
+                    [disabled]="actualiteForm.invalid || submitting">
             </button>
           </div>
         </div>

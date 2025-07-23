@@ -46,42 +46,52 @@
 
   <!-- En-tête de l'actualité -->
   <section class="actualite-header">
-    <div class="header-image" *ngIf="actualite.image">
-      <img [src]="actualite.image" [alt]="actualite.title">
+    <div class="header-image" *ngIf="actualite.imageUrl">
+      <img [src]="'http://localhost:8080' + actualite.imageUrl" [alt]="actualite.titre">
       <div class="header-overlay"></div>
     </div>
     
     <div class="header-content">
       <div class="container">
         <div class="header-meta">
-          <p-tag [value]="getCategorieLabel(actualite.category || '')"
-                 [severity]="getSeverityForCategory(actualite.category || '')"
+          <p-tag [value]="getCategorieLabel(actualite.categorie || '')"
+                 [severity]="getSeverityForCategory(actualite.categorie || '')"
                  class="category-badge">
           </p-tag>
           
-          <p-tag *ngIf="actualite.category === 'evenement'"
+          <p-tag *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement"
                  [value]="getEventStatus().label"
                  [severity]="getEventStatus().severity"
                  class="event-status">
           </p-tag>
         </div>
         
-        <h1 class="actualite-title">{{ actualite.title }}</h1>
+        <h1 class="actualite-title">{{ actualite.titre }}</h1>
         
         <div class="actualite-meta">
           <div class="meta-item">
             <i class="pi pi-calendar"></i>
-            <span>{{ formatDate(actualite.date) }}</span>
+            <span>{{ formatDate(actualite.datePublication) }}</span>
           </div>
           
-          <div class="meta-item" *ngIf="actualite.category === 'evenement'">
+          <div class="meta-item" *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement">
             <i class="pi pi-clock"></i>
-            <span>{{ formatTime(actualite.date) }}</span>
+            <span>{{ formatTime(actualite.dateEvenement) }}</span>
+          </div>
+          
+          <div class="meta-item" *ngIf="actualite.auteur">
+            <i class="pi pi-user"></i>
+            <span>{{ actualite.auteur }}</span>
+          </div>
+          
+          <div class="meta-item" *ngIf="actualite.nombreVues">
+            <i class="pi pi-eye"></i>
+            <span>{{ actualite.nombreVues }} vues</span>
           </div>
           
           <div class="meta-item">
-            <p-tag [value]="actualite.published ? 'Publié' : 'Brouillon'"
-                   [severity]="actualite.published ? 'success' : 'warning'">
+            <p-tag [value]="actualite.publie ? 'Publié' : 'Brouillon'"
+                   [severity]="actualite.publie ? 'success' : 'warning'">
             </p-tag>
           </div>
         </div>
@@ -106,12 +116,12 @@
             <p-divider></p-divider>
             
             <!-- Contenu complet -->
-            <div class="full-content" *ngIf="actualite.content">
-              <div class="content-text" [innerHTML]="actualite.content"></div>
+            <div class="full-content" *ngIf="actualite.contenu">
+              <div class="content-text" [innerHTML]="actualite.contenu"></div>
             </div>
             
             <!-- Message si pas de contenu complet -->
-            <div class="no-content" *ngIf="!actualite.content">
+            <div class="no-content" *ngIf="!actualite.contenu">
               <i class="pi pi-info-circle"></i>
               <p>Cette actualité ne contient pas de contenu détaillé supplémentaire.</p>
             </div>
@@ -137,9 +147,9 @@
               
               <button pButton 
                       type="button" 
-                      [icon]="actualite.published ? 'pi pi-eye-slash' : 'pi pi-eye'"
-                      [label]="actualite.published ? 'Dépublier' : 'Publier'"
-                      [class]="actualite.published ? 'p-button-warning unpublish-btn' : 'p-button-success publish-btn'"
+                      [icon]="actualite.publie ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                      [label]="actualite.publie ? 'Dépublier' : 'Publier'"
+                      [class]="actualite.publie ? 'p-button-warning unpublish-btn' : 'p-button-success publish-btn'"
                       (click)="togglePublication()">
               </button>
               
@@ -154,18 +164,18 @@
           </div>
 
           <!-- Informations supplémentaires -->
-          <div class="info-card" *ngIf="actualite.category === 'evenement'">
+          <div class="info-card" *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement">
             <h3 class="card-title">Détails de l'événement</h3>
             
             <div class="info-items">
               <div class="info-item">
                 <span class="info-label">Date :</span>
-                <span class="info-value">{{ formatDate(actualite.date) }}</span>
+                <span class="info-value">{{ formatDate(actualite.dateEvenement) }}</span>
               </div>
               
               <div class="info-item">
                 <span class="info-label">Heure :</span>
-                <span class="info-value">{{ formatTime(actualite.date) }}</span>
+                <span class="info-value">{{ formatTime(actualite.dateEvenement) }}</span>
               </div>
               
               <div class="info-item">
@@ -192,20 +202,20 @@
              *ngFor="let similar of actualitesSimilaires"
              (click)="navigateToActualite(similar.id!)">
           
-          <div class="similar-image" *ngIf="similar.image">
-            <img [src]="similar.image" [alt]="similar.title">
+          <div class="similar-image" *ngIf="similar.imageUrl">
+            <img [src]="similar.imageUrl" [alt]="similar.titre">
           </div>
           
           <div class="similar-content">
             <div class="similar-meta">
-              <span class="similar-date">{{ formatDate(similar.date) }}</span>
-              <p-tag [value]="getCategorieLabel(similar.category || '')"
-                     [severity]="getSeverityForCategory(similar.category || '')"
+              <span class="similar-date">{{ formatDate(similar.datePublication) }}</span>
+              <p-tag [value]="getCategorieLabel(similar.categorie || '')"
+                     [severity]="getSeverityForCategory(similar.categorie || '')"
                      class="similar-category">
               </p-tag>
             </div>
             
-            <h3 class="similar-title">{{ similar.title }}</h3>
+            <h3 class="similar-title">{{ similar.titre }}</h3>
             <p class="similar-description">{{ similar.description }}</p>
             
             <div class="similar-action">

@@ -72,15 +72,15 @@
       <div class="actualite-card" *ngFor="let actualite of actualitesFiltrees">
         <!-- Image de l'actualité -->
         <div class="actualite-image">
-          <!-- CORRECTION: utiliser 'imageUrl' et 'titre' au lieu de 'image' et 'title' -->
-          <img #newsImg [src]="actualite.imageUrl" 
-               [alt]="actualite.titre" 
-               (error)="newsImg.src='assets/images/default-news.jpg'">
+          <img #newsImg 
+      [src]="'http://localhost:8080' + actualite.imageUrl || 'assets/images/default-news.jpg'" 
+      [alt]="actualite.titre" 
+      (error)="newsImg.src='assets/images/default-news.jpg'">
+
           <div class="actualite-overlay">
-            <!-- CORRECTION: utiliser 'categorie' au lieu de 'category' -->
             <p-tag [value]="getCategorieLabel(actualite.categorie || '')"
-                   [severity]="getSeverityForCategory(actualite.categorie || '')"
-                   class="category-tag">
+                  [severity]="getSeverityForCategory(actualite.categorie || '')"
+                  class="category-tag">
             </p-tag>
           </div>
         </div>
@@ -88,24 +88,33 @@
         <!-- Contenu de l'actualité -->
         <div class="actualite-content">
           <div class="actualite-header">
-            <!-- CORRECTION: utiliser 'titre' au lieu de 'title' -->
             <h3 class="actualite-title">{{ actualite.titre }}</h3>
             <div class="actualite-meta">
               <span class="actualite-date">
                 <i class="pi pi-calendar"></i>
-                <!-- CORRECTION: utiliser 'datePublication' au lieu de 'date' -->
                 {{ formatDate(actualite.datePublication) }}
               </span>
               <div class="publication-status">
-                <!-- CORRECTION: utiliser 'publie' au lieu de 'published' -->
                 <p-tag [value]="actualite.publie ? 'Publié' : 'Brouillon'"
-                       [severity]="actualite.publie ? 'success' : 'warning'">
+                      [severity]="actualite.publie ? 'success' : 'warning'">
                 </p-tag>
               </div>
             </div>
           </div>
 
           <p class="actualite-description">{{ actualite.description }}</p>
+
+          <!-- Métadonnées supplémentaires -->
+          <div class="actualite-metadata" *ngIf="actualite.auteur || actualite.nombreVues">
+            <small class="metadata-item" *ngIf="actualite.auteur">
+              <i class="pi pi-user"></i>
+              {{ actualite.auteur }}
+            </small>
+            <small class="metadata-item" *ngIf="actualite.nombreVues">
+              <i class="pi pi-eye"></i>
+              {{ actualite.nombreVues }} vues
+            </small>
+          </div>
 
           <!-- Actions -->
           <div class="actualite-actions">
@@ -128,7 +137,6 @@
                       (click)="navigateToEdit(actualite.id!)">
               </button>
               
-              <!-- CORRECTION: utiliser 'publie' au lieu de 'published' -->
               <button pButton 
                       type="button" 
                       [icon]="actualite.publie ? 'pi pi-eye-slash' : 'pi pi-eye'"

@@ -81,13 +81,12 @@ export class DetailActualiteComponent implements OnInit {
     if (!this.actualite) return;
 
     // Charger les actualités de la même catégorie
-    this.actualiteService.getActualites().subscribe({
+    this.actualiteService.getActualitesByCategorie(this.actualite.categorie).subscribe({
       next: (actualites) => {
         this.actualitesSimilaires = actualites
           .filter(a => 
             a.id !== this.actualite!.id && 
-            a.category === this.actualite!.category &&
-            a.published
+            a.publie
           )
           .slice(0, 3); // Limiter à 3 actualités similaires
       },
@@ -105,7 +104,7 @@ export class DetailActualiteComponent implements OnInit {
     if (!this.actualite) return;
 
     this.confirmationService.confirm({
-      message: `Êtes-vous sûr de vouloir supprimer l'actualité "${this.actualite.title}" ?`,
+      message: `Êtes-vous sûr de vouloir supprimer l'actualité "${this.actualite.titre}" ?`,
       header: 'Confirmer la suppression',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Supprimer',
@@ -142,12 +141,15 @@ export class DetailActualiteComponent implements OnInit {
   togglePublication() {
     if (!this.actualite) return;
 
-    const updatedActualite = { ...this.actualite, published: !this.actualite.published };
+    const updatedActualite: Actualite = { 
+      ...this.actualite, 
+      publie: !this.actualite.publie 
+    };
     
     this.actualiteService.updateActualite(this.actualite.id!, updatedActualite).subscribe({
       next: (actualite) => {
         this.actualite = actualite;
-        const action = actualite.published ? 'publiée' : 'dépubliée';
+        const action = actualite.publie ? 'publiée' : 'dépubliée';
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
@@ -178,7 +180,7 @@ export class DetailActualiteComponent implements OnInit {
 
     if (navigator.share) {
       navigator.share({
-        title: this.actualite.title,
+        title: this.actualite.titre,
         text: this.actualite.description,
         url: window.location.href
       });
@@ -241,18 +243,18 @@ export class DetailActualiteComponent implements OnInit {
   }
 
   isEventUpcoming(): boolean {
-    if (!this.actualite || this.actualite.category !== 'evenement') return false;
+    if (!this.actualite || this.actualite.categorie !== 'evenement' || !this.actualite.dateEvenement) return false;
     
-    const eventDate = new Date(this.actualite.date);
+    const eventDate = new Date(this.actualite.dateEvenement);
     const now = new Date();
     
     return eventDate > now;
   }
 
   isEventToday(): boolean {
-    if (!this.actualite || this.actualite.category !== 'evenement') return false;
+    if (!this.actualite || this.actualite.categorie !== 'evenement' || !this.actualite.dateEvenement) return false;
     
-    const eventDate = new Date(this.actualite.date);
+    const eventDate = new Date(this.actualite.dateEvenement);
     const today = new Date();
     
     return eventDate.toDateString() === today.toDateString();
