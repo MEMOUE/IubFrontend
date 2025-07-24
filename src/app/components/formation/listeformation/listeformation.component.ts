@@ -1,138 +1,242 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 // PrimeFaces imports
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SkeletonModule } from 'primeng/skeleton';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
+// Services et modèles
+import { FormationService } from '../../../core/services/formation.service';
+import { Formation, FormationStats } from '../../../shared/models/formation.model';
 
 @Component({
   selector: 'app-listeformation',
   standalone: true,
   imports: [
     CommonModule,
-    ButtonModule
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    SkeletonModule,
+    MessageModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './listeformation.component.html',
   styleUrl: './listeformation.component.css'
 })
-export class ListeformationComponent implements OnInit {
+export class ListeformationComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  // Formations par catégorie
-  formations = {
-    licence: [
-      {
-        id: 1,
-        nom: 'Licence en Management',
-        duree: '3 ans',
-        diplome: 'Licence (Bac+3)',
-        description: 'Formation complète en gestion d\'entreprise, marketing et management des équipes.',
-        objectifs: ['Gestion d\'entreprise', 'Marketing digital', 'Management d\'équipe', 'Entrepreneuriat'],
-        debouches: ['Chef d\'entreprise', 'Responsable commercial', 'Chargé de marketing', 'Manager'],
-        frais: '500 000 FCFA/an'
-      },
-      {
-        id: 2,
-        nom: 'Licence en Informatique',
-        duree: '3 ans',
-        diplome: 'Licence (Bac+3)',
-        description: 'Formation en développement logiciel, réseaux informatiques et systèmes d\'information.',
-        objectifs: ['Programmation', 'Base de données', 'Réseaux', 'Développement web'],
-        debouches: ['Développeur', 'Administrateur réseau', 'Analyste programmeur', 'Chef de projet IT'],
-        frais: '550 000 FCFA/an'
-      },
-      {
-        id: 3,
-        nom: 'Licence en Comptabilité-Finance',
-        duree: '3 ans',
-        diplome: 'Licence (Bac+3)',
-        description: 'Formation en comptabilité générale, finance d\'entreprise et audit.',
-        objectifs: ['Comptabilité générale', 'Finance d\'entreprise', 'Audit', 'Fiscalité'],
-        debouches: ['Comptable', 'Auditeur', 'Contrôleur de gestion', 'Analyste financier'],
-        frais: '450 000 FCFA/an'
-      },
-      {
-        id: 4,
-        nom: 'Licence en Communication',
-        duree: '3 ans',
-        diplome: 'Licence (Bac+3)',
-        description: 'Formation en communication digitale, relations publiques et journalisme.',
-        objectifs: ['Communication digitale', 'Relations publiques', 'Journalisme', 'Marketing'],
-        debouches: ['Chargé de communication', 'Journaliste', 'Community manager', 'Attaché de presse'],
-        frais: '450 000 FCFA/an'
-      }
-    ],
-    master: [
-      {
-        id: 5,
-        nom: 'Master en Management Stratégique',
-        duree: '2 ans',
-        diplome: 'Master (Bac+5)',
-        description: 'Formation avancée en stratégie d\'entreprise et leadership.',
-        objectifs: ['Stratégie d\'entreprise', 'Leadership', 'Innovation', 'Management international'],
-        debouches: ['Directeur général', 'Consultant', 'Manager senior', 'Entrepreneur'],
-        frais: '750 000 FCFA/an'
-      },
-      {
-        id: 6,
-        nom: 'Master en Ingénierie Informatique',
-        duree: '2 ans',
-        diplome: 'Master (Bac+5)',
-        description: 'Formation spécialisée en intelligence artificielle et big data.',
-        objectifs: ['Intelligence artificielle', 'Big Data', 'Cybersécurité', 'Cloud computing'],
-        debouches: ['Ingénieur logiciel', 'Data scientist', 'Expert cybersécurité', 'Architecte IT'],
-        frais: '800 000 FCFA/an'
-      },
-      {
-        id: 7,
-        nom: 'Master en Finance d\'Entreprise',
-        duree: '2 ans',
-        diplome: 'Master (Bac+5)',
-        description: 'Formation en finance avancée et gestion des risques.',
-        objectifs: ['Finance d\'entreprise', 'Gestion des risques', 'Marchés financiers', 'Investment banking'],
-        debouches: ['Directeur financier', 'Analyste financier', 'Gestionnaire de portefeuille', 'Consultant financier'],
-        frais: '700 000 FCFA/an'
-      },
-      {
-        id: 8,
-        nom: 'Master en Marketing Digital',
-        duree: '2 ans',
-        diplome: 'Master (Bac+5)',
-        description: 'Formation spécialisée en marketing numérique et e-commerce.',
-        objectifs: ['Marketing digital', 'E-commerce', 'Analytics', 'Social media'],
-        debouches: ['Directeur marketing', 'Responsable e-commerce', 'Consultant digital', 'Growth hacker'],
-        frais: '650 000 FCFA/an'
-      }
-    ]
+  // État du composant
+  loading = true;
+  formations: Formation[] = [];
+  formationsFiltered: Formation[] = [];
+  searchKeyword = '';
+  categorieActive = 'all';
+  error: string | null = null;
+
+  // Statistiques
+  stats: FormationStats = {
+    totalFormations: 0,
+    formationsLicence: 0,
+    formationsMaster: 0,
+    tauxInsertion: 95
   };
 
-  // Statistiques des formations
-  statistiques = [
-    { valeur: '15+', label: 'Formations disponibles' },
-    { valeur: '95%', label: 'Taux d\'insertion professionnelle' },
-    { valeur: '50+', label: 'Enseignants qualifiés' },
-    { valeur: '2000+', label: 'Étudiants formés' }
-  ];
+  // Statistiques à afficher
+  statistiques: Array<{valeur: string; label: string}> = [];
 
-  // Filtre actuel
-  categorieActive = 'licence';
+  constructor(
+    private formationService: FormationService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
-  constructor(private router: Router) {}
+  ngOnInit() {
+    this.loadData();
+  }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Charger toutes les données
+  loadData() {
+    this.loading = true;
+    this.error = null;
+
+    // Charger formations et statistiques en parallèle
+    forkJoin({
+      formations: this.formationService.getAllFormations(),
+      stats: this.formationService.getFormationStats()
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (data) => {
+        this.formations = data.formations;
+        this.formationsFiltered = [...this.formations];
+        this.stats = data.stats;
+        this.updateStatistiques();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des formations:', error);
+        this.error = 'Erreur lors du chargement des formations';
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Impossible de charger les formations',
+          life: 5000
+        });
+      }
+    });
+  }
+
+  // Mettre à jour les statistiques affichées
+  updateStatistiques() {
+    this.statistiques = [
+      { valeur: this.stats.totalFormations.toString(), label: 'Formations disponibles' },
+      { valeur: `${this.stats.tauxInsertion}%`, label: 'Taux d\'insertion professionnelle' },
+      { valeur: this.stats.formationsLicence.toString(), label: 'Formations Licence' },
+      { valeur: this.stats.formationsMaster.toString(), label: 'Formations Master' }
+    ];
+  }
 
   // Changer de catégorie
   changerCategorie(categorie: string) {
     this.categorieActive = categorie;
+    this.filterFormations();
   }
 
-  // Obtenir les formations de la catégorie active
-  getFormationsActives() {
-    return this.formations[this.categorieActive as keyof typeof this.formations] || [];
+  // Rechercher des formations
+  onSearch() {
+    if (this.searchKeyword.trim()) {
+      this.loading = true;
+      this.formationService.searchFormations(this.searchKeyword.trim())
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (formations) => {
+            this.formationsFiltered = formations;
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Erreur lors de la recherche:', error);
+            this.loading = false;
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Erreur lors de la recherche',
+              life: 3000
+            });
+          }
+        });
+    } else {
+      this.formationsFiltered = [...this.formations];
+      this.filterFormations();
+    }
+  }
+
+  // Effacer la recherche
+  clearSearch() {
+    this.searchKeyword = '';
+    this.formationsFiltered = [...this.formations];
+    this.filterFormations();
+  }
+
+  // Filtrer les formations par catégorie
+  filterFormations() {
+    if (this.categorieActive === 'all') {
+      this.formationsFiltered = [...this.formations];
+    } else {
+      this.formationsFiltered = this.formations.filter(
+        formation => formation.categorie === this.categorieActive
+      );
+    }
+  }
+
+  // Obtenir les formations actives avec filtres appliqués
+  getFormationsActives(): Formation[] {
+    return this.formationsFiltered.filter(formation => 
+      formation.actif && formation.disponible
+    );
+  }
+
+  // Formater le prix
+  formatPrice(price: number | undefined): string {
+    if (!price) return 'Prix non défini';
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'XOF',
+      minimumFractionDigits: 0
+    }).format(price);
+  }
+
+  // Obtenir le pourcentage de places occupées
+  getOccupancyPercentage(formation: Formation): number {
+    if (!formation.nombrePlaces || formation.nombrePlaces === 0) return 0;
+    return Math.round((formation.nombreInscrits || 0) / formation.nombrePlaces * 100);
+  }
+
+  // Vérifier si une formation est presque complète
+  isNearlyFull(formation: Formation): boolean {
+    return this.getOccupancyPercentage(formation) >= 80;
   }
 
   // Navigation vers les détails d'une formation
   voirDetails(formationId: number) {
     this.router.navigate(['/formations/details', formationId]);
+  }
+
+  // S'inscrire à une formation
+  inscrireFormation(formation: Formation) {
+    if (!formation.nombrePlaces || (formation.nombreInscrits || 0) >= formation.nombrePlaces) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Formation complète',
+        detail: 'Cette formation n\'a plus de places disponibles',
+        life: 3000
+      });
+      return;
+    }
+
+    this.formationService.inscrireEtudiant(formation.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (updatedFormation) => {
+          // Mettre à jour la formation dans la liste
+          const index = this.formations.findIndex(f => f.id === formation.id);
+          if (index !== -1) {
+            this.formations[index] = updatedFormation;
+            this.filterFormations();
+          }
+          
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Inscription réussie',
+            detail: `Vous êtes inscrit(e) à la formation "${formation.nom}"`,
+            life: 3000
+          });
+        },
+        error: (error) => {
+          console.error('Erreur lors de l\'inscription:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur d\'inscription',
+            detail: 'Impossible de procéder à l\'inscription',
+            life: 3000
+          });
+        }
+      });
   }
 
   // Navigation vers contact
@@ -143,5 +247,15 @@ export class ListeformationComponent implements OnInit {
   // Navigation vers présentation
   navigateToPresentation() {
     this.router.navigate(['/universite/presentation']);
+  }
+
+  // Navigation vers création de formation (pour admin)
+  navigateToCreateFormation() {
+    this.router.navigate(['/formations/nouveau']);
+  }
+
+  // TrackBy function pour optimiser le rendu
+  trackByFormationId(index: number, formation: Formation): number {
+    return formation.id;
   }
 }

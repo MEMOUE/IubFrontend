@@ -1,0 +1,452 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+  --error-color: #e74c3c;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+}
+
+/* Container principal */
+.new-formation-container {
+  min-height: 100vh;
+  background: var(--background-color);
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header de la page */
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.page-title i {
+  color: var(--primary-color);
+}
+
+.page-description {
+  font-size: 1.1rem;
+  color: var(--text-color-light);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Formulaire */
+.formation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Panels */
+.form-panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.form-panel::ng-deep .p-panel-header {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 12px 12px 0 0;
+}
+
+.form-panel::ng-deep .p-panel-content {
+  padding: 2rem;
+}
+
+/* Grille de formulaire */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Labels */
+.field-label {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.required {
+  color: var(--error-color);
+  font-weight: bold;
+}
+
+/* Inputs */
+.form-field input,
+.form-field textarea {
+  border-radius: 8px !important;
+  border: 2px solid var(--border-color) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: var(--transition) !important;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(184, 84, 80, 0.2) !important;
+}
+
+.form-field input.ng-invalid.ng-touched,
+.form-field textarea.ng-invalid.ng-touched {
+  border-color: var(--error-color) !important;
+}
+
+/* Dropdowns */
+.form-field::ng-deep .p-dropdown {
+  border-radius: 8px !important;
+  border: 2px solid var(--border-color) !important;
+}
+
+.form-field::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--primary-color) !important;
+}
+
+.form-field::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(184, 84, 80, 0.2) !important;
+}
+
+/* Input Numbers */
+.form-field::ng-deep .p-inputnumber input {
+  border-radius: 8px !important;
+  border: 2px solid var(--border-color) !important;
+}
+
+.form-field::ng-deep .p-inputnumber:not(.p-disabled):hover input {
+  border-color: var(--primary-color) !important;
+}
+
+.form-field::ng-deep .p-inputnumber.p-focus input {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(184, 84, 80, 0.2) !important;
+}
+
+/* Messages d'erreur */
+.p-error {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* Liste dynamique */
+.dynamic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dynamic-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dynamic-input {
+  flex: 1;
+}
+
+.dynamic-remove-btn {
+  flex-shrink: 0;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.add-item-btn {
+  align-self: flex-start;
+  font-weight: 600 !important;
+}
+
+/* Checkboxes */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox-label {
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.checkbox-item::ng-deep .p-checkbox .p-checkbox-box {
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.checkbox-item::ng-deep .p-checkbox .p-checkbox-box:hover {
+  border-color: var(--primary-color);
+}
+
+.checkbox-item::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Actions du formulaire */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.actions-left,
+.actions-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Boutons personnalisés */
+.form-actions button {
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  transition: var(--transition) !important;
+}
+
+.form-actions .p-button-success {
+  background: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+}
+
+.form-actions .p-button-success:hover {
+  background: #229954 !important;
+  border-color: #229954 !important;
+  transform: translateY(-2px);
+}
+
+.form-actions .p-button-outlined {
+  border: 2px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.form-actions .p-button-outlined:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+.form-actions .p-button-text {
+  color: var(--accent-color) !important;
+}
+
+.form-actions .p-button-text:hover {
+  background: rgba(107, 107, 107, 0.1) !important;
+  color: var(--text-color) !important;
+}
+
+/* États des boutons */
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Animation de loading */
+.form-actions button[loading="true"] {
+  position: relative;
+}
+
+.form-actions button[loading="true"]::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .page-description {
+    font-size: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-panel::ng-deep .p-panel-content {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .actions-left,
+  .actions-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .actions-right {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .dynamic-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dynamic-remove-btn {
+    align-self: flex-end;
+    width: auto !important;
+    height: auto !important;
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-formation-container {
+    padding: 1rem 0;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .form-panel::ng-deep .p-panel-content {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    padding: 1rem;
+  }
+
+  .checkbox-group {
+    gap: 0.75rem;
+  }
+
+  .checkbox-item {
+    gap: 0.5rem;
+  }
+}
+
+/* Animation d'apparition */
+.form-panel {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus visible pour l'accessibilité */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .form-actions {
+    display: none;
+  }
+  
+  .new-formation-container {
+    background: white;
+  }
+}

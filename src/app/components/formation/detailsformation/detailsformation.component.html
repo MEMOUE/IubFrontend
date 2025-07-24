@@ -1,1 +1,273 @@
-<p>detailsformation works!</p>
+<!-- Toast et Dialog de confirmation -->
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="formation-details-container">
+  <div class="container">
+    
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-content">
+      <div class="loading-header">
+        <p-skeleton height="3rem" width="60%" class="mb-3"></p-skeleton>
+        <p-skeleton height="1.5rem" width="40%" class="mb-2"></p-skeleton>
+        <p-skeleton height="1rem" width="80%"></p-skeleton>
+      </div>
+      
+      <div class="loading-grid">
+        <div class="loading-main">
+          <p-skeleton height="200px" class="mb-3"></p-skeleton>
+          <p-skeleton height="150px" class="mb-3"></p-skeleton>
+          <p-skeleton height="100px"></p-skeleton>
+        </div>
+        <div class="loading-sidebar">
+          <p-skeleton height="120px" class="mb-3"></p-skeleton>
+          <p-skeleton height="80px" class="mb-3"></p-skeleton>
+          <p-skeleton height="60px"></p-skeleton>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error-content">
+      <div class="error-card">
+        <i class="pi pi-exclamation-triangle error-icon"></i>
+        <h2>Formation non trouvée</h2>
+        <p>{{ error }}</p>
+        <button pButton 
+                type="button" 
+                label="Retour aux formations" 
+                icon="pi pi-arrow-left"
+                (click)="goBack()">
+        </button>
+      </div>
+    </div>
+
+    <!-- Formation Details -->
+    <div *ngIf="formation && !loading" class="formation-content">
+      
+      <!-- Header avec breadcrumb et actions -->
+      <div class="content-header">
+        <div class="breadcrumb">
+          <button pButton 
+                  type="button" 
+                  label="Formations" 
+                  icon="pi pi-arrow-left"
+                  class="p-button-text breadcrumb-btn"
+                  (click)="goBack()">
+          </button>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">{{ formation.nom }}</span>
+        </div>
+        
+        <div class="header-actions">
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-share-alt"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Partager"
+                  tooltipPosition="bottom"
+                  (click)="shareFormation()">
+          </button>
+          
+          <button pButton 
+                  type="button" 
+                  icon="pi pi-download"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Télécharger la brochure"
+                  tooltipPosition="bottom"
+                  (click)="downloadBrochure()">
+          </button>
+        </div>
+      </div>
+
+      <!-- Layout principal -->
+      <div class="formation-layout">
+        
+        <!-- Contenu principal -->
+        <div class="main-content">
+          
+          <!-- En-tête de la formation -->
+          <div class="formation-header">
+            <div class="formation-title-section">
+              <h1 class="formation-title">{{ formation.nom }}</h1>
+              
+              <div class="formation-meta">
+                <span class="meta-item diploma">
+                  <i class="pi pi-bookmark"></i>
+                  {{ formation.diplome }}
+                </span>
+                <span class="meta-item duration">
+                  <i class="pi pi-clock"></i>
+                  {{ formation.duree }}
+                </span>
+                <span class="meta-item category">
+                  <i class="pi pi-tag"></i>
+                  {{ formation.categorie | titlecase }}
+                </span>
+              </div>
+
+              <p-tag 
+                [value]="getStatusText()" 
+                [severity]="getStatusSeverity()"
+                class="status-tag">
+              </p-tag>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p-panel header="Description" *ngIf="formation.description" class="content-panel">
+            <p class="description-text">{{ formation.description }}</p>
+          </p-panel>
+
+          <!-- Objectifs de formation -->
+          <p-panel header="Objectifs de formation" *ngIf="formation.objectifs && formation.objectifs.length > 0" class="content-panel">
+            <ul class="objectifs-list">
+              <li *ngFor="let objectif of formation.objectifs" class="objectif-item">
+                <i class="pi pi-check-circle"></i>
+                {{ objectif }}
+              </li>
+            </ul>
+          </p-panel>
+
+          <!-- Programme détaillé -->
+          <p-panel header="Programme détaillé" *ngIf="formation.programmeDetaille" [toggleable]="true" class="content-panel">
+            <div class="programme-content">
+              <p>{{ formation.programmeDetaille }}</p>
+            </div>
+          </p-panel>
+
+          <!-- Débouchés professionnels -->
+          <p-panel header="Débouchés professionnels" *ngIf="formation.debouches && formation.debouches.length > 0" class="content-panel">
+            <div class="debouches-grid">
+              <div *ngFor="let debouche of formation.debouches" class="debouche-item">
+                <i class="pi pi-briefcase"></i>
+                <span>{{ debouche }}</span>
+              </div>
+            </div>
+          </p-panel>
+
+          <!-- Conditions d'admission -->
+          <p-panel header="Conditions d'admission" *ngIf="formation.conditionsAdmission" [toggleable]="true" class="content-panel">
+            <div class="conditions-content">
+              <p>{{ formation.conditionsAdmission }}</p>
+            </div>
+          </p-panel>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          
+          <!-- Carte d'inscription -->
+          <p-card header="Inscription" class="inscription-card">
+            <div class="price-section">
+              <div class="price-label">Frais de scolarité</div>
+              <div class="price-value">{{ formatPrice(formation.fraisScolarite) }}</div>
+            </div>
+
+            <p-divider></p-divider>
+
+            <!-- Places disponibles -->
+            <div class="places-section" *ngIf="formation.nombrePlaces">
+              <div class="places-header">
+                <span class="places-label">Places disponibles</span>
+                <span class="places-count">
+                  {{ getPlacesRestantes() }}/{{ formation.nombrePlaces }}
+                </span>
+              </div>
+              
+              <p-progressBar 
+                [value]="getOccupancyPercentage()" 
+                [styleClass]="isNearlyFull() ? 'progress-warning' : 'progress-normal'"
+                class="places-progress">
+              </p-progressBar>
+              
+              <div class="places-text">
+                <span *ngIf="!isFull()" class="places-remaining">
+                  {{ getPlacesRestantes() }} place(s) restante(s)
+                </span>
+                <span *ngIf="isFull()" class="places-full">
+                  Formation complète
+                </span>
+              </div>
+            </div>
+
+            <p-divider></p-divider>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+              <button pButton 
+                      type="button" 
+                      label="S'inscrire maintenant" 
+                      icon="pi pi-user-plus"
+                      class="p-button-success inscription-btn"
+                      [loading]="inscriptionLoading"
+                      [disabled]="isFull() || !formation.disponible || !formation.actif"
+                      (click)="inscrireFormation()">
+              </button>
+              
+              <button pButton 
+                      type="button" 
+                      label="Nous contacter" 
+                      icon="pi pi-phone"
+                      class="p-button-outlined contact-btn"
+                      (click)="navigateToContact()">
+              </button>
+            </div>
+          </p-card>
+
+          <!-- Informations complémentaires -->
+          <p-card header="Informations" class="info-card">
+            <div class="info-list">
+              
+              <div class="info-item" *ngIf="formation.nombreSemestres">
+                <div class="info-label">Nombre de semestres</div>
+                <div class="info-value">{{ formation.nombreSemestres }}</div>
+              </div>
+              
+              <div class="info-item" *ngIf="formation.categorie">
+                <div class="info-label">Niveau d'études</div>
+                <div class="info-value">{{ formation.categorie | titlecase }}</div>
+              </div>
+              
+              <div class="info-item">
+                <div class="info-label">Statut</div>
+                <div class="info-value">
+                  <p-tag 
+                    [value]="formation.actif && formation.disponible ? 'Active' : 'Inactive'" 
+                    [severity]="formation.actif && formation.disponible ? 'success' : 'danger'">
+                  </p-tag>
+                </div>
+              </div>
+            </div>
+          </p-card>
+
+          <!-- Aide et support -->
+          <p-card header="Besoin d'aide ?" class="help-card">
+            <div class="help-content">
+              <p>Vous avez des questions sur cette formation ?</p>
+              
+              <div class="help-actions">
+                <button pButton 
+                        type="button" 
+                        label="Contactez-nous" 
+                        icon="pi pi-phone"
+                        class="p-button-outlined p-button-sm"
+                        (click)="navigateToContact()">
+                </button>
+              </div>
+            </div>
+          </p-card>
+
+        </div>
+      </div>
+
+      <!-- Formations similaires -->
+      <div class="similar-formations">
+        <h3>Formations similaires</h3>
+        <p class="coming-soon">Section à implémenter - Suggestions de formations similaires</p>
+      </div>
+
+    </div>
+  </div>
+</div>

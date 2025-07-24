@@ -1,1 +1,357 @@
-<p>newformation works!</p>
+<!-- Toast et Dialog de confirmation -->
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="new-formation-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="pi pi-plus-circle"></i>
+        Créer une Nouvelle Formation
+      </h1>
+      <p class="page-description">
+        Remplissez le formulaire ci-dessous pour ajouter une nouvelle formation au catalogue.
+      </p>
+    </div>
+
+    <!-- Formulaire -->
+    <form [formGroup]="formationForm" (ngSubmit)="onSubmit()" class="formation-form">
+      
+      <!-- Section Informations Générales -->
+      <p-panel header="Informations Générales" [toggleable]="true" styleClass="form-panel">
+        <div class="form-grid">
+          <!-- Nom de la formation -->
+          <div class="form-field">
+            <label for="nom" class="field-label">
+              Nom de la formation <span class="required">*</span>
+            </label>
+            <input 
+              id="nom"
+              type="text" 
+              pInputText 
+              formControlName="nom"
+              placeholder="Ex: Master en Intelligence Artificielle"
+              [class.ng-invalid]="isFieldInvalid('nom')"
+              class="w-full">
+            <small 
+              *ngIf="isFieldInvalid('nom')" 
+              class="p-error">
+              {{ getFieldError('nom') }}
+            </small>
+          </div>
+
+          <!-- Diplôme -->
+          <div class="form-field">
+            <label for="diplome" class="field-label">
+              Diplôme délivré <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="diplome"
+              formControlName="diplome"
+              [options]="diplomesOptions"
+              placeholder="Sélectionnez le diplôme"
+              [class.ng-invalid]="isFieldInvalid('diplome')"
+              styleClass="w-full">
+            </p-dropdown>
+            <small 
+              *ngIf="isFieldInvalid('diplome')" 
+              class="p-error">
+              {{ getFieldError('diplome') }}
+            </small>
+          </div>
+
+          <!-- Catégorie -->
+          <div class="form-field">
+            <label for="categorie" class="field-label">
+              Catégorie <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="categorie"
+              formControlName="categorie"
+              [options]="categoriesOptions"
+              placeholder="Licence ou Master"
+              [class.ng-invalid]="isFieldInvalid('categorie')"
+              styleClass="w-full">
+            </p-dropdown>
+            <small 
+              *ngIf="isFieldInvalid('categorie')" 
+              class="p-error">
+              {{ getFieldError('categorie') }}
+            </small>
+          </div>
+
+          <!-- Durée -->
+          <div class="form-field">
+            <label for="duree" class="field-label">
+              Durée <span class="required">*</span>
+            </label>
+            <p-dropdown 
+              id="duree"
+              formControlName="duree"
+              [options]="dureeOptions"
+              placeholder="Durée de la formation"
+              [class.ng-invalid]="isFieldInvalid('duree')"
+              styleClass="w-full">
+            </p-dropdown>
+            <small 
+              *ngIf="isFieldInvalid('duree')" 
+              class="p-error">
+              {{ getFieldError('duree') }}
+            </small>
+          </div>
+
+          <!-- Description -->
+          <div class="form-field full-width">
+            <label for="description" class="field-label">
+              Description de la formation
+            </label>
+            <textarea 
+              id="description"
+              pInputTextarea 
+              formControlName="description"
+              placeholder="Description détaillée de la formation, ses spécificités, etc."
+              rows="4"
+              class="w-full">
+            </textarea>
+          </div>
+        </div>
+      </p-panel>
+
+      <!-- Section Pédagogie -->
+      <p-panel header="Contenu Pédagogique" [toggleable]="true" styleClass="form-panel">
+        <div class="form-grid">
+          <!-- Objectifs -->
+          <div class="form-field full-width">
+            <label class="field-label">
+              Objectifs de formation <span class="required">*</span>
+            </label>
+            <div class="dynamic-list">
+              <div 
+                *ngFor="let objectif of objectifs.controls; let i = index" 
+                class="dynamic-item">
+                <input 
+                  type="text" 
+                  pInputText 
+                  [formControlName]="i"
+                  placeholder="Ex: Maîtriser les concepts fondamentaux..."
+                  class="dynamic-input">
+                <button 
+                  type="button"
+                  pButton 
+                  icon="pi pi-trash" 
+                  class="p-button-danger p-button-text dynamic-remove-btn"
+                  (click)="removeObjectif(i)"
+                  [disabled]="objectifs.length <= 1">
+                </button>
+              </div>
+              <button 
+                type="button"
+                pButton 
+                label="Ajouter un objectif" 
+                icon="pi pi-plus"
+                class="p-button-outlined add-item-btn"
+                (click)="addObjectif()">
+              </button>
+            </div>
+          </div>
+
+          <!-- Débouchés -->
+          <div class="form-field full-width">
+            <label class="field-label">
+              Débouchés professionnels <span class="required">*</span>
+            </label>
+            <div class="dynamic-list">
+              <div 
+                *ngFor="let debouche of debouches.controls; let i = index" 
+                class="dynamic-item">
+                <input 
+                  type="text" 
+                  pInputText 
+                  [formControlName]="i"
+                  placeholder="Ex: Ingénieur en intelligence artificielle..."
+                  class="dynamic-input">
+                <button 
+                  type="button"
+                  pButton 
+                  icon="pi pi-trash" 
+                  class="p-button-danger p-button-text dynamic-remove-btn"
+                  (click)="removeDebouche(i)"
+                  [disabled]="debouches.length <= 1">
+                </button>
+              </div>
+              <button 
+                type="button"
+                pButton 
+                label="Ajouter un débouché" 
+                icon="pi pi-plus"
+                class="p-button-outlined add-item-btn"
+                (click)="addDebouche()">
+              </button>
+            </div>
+          </div>
+
+          <!-- Programme détaillé -->
+          <div class="form-field full-width">
+            <label for="programmeDetaille" class="field-label">
+              Programme détaillé
+            </label>
+            <textarea 
+              id="programmeDetaille"
+              pInputTextarea 
+              formControlName="programmeDetaille"
+              placeholder="Détaillez le programme, les matières, les modules, etc."
+              rows="6"
+              class="w-full">
+            </textarea>
+          </div>
+
+          <!-- Conditions d'admission -->
+          <div class="form-field full-width">
+            <label for="conditionsAdmission" class="field-label">
+              Conditions d'admission
+            </label>
+            <textarea 
+              id="conditionsAdmission"
+              pInputTextarea 
+              formControlName="conditionsAdmission"
+              placeholder="Pré-requis, niveau d'études, conditions spécifiques..."
+              rows="3"
+              class="w-full">
+            </textarea>
+          </div>
+        </div>
+      </p-panel>
+
+      <!-- Section Informations Pratiques -->
+      <p-panel header="Informations Pratiques" [toggleable]="true" styleClass="form-panel">
+        <div class="form-grid">
+          <!-- Frais de scolarité -->
+          <div class="form-field">
+            <label for="fraisScolarite" class="field-label">
+              Frais de scolarité (FCFA)
+            </label>
+            <p-inputNumber 
+              id="fraisScolarite"
+              formControlName="fraisScolarite"
+              mode="currency" 
+              currency="XOF"
+              locale="fr-FR"
+              placeholder="0"
+              styleClass="w-full">
+            </p-inputNumber>
+          </div>
+
+          <!-- Nombre de semestres -->
+          <div class="form-field">
+            <label for="nombreSemestres" class="field-label">
+              Nombre de semestres
+            </label>
+            <p-inputNumber 
+              id="nombreSemestres"
+              formControlName="nombreSemestres"
+              [min]="1" 
+              [max]="10"
+              placeholder="6"
+              styleClass="w-full">
+            </p-inputNumber>
+          </div>
+
+          <!-- Nombre de places -->
+          <div class="form-field">
+            <label for="nombrePlaces" class="field-label">
+              Nombre de places <span class="required">*</span>
+            </label>
+            <p-inputNumber 
+              id="nombrePlaces"
+              formControlName="nombrePlaces"
+              [min]="1"
+              placeholder="50"
+              [class.ng-invalid]="isFieldInvalid('nombrePlaces')"
+              styleClass="w-full">
+            </p-inputNumber>
+            <small 
+              *ngIf="isFieldInvalid('nombrePlaces')" 
+              class="p-error">
+              {{ getFieldError('nombrePlaces') }}
+            </small>
+          </div>
+
+          <!-- Options -->
+          <div class="form-field full-width">
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <p-checkbox 
+                  formControlName="disponible" 
+                  binary="true" 
+                  inputId="disponible">
+                </p-checkbox>
+                <label for="disponible" class="checkbox-label">
+                  Formation disponible aux inscriptions
+                </label>
+              </div>
+              
+              <div class="checkbox-item">
+                <p-checkbox 
+                  formControlName="actif" 
+                  binary="true" 
+                  inputId="actif">
+                </p-checkbox>
+                <label for="actif" class="checkbox-label">
+                  Formation active (visible dans le catalogue)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <div class="actions-left">
+          <button 
+            type="button"
+            pButton 
+            label="Prévisualiser" 
+            icon="pi pi-eye"
+            class="p-button-outlined"
+            (click)="previewFormation()"
+            [disabled]="loading">
+          </button>
+        </div>
+        
+        <div class="actions-right">
+          <button 
+            type="button"
+            pButton 
+            label="Annuler" 
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="cancel()"
+            [disabled]="loading">
+          </button>
+          
+          <button 
+            type="button"
+            pButton 
+            label="Réinitialiser" 
+            icon="pi pi-refresh"
+            class="p-button-outlined p-button-secondary"
+            (click)="resetForm()"
+            [disabled]="loading">
+          </button>
+          
+          <button 
+            type="submit"
+            pButton 
+            label="Créer la formation" 
+            icon="pi pi-check"
+            class="p-button-success"
+            [loading]="loading"
+            [disabled]="formationForm.invalid">
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

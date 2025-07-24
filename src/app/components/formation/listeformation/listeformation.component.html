@@ -1,3 +1,6 @@
+<!-- Toast pour les messages -->
+<p-toast></p-toast>
+
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container">
@@ -24,44 +27,107 @@
 <!-- Section Formations -->
 <section class="formations-section">
   <div class="container">
-    <!-- Filtres par catégorie -->
-    <div class="category-filters">
-      <h2 class="section-title">Choisissez votre niveau d'études</h2>
-      <div class="filter-buttons">
-        <button pButton 
-                type="button" 
-                label="Licence (Bac+3)" 
-                [class]="'filter-btn ' + (categorieActive === 'licence' ? 'active' : '')"
-                (click)="changerCategorie('licence')">
-        </button>
-        <button pButton 
-                type="button" 
-                label="Master (Bac+5)" 
-                [class]="'filter-btn ' + (categorieActive === 'master' ? 'active' : '')"
-                (click)="changerCategorie('master')">
-        </button>
+    <!-- Barre de recherche et filtres -->
+    <div class="search-filter-section">
+      <h2 class="section-title">Explorez nos formations</h2>
+      
+      <!-- Barre de recherche -->
+      <div class="search-container">
+        <div class="p-inputgroup">
+          <input 
+            type="text" 
+            pInputText 
+            placeholder="Rechercher une formation..." 
+            [(ngModel)]="searchKeyword"
+            (keyup.enter)="onSearch()"
+            class="search-input">
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-search" 
+            class="p-button-outlined"
+            (click)="onSearch()"
+            [disabled]="loading">
+          </button>
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-times" 
+            class="p-button-outlined"
+            (click)="clearSearch()"
+            [disabled]="!searchKeyword || loading">
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtres par catégorie -->
+      <div class="category-filters">
+        <div class="filter-buttons">
+          <button pButton 
+                  type="button" 
+                  label="Toutes" 
+                  [class]="'filter-btn ' + (categorieActive === 'all' ? 'active' : '')"
+                  (click)="changerCategorie('all')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Licence (Bac+3)" 
+                  [class]="'filter-btn ' + (categorieActive === 'licence' ? 'active' : '')"
+                  (click)="changerCategorie('licence')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Master (Bac+5)" 
+                  [class]="'filter-btn ' + (categorieActive === 'master' ? 'active' : '')"
+                  (click)="changerCategorie('master')"
+                  [disabled]="loading">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message d'erreur -->
+    <p-message 
+      *ngIf="error && !loading" 
+      severity="error" 
+      text="Une erreur est survenue lors du chargement des formations">
+    </p-message>
+
+    <!-- Loading skeletons -->
+    <div class="formations-grid" *ngIf="loading">
+      <div class="formation-card" *ngFor="let item of [1,2,3,4,5,6]">
+        <p-skeleton height="2rem" class="mb-3"></p-skeleton>
+        <p-skeleton height="4rem" class="mb-3"></p-skeleton>
+        <p-skeleton height="1rem" width="70%" class="mb-2"></p-skeleton>
+        <p-skeleton height="1rem" width="50%"></p-skeleton>
       </div>
     </div>
 
     <!-- Liste des formations -->
-    <div class="formations-grid">
-      <div class="formation-card" *ngFor="let formation of getFormationsActives()">
+    <div class="formations-grid" *ngIf="!loading && !error">
+      <div class="formation-card" *ngFor="let formation of getFormationsActives(); trackBy: trackByFormationId">
         <!-- Header de la formation -->
         <div class="formation-header">
           <h3 class="formation-title">{{ formation.nom }}</h3>
           <div class="formation-meta">
             <span class="formation-diplome">{{ formation.diplome }}</span>
             <span class="formation-duree">{{ formation.duree }}</span>
+            <span class="formation-places" 
+                  [class.nearly-full]="isNearlyFull(formation)">
+              {{ formation.nombreInscrits || 0 }}/{{ formation.nombrePlaces || 0 }} places
+            </span>
           </div>
         </div>
 
         <!-- Description -->
-        <div class="formation-description">
+        <div class="formation-description" *ngIf="formation.description">
           <p>{{ formation.description }}</p>
         </div>
 
         <!-- Objectifs -->
-        <div class="formation-section">
+        <div class="formation-section" *ngIf="formation.objectifs && formation.objectifs.length > 0">
           <h4>Objectifs de formation :</h4>
           <ul class="objectifs-list">
             <li *ngFor="let objectif of formation.objectifs">{{ objectif }}</li>
@@ -69,7 +135,7 @@
         </div>
 
         <!-- Débouchés -->
-        <div class="formation-section">
+        <div class="formation-section" *ngIf="formation.debouches && formation.debouches.length > 0">
           <h4>Débouchés professionnels :</h4>
           <div class="debouches-tags">
             <span class="debouche-tag" *ngFor="let debouche of formation.debouches">
@@ -78,20 +144,69 @@
           </div>
         </div>
 
-        <!-- Footer avec prix et action -->
+        <!-- Conditions d'admission -->
+        <div class="formation-section" *ngIf="formation.conditionsAdmission">
+          <h4>Conditions d'admission :</h4>
+          <p class="conditions-text">{{ formation.conditionsAdmission }}</p>
+        </div>
+
+        <!-- Progress bar des places -->
+        <div class="formation-section" *ngIf="formation.nombrePlaces">
+          <div class="places-info">
+            <span class="places-label">Places disponibles :</span>
+            <div class="places-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" 
+                     [style.width.%]="getOccupancyPercentage(formation)"
+                     [class.warning]="isNearlyFull(formation)">
+                </div>
+              </div>
+              <span class="places-text">
+                {{ (formation.nombrePlaces || 0) - (formation.nombreInscrits || 0) }} places restantes
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer avec prix et actions -->
         <div class="formation-footer">
           <div class="formation-prix">
             <span class="prix-label">Frais de scolarité :</span>
-            <span class="prix-value">{{ formation.frais }}</span>
+            <span class="prix-value">{{ formatPrice(formation.fraisScolarite) }}</span>
           </div>
-          <button pButton 
-                  type="button" 
-                  label="Plus de détails" 
-                  icon="pi pi-arrow-right"
-                  class="details-btn"
-                  (click)="voirDetails(formation.id)">
-          </button>
+          <div class="formation-actions">
+            <button pButton 
+                    type="button" 
+                    label="Détails" 
+                    icon="pi pi-info-circle"
+                    class="p-button-outlined details-btn"
+                    (click)="voirDetails(formation.id)">
+            </button>
+            <button pButton 
+                    type="button" 
+                    label="S'inscrire" 
+                    icon="pi pi-user-plus"
+                    class="inscripution-btn"
+                    (click)="inscrireFormation(formation)"
+                    [disabled]="(formation.nombreInscrits || 0) >= (formation.nombrePlaces || 0)">
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Message si aucune formation trouvée -->
+    <div class="no-results" *ngIf="!loading && !error && getFormationsActives().length === 0">
+      <div class="no-results-content">
+        <i class="pi pi-search no-results-icon"></i>
+        <h3>Aucune formation trouvée</h3>
+        <p>Essayez de modifier vos critères de recherche ou vos filtres.</p>
+        <button pButton 
+                type="button" 
+                label="Réinitialiser les filtres" 
+                class="p-button-outlined"
+                (click)="clearSearch(); changerCategorie('all')">
+        </button>
       </div>
     </div>
   </div>

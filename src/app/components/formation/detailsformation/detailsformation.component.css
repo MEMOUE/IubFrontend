@@ -1,0 +1,604 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+  --error-color: #e74c3c;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --info-color: #3498db;
+}
+
+/* Container principal */
+.formation-details-container {
+  min-height: 100vh;
+  background: var(--background-color);
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* États de chargement et d'erreur */
+.loading-content, .error-content {
+  padding: 2rem 0;
+}
+
+.loading-header {
+  margin-bottom: 2rem;
+}
+
+.loading-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.loading-main, .loading-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.error-card {
+  text-align: center;
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: var(--error-color);
+  margin-bottom: 1rem;
+}
+
+.error-card h2 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.error-card p {
+  color: var(--text-color-light);
+  margin-bottom: 2rem;
+}
+
+/* Header avec breadcrumb */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumb-btn {
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+}
+
+.breadcrumb-separator {
+  color: var(--text-color-light);
+  font-weight: 500;
+}
+
+.breadcrumb-current {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Layout principal */
+.formation-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Contenu principal */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* En-tête de la formation */
+.formation-header {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary-color);
+}
+
+.formation-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.formation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.meta-item.diploma {
+  background: var(--primary-color);
+  color: white;
+}
+
+.meta-item.duration {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.meta-item.category {
+  background: var(--accent-color);
+  color: white;
+}
+
+.status-tag {
+  align-self: flex-start;
+}
+
+/* Panels de contenu */
+.content-panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.content-panel::ng-deep .p-panel-header {
+  background: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.content-panel::ng-deep .p-panel-content {
+  padding: 1.5rem;
+}
+
+/* Description */
+.description-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color-light);
+}
+
+/* Liste des objectifs */
+.objectifs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.objectif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.objectif-item:hover {
+  border-color: var(--primary-color);
+  background: rgba(184, 84, 80, 0.05);
+}
+
+.objectif-item i {
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+/* Grille des débouchés */
+.debouches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.debouche-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.debouche-item:hover {
+  border-color: var(--secondary-color);
+  background: rgba(90, 124, 89, 0.05);
+}
+
+.debouche-item i {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Contenu des programmes et conditions */
+.programme-content, .conditions-content {
+  line-height: 1.6;
+  color: var(--text-color-light);
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Carte d'inscription */
+.inscription-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--primary-color);
+  position: sticky;
+  top: 2rem;
+}
+
+.inscription-card::ng-deep .p-card-header {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+
+.inscription-card::ng-deep .p-card-content {
+  padding: 1.5rem;
+}
+
+/* Section prix */
+.price-section {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.price-label {
+  font-size: 0.9rem;
+  color: var(--text-color-light);
+  margin-bottom: 0.5rem;
+}
+
+.price-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Section places */
+.places-section {
+  margin: 1rem 0;
+}
+
+.places-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.places-label {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.places-count {
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.places-progress {
+  margin-bottom: 0.5rem;
+}
+
+.places-progress::ng-deep .p-progressbar.progress-warning .p-progressbar-value {
+  background: var(--warning-color);
+}
+
+.places-text {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.places-remaining {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.places-full {
+  color: var(--error-color);
+  font-weight: 600;
+}
+
+/* Boutons d'action */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inscription-btn, .contact-btn {
+  width: 100%;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 0.75rem !important;
+}
+
+.inscription-btn {
+  background: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+}
+
+.inscription-btn:hover:not(:disabled) {
+  background: #229954 !important;
+  border-color: #229954 !important;
+  transform: translateY(-2px);
+}
+
+.contact-btn {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.contact-btn:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* Cartes d'information */
+.info-card, .help-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.info-card::ng-deep .p-card-header,
+.help-card::ng-deep .p-card-header {
+  background: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--background-color);
+  border-radius: 6px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: var(--text-color-light);
+  font-size: 0.9rem;
+}
+
+/* Aide */
+.help-content p {
+  color: var(--text-color-light);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.help-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Formations similaires */
+.similar-formations {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.similar-formations h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.coming-soon {
+  color: var(--text-color-light);
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .formation-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .loading-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inscription-card {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .formation-details-container {
+    padding: 1rem 0;
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .formation-header {
+    padding: 1.5rem;
+  }
+
+  .formation-title {
+    font-size: 1.8rem;
+  }
+
+  .formation-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .meta-item {
+    justify-content: center;
+  }
+
+  .content-panel::ng-deep .p-panel-content {
+    padding: 1rem;
+  }
+
+  .debouches-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .formation-title {
+    font-size: 1.5rem;
+  }
+
+  .price-value {
+    font-size: 1.5rem;
+  }
+
+  .breadcrumb {
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb-current {
+    font-size: 1rem;
+  }
+
+  .error-card {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Animations */
+.formation-content {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus et accessibilité */
+button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Transitions */
+.meta-item,
+.objectif-item,
+.debouche-item,
+.info-item {
+  transition: var(--transition);
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .content-header,
+  .similar-formations {
+    display: none;
+  }
+  
+  .formation-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .formation-details-container {
+    background: white;
+  }
+}
