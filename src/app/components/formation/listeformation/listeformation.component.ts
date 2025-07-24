@@ -46,8 +46,12 @@ export class ListeformationComponent implements OnInit, OnDestroy {
   // Statistiques
   stats: FormationStats = {
     totalFormations: 0,
+    formationsBTS: 0,
     formationsLicence: 0,
     formationsMaster: 0,
+    formationsMBA: 0,
+    formationsDoctorat: 0,
+    formationsCertification: 0,
     tauxInsertion: 95
   };
 
@@ -107,8 +111,12 @@ export class ListeformationComponent implements OnInit, OnDestroy {
     this.statistiques = [
       { valeur: this.stats.totalFormations.toString(), label: 'Formations disponibles' },
       { valeur: `${this.stats.tauxInsertion}%`, label: 'Taux d\'insertion professionnelle' },
-      { valeur: this.stats.formationsLicence.toString(), label: 'Formations Licence' },
-      { valeur: this.stats.formationsMaster.toString(), label: 'Formations Master' }
+      { valeur: this.stats.formationsBTS.toString(), label: 'BTS/DUT' },
+      { valeur: this.stats.formationsLicence.toString(), label: 'Licences' },
+      { valeur: this.stats.formationsMaster.toString(), label: 'Masters' },
+      { valeur: this.stats.formationsMBA.toString(), label: 'MBA' },
+      { valeur: this.stats.formationsDoctorat.toString(), label: 'Doctorats' },
+      { valeur: this.stats.formationsCertification.toString(), label: 'Certifications' }
     ];
   }
 
@@ -257,5 +265,48 @@ export class ListeformationComponent implements OnInit, OnDestroy {
   // TrackBy function pour optimiser le rendu
   trackByFormationId(index: number, formation: Formation): number {
     return formation.id;
+  }
+
+  // Obtenir le label de la catégorie
+  getCategorieLabel(categorie: string): string {
+    const labels: { [key: string]: string } = {
+      'bts_dut': 'BTS/DUT (Bac+2)',
+      'licence': 'Licence (Bac+3)',
+      'licence_pro': 'Licence Pro (Bac+3)',
+      'master': 'Master (Bac+5)',
+      'master_pro': 'Master Pro (Bac+5)',
+      'mba': 'MBA',
+      'doctorat': 'Doctorat (Bac+8)',
+      'formation_continue': 'Formation Continue',
+      'certification': 'Certification'
+    };
+    return labels[categorie] || categorie;
+  }
+
+  // Obtenir les catégories disponibles avec leurs compteurs
+  getCategoriesAvailables(): Array<{key: string, label: string, count: number}> {
+    const categories = [
+      { key: 'all', label: 'Toutes', count: this.formations.length },
+      { key: 'bts_dut', label: 'BTS/DUT', count: 0 },
+      { key: 'licence', label: 'Licence', count: 0 },
+      { key: 'licence_pro', label: 'Licence Pro', count: 0 },
+      { key: 'master', label: 'Master', count: 0 },
+      { key: 'master_pro', label: 'Master Pro', count: 0 },
+      { key: 'mba', label: 'MBA', count: 0 },
+      { key: 'doctorat', label: 'Doctorat', count: 0 },
+      { key: 'formation_continue', label: 'Formation Continue', count: 0 },
+      { key: 'certification', label: 'Certification', count: 0 }
+    ];
+
+    // Compter les formations par catégorie
+    this.formations.forEach(formation => {
+      const category = categories.find(cat => cat.key === formation.categorie);
+      if (category) {
+        category.count++;
+      }
+    });
+
+    // Retourner seulement les catégories qui ont des formations
+    return categories.filter(cat => cat.key === 'all' || cat.count > 0);
   }
 }

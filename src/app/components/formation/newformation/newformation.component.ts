@@ -50,29 +50,110 @@ export class NewformationComponent implements OnInit, OnDestroy {
   loading = false;
   submitted = false;
 
-  // Options pour les dropdowns
+  // Options pour les dropdowns - Tous les niveaux universitaires
   categoriesOptions = [
-    { label: 'Licence', value: 'licence' },
-    { label: 'Master', value: 'master' }
+    { label: 'BTS/DUT (Bac+2)', value: 'bts_dut' },
+    { label: 'Licence (Bac+3)', value: 'licence' },
+    { label: 'Licence Professionnelle (Bac+3)', value: 'licence_pro' },
+    { label: 'Master (Bac+5)', value: 'master' },
+    { label: 'Master Professionnel (Bac+5)', value: 'master_pro' },
+    { label: 'MBA', value: 'mba' },
+    { label: 'Doctorat (Bac+8)', value: 'doctorat' },
+    { label: 'Formation Continue', value: 'formation_continue' },
+    { label: 'Certification Professionnelle', value: 'certification' }
   ];
 
+  // Tous les diplômes possibles actuels
   diplomesOptions = [
+    // BTS/DUT
+    { label: 'BTS Comptabilité et Gestion', value: 'BTS Comptabilité et Gestion' },
+    { label: 'BTS Management Commercial Opérationnel', value: 'BTS Management Commercial Opérationnel' },
+    { label: 'BTS Services Informatiques aux Organisations', value: 'BTS Services Informatiques aux Organisations' },
+    { label: 'BTS Communication', value: 'BTS Communication' },
+    { label: 'BTS Banque', value: 'BTS Banque' },
+    { label: 'BTS Tourisme', value: 'BTS Tourisme' },
+    { label: 'DUT Gestion des Entreprises et des Administrations', value: 'DUT Gestion des Entreprises et des Administrations' },
+    { label: 'DUT Informatique', value: 'DUT Informatique' },
+    { label: 'DUT Techniques de Commercialisation', value: 'DUT Techniques de Commercialisation' },
+    
+    // Licences générales
     { label: 'Licence en Management', value: 'Licence en Management' },
+    { label: 'Licence en Administration des Affaires', value: 'Licence en Administration des Affaires' },
     { label: 'Licence en Informatique', value: 'Licence en Informatique' },
+    { label: 'Licence en Ingénierie Logicielle', value: 'Licence en Ingénierie Logicielle' },
     { label: 'Licence en Comptabilité-Finance', value: 'Licence en Comptabilité-Finance' },
+    { label: 'Licence en Finance-Banque', value: 'Licence en Finance-Banque' },
     { label: 'Licence en Communication', value: 'Licence en Communication' },
+    { label: 'Licence en Marketing', value: 'Licence en Marketing' },
+    { label: 'Licence en Ressources Humaines', value: 'Licence en Ressources Humaines' },
+    { label: 'Licence en Commerce International', value: 'Licence en Commerce International' },
+    { label: 'Licence en Logistique et Transport', value: 'Licence en Logistique et Transport' },
+    { label: 'Licence en Droit des Affaires', value: 'Licence en Droit des Affaires' },
+    { label: 'Licence en Économie', value: 'Licence en Économie' },
+    { label: 'Licence en Anglais des Affaires', value: 'Licence en Anglais des Affaires' },
+    
+    // Licences Professionnelles
+    { label: 'Licence Pro Management des PME', value: 'Licence Pro Management des PME' },
+    { label: 'Licence Pro E-commerce', value: 'Licence Pro E-commerce' },
+    { label: 'Licence Pro Développement Web', value: 'Licence Pro Développement Web' },
+    { label: 'Licence Pro Cybersécurité', value: 'Licence Pro Cybersécurité' },
+    { label: 'Licence Pro Audit et Contrôle de Gestion', value: 'Licence Pro Audit et Contrôle de Gestion' },
+    
+    // Masters
     { label: 'Master en Management Stratégique', value: 'Master en Management Stratégique' },
+    { label: 'Master en Management des Projets', value: 'Master en Management des Projets' },
     { label: 'Master en Ingénierie Informatique', value: 'Master en Ingénierie Informatique' },
+    { label: 'Master en Intelligence Artificielle', value: 'Master en Intelligence Artificielle' },
+    { label: 'Master en Cybersécurité', value: 'Master en Cybersécurité' },
+    { label: 'Master en Data Science', value: 'Master en Data Science' },
     { label: 'Master en Finance d\'Entreprise', value: 'Master en Finance d\'Entreprise' },
-    { label: 'Master en Marketing Digital', value: 'Master en Marketing Digital' }
+    { label: 'Master en Finance de Marché', value: 'Master en Finance de Marché' },
+    { label: 'Master en Audit et Contrôle de Gestion', value: 'Master en Audit et Contrôle de Gestion' },
+    { label: 'Master en Marketing Digital', value: 'Master en Marketing Digital' },
+    { label: 'Master en Communication Digitale', value: 'Master en Communication Digitale' },
+    { label: 'Master en Ressources Humaines', value: 'Master en Ressources Humaines' },
+    { label: 'Master en Commerce International', value: 'Master en Commerce International' },
+    { label: 'Master en Supply Chain Management', value: 'Master en Supply Chain Management' },
+    { label: 'Master en Entrepreneuriat et Innovation', value: 'Master en Entrepreneuriat et Innovation' },
+    { label: 'Master en Droit des Affaires', value: 'Master en Droit des Affaires' },
+    
+    // Masters Professionnels
+    { label: 'Master Pro Management Hospitalier', value: 'Master Pro Management Hospitalier' },
+    { label: 'Master Pro Management Public', value: 'Master Pro Management Public' },
+    { label: 'Master Pro Consulting', value: 'Master Pro Consulting' },
+    { label: 'Master Pro Banking & Finance', value: 'Master Pro Banking & Finance' },
+    
+    // MBA
+    { label: 'MBA Management Général', value: 'MBA Management Général' },
+    { label: 'MBA Finance', value: 'MBA Finance' },
+    { label: 'MBA Marketing', value: 'MBA Marketing' },
+    { label: 'MBA Digital Business', value: 'MBA Digital Business' },
+    { label: 'Executive MBA', value: 'Executive MBA' },
+    
+    // Doctorats
+    { label: 'Doctorat en Sciences de Gestion', value: 'Doctorat en Sciences de Gestion' },
+    { label: 'Doctorat en Informatique', value: 'Doctorat en Informatique' },
+    { label: 'Doctorat en Économie', value: 'Doctorat en Économie' },
+    { label: 'PhD in Business Administration', value: 'PhD in Business Administration' },
+    
+    // Certifications
+    { label: 'Certification PMP', value: 'Certification PMP' },
+    { label: 'Certification Scrum Master', value: 'Certification Scrum Master' },
+    { label: 'Certification Digital Marketing', value: 'Certification Digital Marketing' },
+    { label: 'Certification Data Analytics', value: 'Certification Data Analytics' },
+    { label: 'Certification Cloud Computing', value: 'Certification Cloud Computing' }
   ];
 
   dureeOptions = [
+    { label: '6 mois', value: '6 mois' },
     { label: '1 an', value: '1 an' },
+    { label: '18 mois', value: '18 mois' },
     { label: '2 ans', value: '2 ans' },
     { label: '3 ans', value: '3 ans' },
     { label: '4 ans', value: '4 ans' },
-    { label: '5 ans', value: '5 ans' }
+    { label: '5 ans', value: '5 ans' },
+    { label: '6 ans', value: '6 ans' },
+    { label: '8 ans', value: '8 ans' }
   ];
 
   constructor(
@@ -114,6 +195,13 @@ export class NewformationComponent implements OnInit, OnDestroy {
     // Ajouter au moins un champ pour les objectifs et débouchés
     this.addObjectif();
     this.addDebouche();
+
+    // Écouter les changements pour debug
+    this.formationForm.statusChanges.subscribe(status => {
+      console.log('Form status:', status);
+      console.log('Form errors:', this.formationForm.errors);
+      console.log('Form value:', this.formationForm.value);
+    });
   }
 
   // Getters pour les FormArrays
@@ -127,28 +215,40 @@ export class NewformationComponent implements OnInit, OnDestroy {
 
   // Ajouter un objectif
   addObjectif() {
-    const objectifControl = this.fb.control('', Validators.required);
+    const objectifControl = this.fb.control(''); // Pas de validation requise par défaut
     this.objectifs.push(objectifControl);
   }
 
   // Supprimer un objectif
   removeObjectif(index: number) {
-    if (this.objectifs.length > 1) {
+    if (this.objectifs.length > 0) { // Permettre de supprimer même le dernier
       this.objectifs.removeAt(index);
     }
   }
 
   // Ajouter un débouché
   addDebouche() {
-    const deboucheControl = this.fb.control('', Validators.required);
+    const deboucheControl = this.fb.control(''); // Pas de validation requise par défaut
     this.debouches.push(deboucheControl);
   }
 
   // Supprimer un débouché
   removeDebouche(index: number) {
-    if (this.debouches.length > 1) {
+    if (this.debouches.length > 0) { // Permettre de supprimer même le dernier
       this.debouches.removeAt(index);
     }
+  }
+
+  // Vérifier si le formulaire peut être soumis
+  canSubmit(): boolean {
+    // Vérifier les champs requis de base
+    const requiredFields = ['nom', 'diplome', 'duree', 'categorie', 'nombrePlaces'];
+    const hasRequiredFields = requiredFields.every(field => {
+      const control = this.formationForm.get(field);
+      return control && control.value && control.valid;
+    });
+
+    return hasRequiredFields;
   }
 
   // Vérifier si un champ est invalide
@@ -174,11 +274,12 @@ export class NewformationComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.submitted = true;
 
-    if (this.formationForm.invalid) {
+    // Vérifier seulement les champs essentiels
+    if (!this.canSubmit()) {
       this.messageService.add({
         severity: 'warn',
-        summary: 'Formulaire invalide',
-        detail: 'Veuillez corriger les erreurs dans le formulaire',
+        summary: 'Champs requis manquants',
+        detail: 'Veuillez remplir tous les champs obligatoires: nom, diplôme, durée, catégorie et nombre de places',
         life: 5000
       });
       return;
@@ -190,10 +291,12 @@ export class NewformationComponent implements OnInit, OnDestroy {
     const formData = this.formationForm.value;
     const createFormationDto: CreateFormationDto = {
       ...formData,
-      objectifs: formData.objectifs.filter((obj: string) => obj.trim() !== ''),
-      debouches: formData.debouches.filter((deb: string) => deb.trim() !== ''),
+      objectifs: formData.objectifs.filter((obj: string) => obj && obj.trim() !== ''),
+      debouches: formData.debouches.filter((deb: string) => deb && deb.trim() !== ''),
       nombreInscrits: 0
     };
+
+    console.log('Données à envoyer:', createFormationDto);
 
     // Envoyer au service
     this.formationService.createFormation(createFormationDto)
@@ -219,7 +322,7 @@ export class NewformationComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erreur de création',
-            detail: 'Impossible de créer la formation. Veuillez réessayer.',
+            detail: error.message || 'Impossible de créer la formation. Veuillez réessayer.',
             life: 5000
           });
         }
@@ -237,12 +340,12 @@ export class NewformationComponent implements OnInit, OnDestroy {
         this.submitted = false;
         
         // Réinitialiser les FormArrays
-        while (this.objectifs.length > 1) {
-          this.objectifs.removeAt(1);
-        }
-        while (this.debouches.length > 1) {
-          this.debouches.removeAt(1);
-        }
+        this.objectifs.clear();
+        this.debouches.clear();
+        
+        // Ajouter au moins un champ vide pour chaque
+        this.addObjectif();
+        this.addDebouche();
         
         // Remettre les valeurs par défaut
         this.formationForm.patchValue({

@@ -11,6 +11,7 @@
   --transition: all 0.3s ease;
   --warning-color: #ff9800;
   --success-color: #4caf50;
+  --info-color: #2196f3;
 }
 
 /* Container */
@@ -137,29 +138,37 @@
 .filter-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .filter-btn {
-  padding: 1rem 2rem !important;
-  border-radius: 25px !important;
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 20px !important;
   font-weight: 600 !important;
+  font-size: 0.9rem !important;
   transition: var(--transition) !important;
   background: white !important;
   color: var(--text-color) !important;
   border: 2px solid var(--border-color) !important;
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
 .filter-btn:hover {
   border-color: var(--primary-color) !important;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 84, 80, 0.2) !important;
 }
 
 .filter-btn.active {
   background: var(--primary-color) !important;
   color: white !important;
   border-color: var(--primary-color) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 84, 80, 0.3) !important;
 }
 
 /* Grille des formations */
@@ -227,6 +236,15 @@
 
 .formation-duree {
   background: var(--secondary-color);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.formation-categorie {
+  background: var(--info-color);
   color: white;
   padding: 0.4rem 0.8rem;
   border-radius: 15px;
@@ -570,13 +588,35 @@
   }
 
   .filter-buttons {
-    flex-direction: column;
-    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+  }
+
+  .filter-buttons::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .filter-buttons::-webkit-scrollbar-track {
+    background: var(--background-color);
+  }
+
+  .filter-buttons::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 2px;
   }
 
   .filter-btn {
-    width: 100%;
-    max-width: 300px;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.85rem !important;
+    flex-shrink: 0;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
   .advantages-grid {
@@ -596,6 +636,11 @@
   .places-progress {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .formation-meta {
+    flex-direction: column;
     gap: 0.5rem;
   }
 }

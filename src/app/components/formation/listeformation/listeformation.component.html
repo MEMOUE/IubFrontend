@@ -13,7 +13,7 @@
 </section>
 
 <!-- Section Statistiques -->
-<section class="stats-section">
+ <section class="stats-section">
   <div class="container">
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let stat of statistiques">
@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> 
 
 <!-- Section Formations -->
 <section class="formations-section">
@@ -72,16 +72,51 @@
           </button>
           <button pButton 
                   type="button" 
-                  label="Licence (Bac+3)" 
+                  label="BTS/DUT" 
+                  [class]="'filter-btn ' + (categorieActive === 'bts_dut' ? 'active' : '')"
+                  (click)="changerCategorie('bts_dut')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Licence" 
                   [class]="'filter-btn ' + (categorieActive === 'licence' ? 'active' : '')"
                   (click)="changerCategorie('licence')"
                   [disabled]="loading">
           </button>
           <button pButton 
                   type="button" 
-                  label="Master (Bac+5)" 
+                  label="Licence Pro" 
+                  [class]="'filter-btn ' + (categorieActive === 'licence_pro' ? 'active' : '')"
+                  (click)="changerCategorie('licence_pro')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Master" 
                   [class]="'filter-btn ' + (categorieActive === 'master' ? 'active' : '')"
                   (click)="changerCategorie('master')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="MBA" 
+                  [class]="'filter-btn ' + (categorieActive === 'mba' ? 'active' : '')"
+                  (click)="changerCategorie('mba')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Doctorat" 
+                  [class]="'filter-btn ' + (categorieActive === 'doctorat' ? 'active' : '')"
+                  (click)="changerCategorie('doctorat')"
+                  [disabled]="loading">
+          </button>
+          <button pButton 
+                  type="button" 
+                  label="Certifications" 
+                  [class]="'filter-btn ' + (categorieActive === 'certification' ? 'active' : '')"
+                  (click)="changerCategorie('certification')"
                   [disabled]="loading">
           </button>
         </div>
@@ -114,6 +149,7 @@
           <div class="formation-meta">
             <span class="formation-diplome">{{ formation.diplome }}</span>
             <span class="formation-duree">{{ formation.duree }}</span>
+            <span class="formation-categorie">{{ getCategorieLabel(formation.categorie) }}</span>
             <span class="formation-places" 
                   [class.nearly-full]="isNearlyFull(formation)">
               {{ formation.nombreInscrits || 0 }}/{{ formation.nombrePlaces || 0 }} places

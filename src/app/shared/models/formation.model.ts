@@ -3,7 +3,7 @@ export interface Formation {
   nom: string;
   diplome: string;
   duree: string;
-  categorie: string; // 'licence' ou 'master'
+  categorie: 'bts_dut' | 'licence' | 'licence_pro' | 'master' | 'master_pro' | 'mba' | 'doctorat' | 'formation_continue' | 'certification'; // Toutes les catégories
   description?: string;
   objectifs?: string[];
   debouches?: string[];
@@ -23,7 +23,7 @@ export interface CreateFormationDto {
   nom: string;
   diplome: string;
   duree: string;
-  categorie: string;
+  categorie: 'bts_dut' | 'licence' | 'licence_pro' | 'master' | 'master_pro' | 'mba' | 'doctorat' | 'formation_continue' | 'certification';
   description?: string;
   objectifs?: string[];
   debouches?: string[];
@@ -39,7 +39,11 @@ export interface CreateFormationDto {
 
 export interface FormationStats {
   totalFormations: number;
+  formationsBTS: number;
   formationsLicence: number;
   formationsMaster: number;
+  formationsMBA: number;
+  formationsDoctorat: number;
+  formationsCertification: number;
   tauxInsertion: number;
 }

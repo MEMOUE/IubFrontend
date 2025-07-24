@@ -102,7 +102,7 @@
                 </span>
                 <span class="meta-item category">
                   <i class="pi pi-tag"></i>
-                  {{ formation.categorie | titlecase }}
+                  {{ getCategorieLabel(formation.categorie) }}
                 </span>
               </div>
 
@@ -227,7 +227,7 @@
               
               <div class="info-item" *ngIf="formation.categorie">
                 <div class="info-label">Niveau d'études</div>
-                <div class="info-value">{{ formation.categorie | titlecase }}</div>
+                <div class="info-value">{{ getCategorieLabel(formation.categorie) }}</div>
               </div>
               
               <div class="info-item">
@@ -260,12 +260,6 @@
           </p-card>
 
         </div>
-      </div>
-
-      <!-- Formations similaires -->
-      <div class="similar-formations">
-        <h3>Formations similaires</h3>
-        <p class="coming-soon">Section à implémenter - Suggestions de formations similaires</p>
       </div>
 
     </div>

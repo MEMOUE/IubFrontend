@@ -296,4 +296,20 @@ export class DetailsformationComponent implements OnInit, OnDestroy {
     if (!this.formation) return 0;
     return (this.formation.nombrePlaces || 0) - (this.formation.nombreInscrits || 0);
   }
+
+  // Obtenir le label de la catégorie
+  getCategorieLabel(categorie: string): string {
+    const labels: { [key: string]: string } = {
+      'bts_dut': 'BTS/DUT (Bac+2)',
+      'licence': 'Licence (Bac+3)',
+      'licence_pro': 'Licence Professionnelle (Bac+3)',
+      'master': 'Master (Bac+5)',
+      'master_pro': 'Master Professionnel (Bac+5)',
+      'mba': 'MBA',
+      'doctorat': 'Doctorat (Bac+8)',
+      'formation_continue': 'Formation Continue',
+      'certification': 'Certification Professionnelle'
+    };
+    return labels[categorie] || categorie;
+  }
 }

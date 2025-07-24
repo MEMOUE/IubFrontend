@@ -124,7 +124,7 @@
           <!-- Objectifs -->
           <div class="form-field full-width">
             <label class="field-label">
-              Objectifs de formation <span class="required">*</span>
+              Objectifs de formation
             </label>
             <div class="dynamic-list">
               <div 
@@ -141,25 +141,35 @@
                   pButton 
                   icon="pi pi-trash" 
                   class="p-button-danger p-button-text dynamic-remove-btn"
-                  (click)="removeObjectif(i)"
-                  [disabled]="objectifs.length <= 1">
+                  (click)="removeObjectif(i)">
                 </button>
               </div>
-              <button 
-                type="button"
-                pButton 
-                label="Ajouter un objectif" 
-                icon="pi pi-plus"
-                class="p-button-outlined add-item-btn"
-                (click)="addObjectif()">
-              </button>
+              <div class="dynamic-actions">
+                <button 
+                  type="button"
+                  pButton 
+                  label="Ajouter un objectif" 
+                  icon="pi pi-plus"
+                  class="p-button-outlined add-item-btn"
+                  (click)="addObjectif()">
+                </button>
+                <button 
+                  type="button"
+                  pButton 
+                  label="Vider la liste" 
+                  icon="pi pi-times"
+                  class="p-button-text p-button-sm"
+                  (click)="objectifs.clear()"
+                  *ngIf="objectifs.length > 0">
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Débouchés -->
           <div class="form-field full-width">
             <label class="field-label">
-              Débouchés professionnels <span class="required">*</span>
+              Débouchés professionnels
             </label>
             <div class="dynamic-list">
               <div 
@@ -176,18 +186,28 @@
                   pButton 
                   icon="pi pi-trash" 
                   class="p-button-danger p-button-text dynamic-remove-btn"
-                  (click)="removeDebouche(i)"
-                  [disabled]="debouches.length <= 1">
+                  (click)="removeDebouche(i)">
                 </button>
               </div>
-              <button 
-                type="button"
-                pButton 
-                label="Ajouter un débouché" 
-                icon="pi pi-plus"
-                class="p-button-outlined add-item-btn"
-                (click)="addDebouche()">
-              </button>
+              <div class="dynamic-actions">
+                <button 
+                  type="button"
+                  pButton 
+                  label="Ajouter un débouché" 
+                  icon="pi pi-plus"
+                  class="p-button-outlined add-item-btn"
+                  (click)="addDebouche()">
+                </button>
+                <button 
+                  type="button"
+                  pButton 
+                  label="Vider la liste" 
+                  icon="pi pi-times"
+                  class="p-button-text p-button-sm"
+                  (click)="debouches.clear()"
+                  *ngIf="debouches.length > 0">
+                </button>
+              </div>
             </div>
           </div>
 
@@ -348,7 +368,7 @@
             icon="pi pi-check"
             class="p-button-success"
             [loading]="loading"
-            [disabled]="formationForm.invalid">
+            [disabled]="!canSubmit()">
           </button>
         </div>
       </div>
