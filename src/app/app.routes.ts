@@ -33,11 +33,13 @@ export const routes: Routes = [
     { path: 'universite/ecoles-partenaires', component: ListepartenairesComponent },
     { path: 'universite/ecoles-partenaires/details/:id', component: DetailspartenairesComponent },
     { path: 'universite/ecoles-partenaires/nouveau', component: NewpartenairesComponent },
+    {path: 'universite/ecoles-partenaires/modifier/:id', component: NewpartenairesComponent },
     
     // Routes Entreprises Partenaires
     { path: 'universite/entreprises-partenaires', component: ListeEntreprisePartenairesComponent },
     { path: 'universite/entreprises-partenaires/details/:id', component: DetailEntreprisePartenairesComponent },
     { path: 'universite/entreprises-partenaires/nouveau', component: NewEntreprisePartenairesComponent },
+    { path: 'universite/entreprises-partenaires/modifier/:id', component: NewEntreprisePartenairesComponent },
     
     // Routes Formations
     { path: 'formations', component: ListeformationComponent },
@@ -47,6 +49,8 @@ export const routes: Routes = [
     // Routes Actualités
     { path: 'actualites', component: ListeactualitesComponent },
     { path: 'actualites/nouveau', component: NewactualitesComponent },
+    { path: 'actualites/details/:id', component: DetailActualiteComponent },
+    { path: 'actualites/modifier/:id', component: NewactualitesComponent },
     
     // Route Contacts
     { path: 'contacts', component: ContactsComponent },
@@ -54,9 +58,6 @@ export const routes: Routes = [
     // Routes Admin
     { path: 'admin/login', component: LoginComponent },
     { path: 'admin', component: AccueilAdminComponent },
-
-    { path: 'actualites/details/:id', component: DetailActualiteComponent },
-    { path: 'actualites/modifier/:id', component: NewactualitesComponent },
 
     
     // Route wildcard - doit être en dernier

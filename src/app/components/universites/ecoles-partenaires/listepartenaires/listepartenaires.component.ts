@@ -1,153 +1,241 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subject, takeUntil, forkJoin } from 'rxjs';
 
 // PrimeFaces imports
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
+
+// Services et modèles
+import { PartenaireService } from '../../../../core/services/partenaire.service';
+import { EcolePartenaire, StatistiquePartenaire } from '../../../../shared/models/partenaire.model';
 
 @Component({
   selector: 'app-listepartenaires',
   standalone: true,
   imports: [
     CommonModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule,
+    ProgressSpinnerModule,
+    TagModule
   ],
+  providers: [MessageService],
   templateUrl: './listepartenaires.component.html',
   styleUrl: './listepartenaires.component.css'
 })
-export class ListepartenairesComponent implements OnInit {
-
-  // Écoles partenaires par région
-  partenaires = {
-    europe: [
-      {
-        id: 1,
-        nom: 'Université Paris-Dauphine',
-        pays: 'France',
-        ville: 'Paris',
-        type: 'Université publique',
-        domaines: ['Management', 'Finance', 'Mathématiques'],
-        programmes: ['Échanges étudiants', 'Double diplôme', 'Stages'],
-        dureePartenariat: 'Depuis 2018',
-        description: 'Partenariat stratégique pour les programmes de management et finance avec possibilité de double diplôme.',
-        avantages: ['Double diplôme Master', 'Échanges semestriels', 'Stages en entreprises françaises']
-      },
-      {
-        id: 2,
-        nom: 'ESCP Business School',
-        pays: 'France',
-        ville: 'Paris',
-        type: 'École de commerce',
-        domaines: ['Business', 'Management', 'Entrepreneuriat'],
-        programmes: ['Échanges étudiants', 'Summer School', 'Formations courtes'],
-        dureePartenariat: 'Depuis 2020',
-        description: 'Collaboration pour l\'excellence en management et entrepreneuriat avec accès aux programmes européens.',
-        avantages: ['Summer School', 'Échanges courts', 'Certifications européennes']
-      },
-      {
-        id: 3,
-        nom: 'Université de Liège',
-        pays: 'Belgique',
-        ville: 'Liège',
-        type: 'Université publique',
-        domaines: ['Ingénierie', 'Sciences', 'Management'],
-        programmes: ['Échanges étudiants', 'Recherche collaborative', 'Double diplôme'],
-        dureePartenariat: 'Depuis 2019',
-        description: 'Partenariat académique fort en ingénierie et sciences avec programmes de recherche conjoints.',
-        avantages: ['Échanges Erasmus+', 'Projets de recherche', 'Double diplôme ingénieur']
-      }
-    ],
-    amerique: [
-      {
-        id: 4,
-        nom: 'Université de Montréal',
-        pays: 'Canada',
-        ville: 'Montréal',
-        type: 'Université publique',
-        domaines: ['Technologies', 'Sciences', 'Management'],
-        programmes: ['Échanges étudiants', 'Stages', 'Programmes courts'],
-        dureePartenariat: 'Depuis 2021',
-        description: 'Collaboration pour l\'innovation technologique et les sciences appliquées avec le Québec.',
-        avantages: ['Échanges francophones', 'Stages technologiques', 'Immersion culturelle']
-      },
-      {
-        id: 5,
-        nom: 'Florida International University',
-        pays: 'États-Unis',
-        ville: 'Miami',
-        type: 'Université publique',
-        domaines: ['Business', 'Informatique', 'Communication'],
-        programmes: ['Summer Programs', 'Échanges courts', 'Certifications'],
-        dureePartenariat: 'Depuis 2022',
-        description: 'Partenariat stratégique pour l\'ouverture sur le marché américain et les certifications internationales.',
-        avantages: ['Programmes d\'été', 'Certifications US', 'Réseau professionnel américain']
-      }
-    ],
-    afrique: [
-      {
-        id: 6,
-        nom: 'Université Cheikh Anta Diop',
-        pays: 'Sénégal',
-        ville: 'Dakar',
-        type: 'Université publique',
-        domaines: ['Droit', 'Économie', 'Sciences sociales'],
-        programmes: ['Échanges étudiants', 'Recherche collaborative', 'Formations conjointes'],
-        dureePartenariat: 'Depuis 2017',
-        description: 'Coopération académique régionale pour le développement de l\'enseignement supérieur en Afrique de l\'Ouest.',
-        avantages: ['Échanges régionaux', 'Recherche africaine', 'Formations spécialisées']
-      },
-      {
-        id: 7,
-        nom: 'Université du Ghana',
-        pays: 'Ghana',
-        ville: 'Accra',
-        type: 'Université publique',
-        domaines: ['Business', 'Technologies', 'Agriculture'],
-        programmes: ['Échanges étudiants', 'Projets communs', 'Formations'],
-        dureePartenariat: 'Depuis 2020',
-        description: 'Partenariat pour le développement économique régional et l\'innovation technologique.',
-        avantages: ['Coopération sous-régionale', 'Projets innovants', 'Échanges culturels']
-      }
-    ]
-  };
-
-  // Statistiques des partenariats
-  statistiques = [
-    { valeur: '15+', label: 'Écoles partenaires' },
-    { valeur: '8', label: 'Pays représentés' },
-    { valeur: '500+', label: 'Étudiants en échange' },
-    { valeur: '50+', label: 'Programmes disponibles' }
+export class ListepartenairesComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  
+  // Données
+  partenaires: EcolePartenaire[] = [];
+  partenairesFiltres: EcolePartenaire[] = [];
+  statistiques: StatistiquePartenaire[] = [];
+  
+  // État du composant
+  loading = false;
+  regionActive = 'europe';
+  
+  // Régions disponibles
+  regions = [
+    { code: 'europe', label: 'Europe', icon: 'pi pi-globe' },
+    { code: 'amerique', label: 'Amérique', icon: 'pi pi-flag' },
+    { code: 'afrique', label: 'Afrique', icon: 'pi pi-sun' }
   ];
 
-  // Filtre actuel
-  regionActive = 'europe';
+  constructor(
+    private router: Router,
+    private partenaireService: PartenaireService,
+    private messageService: MessageService
+  ) {}
 
-  constructor(private router: Router) {}
+  ngOnInit() {
+    this.chargerDonnees();
+  }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-  // Changer de région
+  /**
+   * Charge toutes les données nécessaires
+   */
+  chargerDonnees() {
+    this.loading = true;
+    
+    forkJoin({
+      partenaires: this.partenaireService.getEcolesPartenaires(),
+      count: this.partenaireService.countEcolesPartenaires()
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (data) => {
+        this.partenaires = data.partenaires;
+        this.filtrerParRegion(this.regionActive);
+        this.calculerStatistiques(data.count);
+        this.loading = false;
+      },
+      error: (error: Error) => {
+        console.error('Erreur lors du chargement des partenaires:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Impossible de charger les écoles partenaires'
+        });
+        this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * Change de région et filtre les partenaires
+   */
   changerRegion(region: string) {
     this.regionActive = region;
+    this.filtrerParRegion(region);
   }
 
-  // Obtenir les partenaires de la région active
-  getPartenairesActifs() {
-    return this.partenaires[this.regionActive as keyof typeof this.partenaires] || [];
+  /**
+   * Filtre les partenaires par région
+   */
+  private filtrerParRegion(region: string) {
+    this.partenairesFiltres = this.partenaires.filter(
+      (partenaire: EcolePartenaire) => partenaire.region === region
+    );
   }
 
-  // Navigation vers les détails d'un partenaire
+  /**
+   * Calcule les statistiques à afficher
+   */
+  private calculerStatistiques(totalCount: number) {
+    const paysUniques = new Set(this.partenaires.map((p: EcolePartenaire) => p.pays)).size;
+    const totalProgrammes = this.partenaires.reduce((acc: number, p: EcolePartenaire) => acc + (p.programmes?.length || 0), 0);
+    
+    this.statistiques = [
+      { valeur: totalCount, label: 'Écoles partenaires' },
+      { valeur: paysUniques, label: 'Pays représentés' },
+      { valeur: totalProgrammes, label: 'Programmes disponibles' },
+      { valeur: '500+', label: 'Étudiants en échange' }
+    ];
+  }
+
+  /**
+   * Navigation vers les détails d'un partenaire
+   */
   voirDetails(partenaireId: number) {
-    this.router.navigate(['/universite/ecoles-partenaires/details', partenaireId]);
+    this.router.navigate(['/universite/ecoles-partenaires/details/', partenaireId]);
   }
 
-  // Navigation vers contact
+  /**
+   * Navigation vers la création d'un nouveau partenaire
+   */
+  /* ajouterPartenaire() {
+    this.router.navigate(['/universites/ecoles-partenaires/nouveau']);
+  } */
+
+  /**
+   * Navigation vers l'édition d'un partenaire
+   */
+  modifierPartenaire(partenaireId: number) {
+    this.router.navigate(['universite/ecoles-partenaires/modifier/', partenaireId]);
+  }
+
+  /**
+   * Suppression d'un partenaire
+   */
+  supprimerPartenaire(partenaire: EcolePartenaire, event: Event) {
+    event.stopPropagation();
+    
+    if (confirm(`Êtes-vous sûr de vouloir supprimer l'école "${partenaire.nom}" ?`)) {
+      this.partenaireService.deleteEcolePartenaire(partenaire.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'École partenaire supprimée avec succès'
+            });
+            this.chargerDonnees(); // Recharger les données
+          },
+          error: (error: Error) => {
+            console.error('Erreur lors de la suppression:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Impossible de supprimer l\'école partenaire'
+            });
+          }
+        });
+    }
+  }
+
+  /**
+   * Navigation vers contact
+   */
   navigateToContact() {
     this.router.navigate(['/contacts']);
   }
 
-  // Navigation vers formations
+  /**
+   * Navigation vers formations
+   */
   navigateToFormations() {
     this.router.navigate(['/formations']);
+  }
+
+  /**
+   * Recherche par mot-clé
+   */
+  rechercherPartenaires(keyword: string) {
+    if (!keyword.trim()) {
+      this.filtrerParRegion(this.regionActive);
+      return;
+    }
+
+    this.partenaireService.searchEcolesPartenaires(keyword)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (partenaires: EcolePartenaire[]) => {
+          this.partenairesFiltres = partenaires.filter(
+            (p: EcolePartenaire) => p.region === this.regionActive
+          );
+        },
+        error: (error: Error) => {
+          console.error('Erreur lors de la recherche:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Erreur lors de la recherche'
+          });
+        }
+      });
+  }
+
+  /**
+   * Obtient la couleur pour un tag de domaine
+   */
+  getDomaineTagSeverity(index: number): string {
+    const severities = ['success', 'info', 'warning', 'danger', 'secondary'];
+    return severities[index % severities.length];
+  }
+
+  /**
+   * Formate la durée du partenariat
+   */
+  formatDureePartenariat(duree: string | undefined): string {
+    return duree || 'Non spécifiée';
+  }
+
+  /**
+   * Vérifie si un partenaire a des informations de contact
+   */
+  hasContactInfo(partenaire: EcolePartenaire): boolean {
+    return !!(partenaire.emailContact || partenaire.siteWeb);
   }
 }

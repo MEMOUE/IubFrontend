@@ -1,1 +1,333 @@
-<p>newpartenaires works!</p>
+<!-- Toast pour les messages -->
+<p-toast></p-toast>
+
+<!-- Loader global -->
+<div *ngIf="loading" class="loading-overlay">
+  <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8"></p-progressSpinner>
+</div>
+
+<!-- Container principal -->
+<div class="container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <button pButton 
+              type="button" 
+              icon="pi pi-arrow-left"
+              class="p-button-text back-btn"
+              (click)="annuler()"
+              pTooltip="Retour à la liste">
+      </button>
+      <div class="header-text">
+        <h1 class="page-title">
+          {{ isEditMode ? 'Modifier' : 'Ajouter' }} une École Partenaire
+        </h1>
+        <p class="page-subtitle">
+          {{ isEditMode ? 'Modifiez les informations de l\'école partenaire' : 'Créez un nouveau partenariat avec une école internationale' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="partenaireForm" (ngSubmit)="onSubmit()" class="partenaire-form">
+    
+    <!-- Card 1: Informations générales -->
+    <p-card header="Informations générales" styleClass="form-card">
+      <div class="form-grid">
+        <!-- Nom -->
+        <div class="form-field">
+          <label for="nom" class="field-label required">Nom de l'école</label>
+          <input pInputText 
+                 id="nom"
+                 formControlName="nom"
+                 placeholder="Ex: Université Paris-Dauphine"
+                 [class.ng-invalid]="hasError('nom')"
+                 class="w-full">
+          <small *ngIf="hasError('nom')" class="error-message">
+            {{ getErrorMessage('nom') }}
+          </small>
+        </div>
+
+        <!-- Type -->
+        <div class="form-field">
+          <label for="type" class="field-label required">Type d'établissement</label>
+          <p-dropdown formControlName="type"
+                      [options]="typesEtablissement"
+                      placeholder="Sélectionnez un type"
+                      [class.ng-invalid]="hasError('type')"
+                      styleClass="w-full">
+          </p-dropdown>
+          <small *ngIf="hasError('type')" class="error-message">
+            {{ getErrorMessage('type') }}
+          </small>
+        </div>
+
+        <!-- Pays -->
+        <div class="form-field">
+          <label for="pays" class="field-label required">Pays</label>
+          <input pInputText 
+                 id="pays"
+                 formControlName="pays"
+                 placeholder="Ex: France"
+                 [class.ng-invalid]="hasError('pays')"
+                 class="w-full">
+          <small *ngIf="hasError('pays')" class="error-message">
+            {{ getErrorMessage('pays') }}
+          </small>
+        </div>
+
+        <!-- Ville -->
+        <div class="form-field">
+          <label for="ville" class="field-label required">Ville</label>
+          <input pInputText 
+                 id="ville"
+                 formControlName="ville"
+                 placeholder="Ex: Paris"
+                 [class.ng-invalid]="hasError('ville')"
+                 class="w-full">
+          <small *ngIf="hasError('ville')" class="error-message">
+            {{ getErrorMessage('ville') }}
+          </small>
+        </div>
+
+        <!-- Région -->
+        <div class="form-field">
+          <label for="region" class="field-label required">Région</label>
+          <p-dropdown formControlName="region"
+                      [options]="regions"
+                      placeholder="Sélectionnez une région"
+                      [class.ng-invalid]="hasError('region')"
+                      styleClass="w-full">
+          </p-dropdown>
+          <small *ngIf="hasError('region')" class="error-message">
+            {{ getErrorMessage('region') }}
+          </small>
+        </div>
+
+        <!-- Durée du partenariat -->
+        <div class="form-field">
+          <label for="dureePartenariat" class="field-label">Durée du partenariat</label>
+          <input pInputText 
+                 id="dureePartenariat"
+                 formControlName="dureePartenariat"
+                 placeholder="Ex: Depuis 2018"
+                 class="w-full">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-field full-width">
+        <label for="description" class="field-label">Description</label>
+        <textarea pInputTextarea 
+                  id="description"
+                  formControlName="description"
+                  placeholder="Décrivez le partenariat, ses objectifs et ses spécificités..."
+                  rows="4"
+                  class="w-full">
+        </textarea>
+      </div>
+    </p-card>
+
+    <!-- Card 2: Contacts -->
+    <p-card header="Informations de contact" styleClass="form-card">
+      <div class="form-grid">
+        <!-- Site web -->
+        <div class="form-field">
+          <label for="siteWeb" class="field-label">Site web</label>
+          <input pInputText 
+                 id="siteWeb"
+                 formControlName="siteWeb"
+                 placeholder="https://www.exemple.com"
+                 [class.ng-invalid]="hasError('siteWeb')"
+                 class="w-full">
+          <small *ngIf="hasError('siteWeb')" class="error-message">
+            {{ getErrorMessage('siteWeb') }}
+          </small>
+        </div>
+
+        <!-- Email de contact -->
+        <div class="form-field">
+          <label for="emailContact" class="field-label">Email de contact</label>
+          <input pInputText 
+                 id="emailContact"
+                 formControlName="emailContact"
+                 placeholder="contact@ecole.edu"
+                 [class.ng-invalid]="hasError('emailContact')"
+                 class="w-full">
+          <small *ngIf="hasError('emailContact')" class="error-message">
+            {{ getErrorMessage('emailContact') }}
+          </small>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Card 3: Domaines de collaboration -->
+    <p-card header="Domaines de collaboration" styleClass="form-card">
+      <div class="array-field">
+        <div class="array-header">
+          <p class="array-description">
+            Ajoutez les domaines d'études ou de collaboration avec cette école.
+          </p>
+          <button pButton 
+                  type="button" 
+                  label="Ajouter un domaine" 
+                  icon="pi pi-plus"
+                  class="p-button-outlined p-button-sm"
+                  (click)="ajouterElement('domaines')">
+          </button>
+        </div>
+        
+        <div class="array-items" formArrayName="domaines">
+          <div *ngFor="let domaine of domainesArray.controls; let i = index" 
+               class="array-item">
+            <input pInputText 
+                   [formControlName]="i"
+                   placeholder="Ex: Management, Sciences, Informatique..."
+                   class="array-input">
+            <button pButton 
+                    type="button" 
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                    (click)="supprimerElement('domaines', i)"
+                    pTooltip="Supprimer">
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="domainesArray.length === 0" class="empty-array">
+          Aucun domaine ajouté. Cliquez sur "Ajouter un domaine" pour commencer.
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Card 4: Programmes disponibles -->
+    <p-card header="Programmes disponibles" styleClass="form-card">
+      <div class="array-field">
+        <div class="array-header">
+          <p class="array-description">
+            Listez les programmes d'échange ou de collaboration disponibles.
+          </p>
+          <button pButton 
+                  type="button" 
+                  label="Ajouter un programme" 
+                  icon="pi pi-plus"
+                  class="p-button-outlined p-button-sm"
+                  (click)="ajouterElement('programmes')">
+          </button>
+        </div>
+        
+        <div class="array-items" formArrayName="programmes">
+          <div *ngFor="let programme of programmesArray.controls; let i = index" 
+               class="array-item">
+            <input pInputText 
+                   [formControlName]="i"
+                   placeholder="Ex: Échanges étudiants, Double diplôme, Stages..."
+                   class="array-input">
+            <button pButton 
+                    type="button" 
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                    (click)="supprimerElement('programmes', i)"
+                    pTooltip="Supprimer">
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="programmesArray.length === 0" class="empty-array">
+          Aucun programme ajouté. Cliquez sur "Ajouter un programme" pour commencer.
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Card 5: Avantages pour les étudiants -->
+    <p-card header="Avantages pour les étudiants" styleClass="form-card">
+      <div class="array-field">
+        <div class="array-header">
+          <p class="array-description">
+            Décrivez les avantages et opportunités offertes aux étudiants de l'IUB.
+          </p>
+          <button pButton 
+                  type="button" 
+                  label="Ajouter un avantage" 
+                  icon="pi pi-plus"
+                  class="p-button-outlined p-button-sm"
+                  (click)="ajouterElement('avantages')">
+          </button>
+        </div>
+        
+        <div class="array-items" formArrayName="avantages">
+          <div *ngFor="let avantage of avantagesArray.controls; let i = index" 
+               class="array-item">
+            <input pInputText 
+                   [formControlName]="i"
+                   placeholder="Ex: Bourse d'études, Hébergement facilité, Accompagnement..."
+                   class="array-input">
+            <button pButton 
+                    type="button" 
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                    (click)="supprimerElement('avantages', i)"
+                    pTooltip="Supprimer">
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="avantagesArray.length === 0" class="empty-array">
+          Aucun avantage ajouté. Cliquez sur "Ajouter un avantage" pour commencer.
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Card 6: Options -->
+    <p-card header="Options" styleClass="form-card">
+      <div class="form-field">
+        <div class="checkbox-field">
+          <p-checkbox formControlName="actif" 
+                      id="actif"
+                      [binary]="true">
+          </p-checkbox>
+          <label for="actif" class="checkbox-label">
+            École partenaire active
+          </label>
+        </div>
+        <small class="field-help">
+          Les écoles inactives ne seront pas affichées sur le site public.
+        </small>
+      </div>
+    </p-card>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <div class="actions-left">
+        <button pButton 
+                type="button" 
+                label="Réinitialiser" 
+                icon="pi pi-refresh"
+                class="p-button-outlined p-button-secondary"
+                (click)="reinitialiser()"
+                [disabled]="loading">
+        </button>
+      </div>
+      
+      <div class="actions-right">
+        <button pButton 
+                type="button" 
+                label="Annuler" 
+                icon="pi pi-times"
+                class="p-button-outlined"
+                (click)="annuler()"
+                [disabled]="loading">
+        </button>
+        
+        <button pButton 
+                type="submit" 
+                [label]="isEditMode ? 'Modifier' : 'Créer'"
+                [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'"
+                [disabled]="loading || partenaireForm.invalid"
+                [loading]="loading">
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,3 +1,11 @@
+<!-- Toast pour les messages -->
+<p-toast></p-toast>
+
+<!-- Loader global -->
+<div *ngIf="loading" class="loading-overlay">
+  <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8"></p-progressSpinner>
+</div>
+
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container">
@@ -6,11 +14,22 @@
       L'IUB développe des partenariats stratégiques avec des universités prestigieuses du monde entier 
       pour offrir à nos étudiants une ouverture internationale et des opportunités d'échanges uniques.
     </p>
+    
+    <!-- Bouton d'ajout pour les administrateurs -->
+    <!-- <div class="hero-actions">
+      <button pButton 
+              type="button" 
+              label="Ajouter un Partenaire" 
+              icon="pi pi-plus"
+              class="p-button-outlined"
+              (click)="ajouterPartenaire()">
+      </button>
+    </div> -->
   </div>
 </section>
 
 <!-- Section Statistiques -->
-<section class="stats-section">
+<section class="stats-section" *ngIf="!loading">
   <div class="container">
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let stat of statistiques">
@@ -24,37 +43,49 @@
 <!-- Section Partenaires -->
 <section class="partenaires-section">
   <div class="container">
-    <!-- Filtres par région -->
-    <div class="region-filters">
+    <!-- Filtres et recherche -->
+    <div class="filters-section">
       <h2 class="section-title">Partenaires par Région</h2>
+      
+      <!-- Barre de recherche -->
+      <div class="search-bar">
+        <input type="text" 
+               placeholder="Rechercher une école..."
+               #searchInput
+               (keyup.enter)="rechercherPartenaires(searchInput.value)"
+               (input)="searchInput.value.length === 0 && rechercherPartenaires('')"
+               class="search-input">
+        <button pButton 
+                type="button" 
+                icon="pi pi-search"
+                class="search-btn"
+                (click)="rechercherPartenaires(searchInput.value)">
+        </button>
+      </div>
+      
+      <!-- Filtres par région -->
       <div class="filter-buttons">
         <button pButton 
+                *ngFor="let region of regions"
                 type="button" 
-                label="Europe" 
-                icon="pi pi-globe"
-                [class]="'filter-btn ' + (regionActive === 'europe' ? 'active' : '')"
-                (click)="changerRegion('europe')">
-        </button>
-        <button pButton 
-                type="button" 
-                label="Amérique" 
-                icon="pi pi-flag"
-                [class]="'filter-btn ' + (regionActive === 'amerique' ? 'active' : '')"
-                (click)="changerRegion('amerique')">
-        </button>
-        <button pButton 
-                type="button" 
-                label="Afrique" 
-                icon="pi pi-sun"
-                [class]="'filter-btn ' + (regionActive === 'afrique' ? 'active' : '')"
-                (click)="changerRegion('afrique')">
+                [label]="region.label" 
+                [icon]="region.icon"
+                [class]="'filter-btn ' + (regionActive === region.code ? 'active' : '')"
+                (click)="changerRegion(region.code)">
         </button>
       </div>
     </div>
 
+    <!-- Message si aucun partenaire -->
+    <div *ngIf="!loading && partenairesFiltres.length === 0" class="no-data-message">
+      <i class="pi pi-info-circle"></i>
+      <h3>Aucune école partenaire trouvée</h3>
+      <p>Il n'y a actuellement aucune école partenaire dans la région "{{ regionActive }}".</p>
+    </div>
+
     <!-- Liste des partenaires -->
-    <div class="partenaires-grid">
-      <div class="partenaire-card" *ngFor="let partenaire of getPartenairesActifs()">
+    <div class="partenaires-grid" *ngIf="!loading && partenairesFiltres.length > 0">
+      <div class="partenaire-card" *ngFor="let partenaire of partenairesFiltres">
         <!-- Header du partenaire -->
         <div class="partenaire-header">
           <div class="partenaire-info">
@@ -65,28 +96,48 @@
             </div>
             <span class="partenaire-type">{{ partenaire.type }}</span>
           </div>
-          <div class="partenariat-duree">
-            <span>{{ partenaire.dureePartenariat }}</span>
+          <div class="partenaire-meta">
+            <div class="partenariat-duree">
+              <span>{{ formatDureePartenariat(partenaire.dureePartenariat) }}</span>
+            </div>
+            <!-- Actions -->
+            <div class="partenaire-actions">
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-pencil"
+                      class="p-button-rounded p-button-text p-button-sm"
+                      pTooltip="Modifier"
+                      (click)="modifierPartenaire(partenaire.id)">
+              </button>
+              <button pButton 
+                      type="button" 
+                      icon="pi pi-trash"
+                      class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                      pTooltip="Supprimer"
+                      (click)="supprimerPartenaire(partenaire, $event)">
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Description -->
-        <div class="partenaire-description">
+        <div class="partenaire-description" *ngIf="partenaire.description">
           <p>{{ partenaire.description }}</p>
         </div>
 
         <!-- Domaines -->
-        <div class="partenaire-section">
+        <div class="partenaire-section" *ngIf="partenaire.domaines && partenaire.domaines.length > 0">
           <h4>Domaines de collaboration :</h4>
           <div class="domaines-tags">
-            <span class="domaine-tag" *ngFor="let domaine of partenaire.domaines">
-              {{ domaine }}
-            </span>
+            <p-tag *ngFor="let domaine of partenaire.domaines; let i = index"
+                   [value]="domaine"
+                   [severity]="getDomaineTagSeverity(i)">
+            </p-tag>
           </div>
         </div>
 
         <!-- Programmes -->
-        <div class="partenaire-section">
+        <div class="partenaire-section" *ngIf="partenaire.programmes && partenaire.programmes.length > 0">
           <h4>Programmes disponibles :</h4>
           <ul class="programmes-list">
             <li *ngFor="let programme of partenaire.programmes">{{ programme }}</li>
@@ -94,11 +145,30 @@
         </div>
 
         <!-- Avantages -->
-        <div class="partenaire-section">
+        <div class="partenaire-section" *ngIf="partenaire.avantages && partenaire.avantages.length > 0">
           <h4>Avantages pour nos étudiants :</h4>
           <ul class="avantages-list">
             <li *ngFor="let avantage of partenaire.avantages">{{ avantage }}</li>
           </ul>
+        </div>
+
+        <!-- Informations de contact -->
+        <div class="partenaire-contact" *ngIf="hasContactInfo(partenaire)">
+          <div class="contact-links">
+            <a *ngIf="partenaire.siteWeb" 
+               [href]="partenaire.siteWeb" 
+               target="_blank"
+               class="contact-link">
+              <i class="pi pi-external-link"></i>
+              Site web
+            </a>
+            <a *ngIf="partenaire.emailContact" 
+               [href]="'mailto:' + partenaire.emailContact"
+               class="contact-link">
+              <i class="pi pi-envelope"></i>
+              Contact
+            </a>
+          </div>
         </div>
 
         <!-- Footer avec action -->

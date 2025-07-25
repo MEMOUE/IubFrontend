@@ -1,0 +1,689 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --error-color: #ef4444;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --info-color: #3b82f6;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+/* Error Container */
+.error-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+  padding: 2rem;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 500px;
+  background: white;
+  padding: 3rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: var(--error-color);
+  margin-bottom: 1.5rem;
+}
+
+.error-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.error-content p {
+  color: var(--text-color-light);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Container */
+.container {
+  min-height: 100vh;
+  background: var(--background-color);
+}
+
+/* Page Header */
+.page-header {
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-light);
+}
+
+.header-navigation {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.back-btn {
+  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: var(--primary-color) !important;
+  flex-shrink: 0;
+}
+
+.back-btn:hover {
+  background: rgba(184, 84, 80, 0.1) !important;
+  color: var(--primary-color) !important;
+}
+
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.breadcrumb-item {
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.breadcrumb-item:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  color: var(--text-color-light);
+  font-size: 0.8rem;
+}
+
+.breadcrumb-current {
+  color: var(--text-color);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-background {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  position: relative;
+}
+
+.hero-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.institution-avatar {
+  flex-shrink: 0;
+}
+
+::ng-deep .custom-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 3px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-meta > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+.hero-meta i {
+  color: rgba(255, 255, 255, 0.8);
+  width: 16px;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.hero-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+}
+
+.hero-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px);
+}
+
+/* Content Section */
+.content-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Cards */
+::ng-deep .detail-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+::ng-deep .detail-card:hover {
+  box-shadow: var(--shadow);
+  border-color: rgba(184, 84, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+::ng-deep .detail-card .p-card-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: none;
+}
+
+::ng-deep .detail-card .p-card-content {
+  padding: 2rem;
+}
+
+/* Description Card */
+.description-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+/* Tags Container */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+::ng-deep .domain-tag {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+/* Info Lists */
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.list-item:hover {
+  background: white;
+  border-color: var(--primary-color);
+  transform: translateX(4px);
+}
+
+.item-icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  font-weight: bold;
+}
+
+.programmes-list .item-icon {
+  color: var(--primary-color);
+}
+
+.avantages-list .item-icon.success {
+  color: var(--success-color);
+}
+
+.list-item span {
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+/* Contact Card */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.contact-item:hover {
+  background: white;
+  border-color: var(--primary-color);
+}
+
+.contact-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.contact-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-value {
+  font-size: 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.email-link:hover,
+.website-link:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* CTA Section */
+.cta-section {
+  margin-top: 2rem;
+}
+
+::ng-deep .cta-card {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  border: none;
+  box-shadow: var(--shadow-heavy);
+}
+
+::ng-deep .cta-card .p-card-header {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+::ng-deep .cta-card .p-card-content {
+  color: white;
+}
+
+.cta-content {
+  text-align: center;
+}
+
+.cta-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-actions button {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+}
+
+.cta-actions button:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px);
+}
+
+/* Navigation Section */
+.navigation-section {
+  margin-top: 1rem;
+}
+
+::ng-deep .navigation-card .p-card-content {
+  padding: 2rem;
+}
+
+.navigation-content {
+  text-align: center;
+}
+
+.navigation-content h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.navigation-content p {
+  color: var(--text-color-light);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-navigation {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+  }
+
+  .header-breadcrumb {
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .hero-content {
+    padding: 2rem 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-meta > div {
+    justify-content: center;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-section {
+    padding: 1rem;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .contact-details {
+    align-items: center;
+  }
+
+  .cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-actions button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .hero-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-badges {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  ::ng-deep .custom-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.5rem !important;
+  }
+
+  .hero-content {
+    padding: 1.5rem 1rem;
+  }
+
+  ::ng-deep .detail-card .p-card-content {
+    padding: 1.5rem;
+  }
+
+  .list-item {
+    padding: 0.75rem;
+  }
+
+  .contact-item {
+    padding: 0.75rem;
+  }
+
+  .error-content {
+    padding: 2rem;
+  }
+
+  .tags-container {
+    justify-content: center;
+  }
+}
+
+/* Animations */
+.detail-card {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Focus visible for accessibility */
+::ng-deep .p-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .page-header,
+  .hero-actions,
+  .header-actions,
+  .cta-section,
+  .navigation-section {
+    display: none;
+  }
+
+  .hero-background {
+    background: var(--primary-color) !important;
+  }
+
+  .container {
+    background: white;
+  }
+}

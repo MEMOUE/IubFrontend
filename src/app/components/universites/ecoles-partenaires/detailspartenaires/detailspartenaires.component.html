@@ -1,1 +1,271 @@
-<p>detailspartenaires works!</p>
+<!-- Toast pour les messages -->
+<p-toast></p-toast>
+
+<!-- Loader global -->
+<div *ngIf="loading" class="loading-overlay">
+  <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8"></p-progressSpinner>
+</div>
+
+<!-- Message d'erreur -->
+<div *ngIf="error && !loading" class="error-container">
+  <div class="error-content">
+    <i class="pi pi-exclamation-triangle error-icon"></i>
+    <h2>École partenaire introuvable</h2>
+    <p>L'école partenaire que vous recherchez n'existe pas ou a été supprimée.</p>
+    <div class="error-actions">
+      <button pButton 
+              type="button" 
+              label="Retour à la liste" 
+              icon="pi pi-arrow-left"
+              (click)="retourListe()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Réessayer" 
+              icon="pi pi-refresh"
+              class="p-button-outlined"
+              (click)="recharger()">
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Contenu principal -->
+<div *ngIf="partenaire && !loading" class="container">
+  
+  <!-- Header avec navigation -->
+  <div class="page-header">
+    <div class="header-navigation">
+      <button pButton 
+              type="button" 
+              icon="pi pi-arrow-left"
+              class="p-button-text back-btn"
+              (click)="retourListe()"
+              pTooltip="Retour à la liste">
+      </button>
+      
+      <div class="header-breadcrumb">
+        <span class="breadcrumb-item" (click)="retourListe()">Écoles partenaires</span>
+        <i class="pi pi-angle-right breadcrumb-separator"></i>
+        <span class="breadcrumb-current">{{ partenaire.nom }}</span>
+      </div>
+      
+      <div class="header-actions">
+        <button pButton 
+                type="button" 
+                icon="pi pi-share-alt"
+                class="p-button-rounded p-button-text"
+                (click)="partager()"
+                pTooltip="Partager">
+        </button>
+        <button pButton 
+                type="button" 
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text"
+                (click)="modifierPartenaire()"
+                pTooltip="Modifier">
+        </button>
+        <button pButton 
+                type="button" 
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger"
+                (click)="supprimerPartenaire()"
+                pTooltip="Supprimer">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-background" [style.background-color]="getRegionConfig()?.color || '#B85450'">
+      <div class="hero-content">
+        <div class="hero-main">
+          <div class="institution-avatar">
+            <p-avatar [label]="partenaire.nom.charAt(0)" 
+                      size="large"
+                      styleClass="custom-avatar">
+            </p-avatar>
+          </div>
+          
+          <div class="hero-info">
+            <h1 class="hero-title">{{ partenaire.nom }}</h1>
+            
+            <div class="hero-meta">
+              <div class="location-info">
+                <i class="pi pi-map-marker"></i>
+                <span>{{ partenaire.ville }}, {{ partenaire.pays }}</span>
+              </div>
+              
+              <div class="type-info">
+                <i class="pi pi-building"></i>
+                <span>{{ partenaire.type }}</span>
+              </div>
+              
+              <div class="region-info" *ngIf="getRegionConfig()">
+                <i [class]="getRegionConfig()?.icon"></i>
+                <span>{{ getRegionConfig()?.label }}</span>
+              </div>
+            </div>
+            
+            <!-- Statut et durée -->
+            <div class="hero-badges">
+              <p-tag [value]="getStatutActivite().label"
+                     [severity]="getStatutActivite().severity"
+                     [icon]="getStatutActivite().icon">
+              </p-tag>
+              
+              <p-tag value="{{ formatDureePartenariat() }}"
+                     severity="info"
+                     icon="pi pi-calendar">
+              </p-tag>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions principales -->
+        <div class="hero-actions">
+          <button pButton 
+                  *ngIf="partenaire.siteWeb"
+                  type="button" 
+                  label="Site web" 
+                  icon="pi pi-external-link"
+                  class="p-button-outlined hero-btn"
+                  (click)="ouvrirSiteWeb()">
+          </button>
+          
+          <button pButton 
+                  *ngIf="partenaire.emailContact"
+                  type="button" 
+                  label="Contact" 
+                  icon="pi pi-envelope"
+                  class="p-button-outlined hero-btn"
+                  (click)="envoyerEmail()">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="content-section">
+    
+    <!-- Description -->
+    <p-card *ngIf="partenaire.description" 
+            header="À propos du partenariat" 
+            styleClass="detail-card description-card">
+      <p class="description-text">{{ partenaire.description }}</p>
+    </p-card>
+
+    <!-- Grille d'informations -->
+    <div class="info-grid">
+      
+      <!-- Domaines de collaboration -->
+      <p-card *ngIf="partenaire.domaines && partenaire.domaines.length > 0"
+              header="Domaines de collaboration" 
+              styleClass="detail-card">
+        <div class="tags-container">
+          <p-tag *ngFor="let domaine of partenaire.domaines; let i = index"
+                 [value]="domaine"
+                 [severity]="getDomaineTagSeverity(i)"
+                 styleClass="domain-tag">
+          </p-tag>
+        </div>
+      </p-card>
+
+      <!-- Programmes disponibles -->
+      <p-card *ngIf="partenaire.programmes && partenaire.programmes.length > 0"
+              header="Programmes disponibles" 
+              styleClass="detail-card">
+        <ul class="info-list programmes-list">
+          <li *ngFor="let programme of partenaire.programmes" class="list-item">
+            <i class="pi pi-arrow-right item-icon"></i>
+            <span>{{ programme }}</span>
+          </li>
+        </ul>
+      </p-card>
+
+      <!-- Avantages pour les étudiants -->
+      <p-card *ngIf="partenaire.avantages && partenaire.avantages.length > 0"
+              header="Avantages pour nos étudiants" 
+              styleClass="detail-card">
+        <ul class="info-list avantages-list">
+          <li *ngFor="let avantage of partenaire.avantages" class="list-item">
+            <i class="pi pi-check item-icon success"></i>
+            <span>{{ avantage }}</span>
+          </li>
+        </ul>
+      </p-card>
+
+      <!-- Informations de contact -->
+      <p-card *ngIf="hasContactInfo()"
+              header="Informations de contact" 
+              styleClass="detail-card contact-card">
+        <div class="contact-info">
+          
+          <div *ngIf="partenaire.emailContact" class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-envelope"></i>
+            </div>
+            <div class="contact-details">
+              <span class="contact-label">Email</span>
+              <a [href]="'mailto:' + partenaire.emailContact" 
+                 class="contact-value email-link">
+                {{ partenaire.emailContact }}
+              </a>
+            </div>
+          </div>
+          
+          <div *ngIf="partenaire.siteWeb" class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-globe"></i>
+            </div>
+            <div class="contact-details">
+              <span class="contact-label">Site web</span>
+              <a [href]="partenaire.siteWeb" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class="contact-value website-link">
+                {{ partenaire.siteWeb }}
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Section Call to Action -->
+    <div class="cta-section">
+      <p-card header="Intéressé par ce partenariat ?" styleClass="cta-card">
+        <div class="cta-content">
+          <p class="cta-text">
+            Découvrez nos formations et les opportunités d'échange avec {{ partenaire.nom }}.
+            Nos conseillers sont là pour vous accompagner dans vos projets académiques internationaux.
+          </p>
+          
+          <div class="cta-actions">
+            <button pButton 
+                    type="button" 
+                    label="Voir nos formations" 
+                    icon="pi pi-book"
+                    (click)="voirFormations()">
+            </button>
+            
+            <button pButton 
+                    type="button" 
+                    label="Nous contacter" 
+                    icon="pi pi-phone"
+                    class="p-button-outlined"
+                    (click)="voirContacts()">
+            </button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Navigation vers d'autres partenaires -->
+    
+
+  </div>
+</div>
