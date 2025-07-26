@@ -58,6 +58,7 @@ export const routes: Routes = [
     // Routes Admin
     { path: 'admin/login', component: LoginComponent },
     { path: 'admin', component: AccueilAdminComponent },
+    { path: 'admin/accueil', component: AccueilAdminComponent },
 
     
     // Route wildcard - doit être en dernier
