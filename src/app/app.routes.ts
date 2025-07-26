@@ -18,6 +18,7 @@ import { ContactsComponent } from './components/contacts/contacts.component';
 import { LoginComponent } from './components/admin/login/login.component';
 import { AccueilAdminComponent } from './components/admin/accueil-admin/accueil-admin.component';
 import { DetailActualiteComponent } from './components/actualites/detail-actualite/detail-actualite.component';
+import { NewdirecteurComponent } from './components/universites/directeurs/newdirecteur/newdirecteur.component';
 
 export const routes: Routes = [
     // Route par défaut - Page d'accueil
@@ -59,6 +60,11 @@ export const routes: Routes = [
     { path: 'admin/login', component: LoginComponent },
     { path: 'admin', component: AccueilAdminComponent },
     { path: 'admin/accueil', component: AccueilAdminComponent },
+
+    // Route pour le directeur
+    { path: 'universite/directeur', component: DirecteurComponent },
+    { path: 'universite/directeur/nouveau', component: NewdirecteurComponent },
+    {path: 'universite/directeur/modifier/:id', component: NewdirecteurComponent },
 
     
     // Route wildcard - doit être en dernier

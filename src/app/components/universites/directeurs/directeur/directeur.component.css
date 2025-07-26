@@ -8,222 +8,399 @@
   --text-color-light: #666666;
   --border-color: #E5E5E5;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --error-color: #ff6b6b;
+  --success-color: #51cf66;
 }
 
-/* Container */
+/* Container global */
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-/* Hero Section */
+/* ========== SECTION HERO ========== */
 .hero-section {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
-  padding: 4rem 0;
+  padding: 3rem 0;
   text-align: center;
+  margin-bottom: 2rem;
 }
 
 .hero-title {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .hero-description {
-  font-size: 1.1rem;
-  opacity: 0.95;
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 0 0 2rem 0;
   max-width: 600px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Section Présentation du Directeur */
-.director-presentation {
-  padding: 4rem 0;
+/* Actions d'administration */
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.admin-btn {
+  min-width: 140px;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  border: 2px solid white !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.admin-btn:hover {
+  background: white !important;
+  color: var(--primary-color) !important;
+  border-color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.admin-btn.p-button-danger {
+  border-color: #ff6b6b !important;
+  background: rgba(255, 107, 107, 0.2) !important;
+}
+
+.admin-btn.p-button-danger:hover {
+  background: #ff6b6b !important;
+  color: white !important;
+  border-color: #ff6b6b !important;
+}
+
+/* ========== LOADING & ERROR STATES ========== */
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: white;
 }
 
-.director-card {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 3rem;
-  align-items: start;
-  background: var(--background-color);
-  padding: 3rem;
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
+.error-container {
+  padding: 2rem 0;
+  background: white;
 }
 
+/* ========== SECTION DIRECTEUR ========== */
+.director-presentation {
+  background: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.director-card {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+/* Photo Section avec gestion d'états avancée */
 .director-photo {
-  text-align: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 200px;
+  height: 240px;
 }
 
 .director-photo img {
   width: 100%;
-  max-width: 250px;
-  height: 300px;
+  height: 100%;
   object-fit: cover;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border: 3px solid white;
+  border: 4px solid white;
+  box-shadow: var(--shadow);
+  transition: opacity 0.3s ease;
+}
+
+/* Indicateur de chargement de l'image */
+.image-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Indicateur d'erreur d'image */
+.image-error {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  text-align: center;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  backdrop-filter: blur(5px);
+}
+
+.image-error i {
+  font-size: 0.8rem;
+}
+
+.default-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 2;
 }
 
 .director-info {
-  padding: 1rem 0;
+  flex: 1;
 }
 
 .director-name {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
 }
 
 .director-title {
   font-size: 1.3rem;
+  color: var(--secondary-color);
   font-weight: 600;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
 }
 
 .director-experience {
   font-size: 1.1rem;
-  color: var(--text-color-light);
-  margin-bottom: 2rem;
-  font-style: italic;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Informations de contact */
+.contact-info {
+  margin: 1.5rem 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.contact-item i {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  width: 20px;
+}
+
+.contact-item a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/* Qualifications */
+.director-credentials {
+  background: var(--background-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
 }
 
 .director-credentials h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  margin: 0 0 1rem 0;
   color: var(--text-color);
-  margin-bottom: 1rem;
+  font-size: 1.1rem;
 }
 
 .director-credentials ul {
-  list-style: none;
-  padding: 0;
+  margin: 0;
+  padding-left: 1.5rem;
 }
 
 .director-credentials li {
-  padding: 0.5rem 0;
-  padding-left: 1.5rem;
-  position: relative;
+  margin-bottom: 0.5rem;
   color: var(--text-color-light);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-.director-credentials li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--secondary-color);
-  font-weight: bold;
-}
-
-/* Section Message */
+/* ========== SECTION MESSAGE ========== */
 .message-section {
-  padding: 4rem 0;
-  background: var(--background-color);
+  background: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
 }
 
 .message-content {
-  max-width: 900px;
-  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
 }
 
 .message-block {
-  background: white;
-  padding: 3rem;
-  margin-bottom: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
+  margin-bottom: 2.5rem;
+}
+
+.message-block:last-child {
+  margin-bottom: 0;
 }
 
 .message-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
+  margin: 0 0 1rem 0;
   border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
 }
 
 .message-text {
-  line-height: 1.8;
+  color: var(--text-color);
+  line-height: 1.7;
+  font-size: 1.05rem;
 }
 
 .message-text p {
-  font-size: 1.1rem;
-  color: var(--text-color);
-  margin-bottom: 1.5rem;
-  text-align: justify;
+  margin: 0 0 1rem 0;
 }
 
 .message-text p:last-child {
   margin-bottom: 0;
 }
 
-/* Section Signature */
+/* Signature */
 .signature-section {
   margin-top: 3rem;
-  text-align: right;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
 }
 
 .signature {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  display: inline-block;
-  box-shadow: var(--shadow);
+  text-align: right;
+  background: var(--background-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--secondary-color);
 }
 
 .signature-text {
-  font-size: 1.1rem;
-  color: var(--text-color-light);
-  margin-bottom: 1rem;
   font-style: italic;
+  color: var(--text-color-light);
+  margin: 0 0 0.5rem 0;
 }
 
 .signature-name {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0 0 0.25rem 0;
 }
 
 .signature-title {
-  font-size: 1rem;
-  color: var(--primary-color);
-  font-weight: 600;
+  color: var(--secondary-color);
+  font-weight: 500;
   margin: 0;
 }
 
-/* Section CTA */
+/* ========== SECTION INFORMATIONS COMPLÉMENTAIRES ========== */
+.additional-info {
+  background: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.info-item i {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.info-item strong {
+  color: var(--text-color);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.info-item p {
+  margin: 0;
+  color: var(--text-color-light);
+}
+
+/* ========== SECTION CALL TO ACTION ========== */
 .cta-section {
-  padding: 4rem 0;
-  background: var(--accent-color);
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
   color: white;
+  padding: 4rem 0;
   text-align: center;
 }
 
 .cta-section h2 {
   font-size: 2.2rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .cta-section p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  font-size: 1.2rem;
   opacity: 0.9;
+  margin: 0 0 2rem 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cta-buttons {
@@ -233,35 +410,77 @@
   flex-wrap: wrap;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-  .director-card {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: center;
-  }
-  
-  .director-photo img {
-    max-width: 200px;
-    height: 240px;
-  }
-  
-  .signature-section {
-    text-align: center;
-  }
-}
-
+/* ========== RESPONSIVE DESIGN ========== */
 @media (max-width: 768px) {
   .container {
     padding: 0 1rem;
   }
 
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
   }
 
   .director-card {
-    padding: 2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .director-photo {
+    width: 150px;
+    height: 180px;
+    margin: 0 auto;
+  }
+
+  .admin-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-btn {
+    width: 200px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .message-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 2rem 0;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .director-presentation,
+  .message-section,
+  .additional-info {
+    padding: 2rem 0;
+  }
+
+  .director-card,
+  .message-content {
+    padding: 1.5rem;
   }
 
   .director-name {
@@ -272,70 +491,132 @@
     font-size: 1.1rem;
   }
 
-  .message-block {
-    padding: 2rem;
-  }
-
   .message-title {
     font-size: 1.3rem;
   }
 
-  .message-text p {
-    font-size: 1rem;
-    text-align: left;
-  }
-
-  .cta-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .cta-buttons button {
-    width: 100%;
-    max-width: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 1.8rem;
-  }
-
-  .director-card {
-    padding: 1.5rem;
-  }
-
-  .director-photo img {
-    max-width: 150px;
-    height: 180px;
-  }
-
-  .director-name {
-    font-size: 1.4rem;
-  }
-
-  .message-block {
-    padding: 1.5rem;
-  }
-
-  .message-title {
-    font-size: 1.2rem;
-  }
-
   .signature {
-    padding: 1.5rem;
+    text-align: center;
   }
 
-  .cta-section h2 {
-    font-size: 1.8rem;
+  .director-photo {
+    width: 120px;
+    height: 144px;
   }
 }
 
-/* Animation hover pour la photo du directeur */
-.director-photo img {
-  transition: transform 0.3s ease;
+/* ========== OVERRIDES PRIMENG ========== */
+::ng-deep .p-button {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.75rem 1.5rem;
 }
 
-.director-photo:hover img {
-  transform: scale(1.05);
+::ng-deep .p-button:not(.p-button-text):not(.p-button-outlined) {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-button:not(.p-button-text):not(.p-button-outlined):hover {
+  background: #a04a46;
+  border-color: #a04a46;
+  transform: translateY(-2px);
+}
+
+::ng-deep .p-button.p-button-outlined {
+  background: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-button.p-button-outlined:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+::ng-deep .p-button.p-button-text {
+  color: white;
+}
+
+::ng-deep .p-button.p-button-text:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Seulement les boutons de la fenêtre de confirmation - garder le design original du dialog */
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button {
+  min-width: 100px !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Bouton Annuler/Rejeter - Gris visible */
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button-secondary,
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button:not(.p-button-danger) {
+  background: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+}
+
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button-secondary:hover,
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button:not(.p-button-danger):hover {
+  background: #5a6268 !important;
+  border-color: #5a6268 !important;
+}
+
+/* Bouton Supprimer/Accepter - Rouge visible */
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button-danger {
+  background: #dc3545 !important;
+  border-color: #dc3545 !important;
+  color: white !important;
+}
+
+::ng-deep .p-confirmdialog .p-dialog-footer .p-button-danger:hover {
+  background: #c82333 !important;
+  border-color: #c82333 !important;
+}
+
+::ng-deep .p-card {
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+}
+
+::ng-deep .p-card .p-card-header {
+  background: var(--background-color);
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 1.5rem;
+}
+
+::ng-deep .p-card .p-card-body {
+  padding: 2rem;
+}
+
+::ng-deep .p-tag {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+::ng-deep .p-progressspinner {
+  width: 4rem;
+  height: 4rem;
+}
+
+::ng-deep .p-message {
+  border-radius: 8px;
+  border-width: 0 0 0 4px;
+}
+
+/* Styles spécifiques pour les petits spinners */
+::ng-deep .w-2rem {
+  width: 2rem !important;
+}
+
+::ng-deep .h-2rem {
+  height: 2rem !important;
 }

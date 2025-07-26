@@ -7,6 +7,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 // Services
 import { DirecteurService, Directeur } from '../../../../core/services/directeur.service';
@@ -23,8 +29,14 @@ interface MessageSection {
     CommonModule,
     ButtonModule,
     ProgressSpinnerModule,
-    MessageModule
+    MessageModule,
+    CardModule,
+    DividerModule,
+    TagModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './directeur.component.html',
   styleUrl: './directeur.component.css'
 })
@@ -40,6 +52,10 @@ export class DirecteurComponent implements OnInit, OnDestroy {
 
   // Sections du message (construites à partir des données du directeur)
   messageSections: MessageSection[] = [];
+
+  // État de l'image
+  imageError = false;
+  imageLoading = true;
 
   // Données par défaut en cas d'absence de directeur
   private readonly defaultDirecteur: Directeur = {
@@ -85,7 +101,9 @@ Ensemble, construisons l'avenir !`
 
   constructor(
     private router: Router,
-    private directeurService: DirecteurService
+    private directeurService: DirecteurService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -177,20 +195,38 @@ Ensemble, construisons l'avenir !`
   }
 
   /**
-   * Obtient l'URL de la photo du directeur
+   * Obtient l'URL de la photo du directeur (nouvelle méthode comme les actualités)
    */
   getDirecteurPhotoUrl(): string {
-    if (this.directeur?.photoUrl) {
-      // Si l'URL commence par http, l'utiliser telle quelle
-      if (this.directeur.photoUrl.startsWith('http')) {
-        return this.directeur.photoUrl;
-      }
-      // Sinon, construire l'URL complète
-      return `${window.location.origin}/${this.directeur.photoUrl}`;
-    }
+    return this.directeurService.getPhotoUrl(this.directeur);
+  }
+
+  /**
+   * Gestion de l'erreur d'image (comme pour les actualités)
+   */
+  onImageError(event: any): void {
+    console.warn('Erreur de chargement de l\'image:', event);
+    this.imageError = true;
+    this.imageLoading = false;
     
-    // Image par défaut
-    return 'assets/images/default-director.jpg';
+    // Fallback vers l'image par défaut
+    event.target.src = 'assets/images/default-director.jpg';
+  }
+
+  /**
+   * Image chargée avec succès
+   */
+  onImageLoad(): void {
+    this.imageError = false;
+    this.imageLoading = false;
+  }
+
+  /**
+   * Début du chargement de l'image
+   */
+  onImageLoadStart(): void {
+    this.imageLoading = true;
+    this.imageError = false;
   }
 
   /**
@@ -222,10 +258,96 @@ Ensemble, construisons l'avenir !`
   }
 
   /**
+   * Vérifie si un directeur personnalisé existe (pas les données par défaut)
+   */
+  hasCustomDirecteur(): boolean {
+    return this.directeur !== this.defaultDirecteur && 
+           this.directeur?.nom !== this.defaultDirecteur.nom;
+  }
+
+  /**
+   * Obtient les informations de contact du directeur
+   */
+  getContactInfo(): any {
+    if (!this.directeur) return null;
+    
+    return {
+      email: this.directeur.email,
+      telephone: this.directeur.telephone,
+      adresse: this.directeur.adresse,
+      linkedinUrl: this.directeur.linkedinUrl
+    };
+  }
+
+  /**
    * Recharge les données du directeur
    */
   refreshData(): void {
     this.loadDirecteurData();
+  }
+
+  /**
+   * Navigue vers l'édition du directeur
+   */
+  editDirecteur(): void {
+    this.router.navigate(['/universite/directeur/nouveau']);
+  }
+
+  /**
+   * Navigue vers la création d'un nouveau directeur
+   */
+  createDirecteur(): void {
+    this.router.navigate(['/universite/directeur/nouveau']);
+  }
+
+  /**
+   * Supprime le directeur actuel avec confirmation
+   */
+  deleteDirecteur(): void {
+    if (!this.directeur?.id) return;
+
+    this.confirmationService.confirm({
+      message: 'Êtes-vous sûr de vouloir supprimer ce directeur ? Cette action ne peut pas être annulée.',
+      header: 'Confirmation de suppression',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Supprimer',
+      rejectLabel: 'Annuler',
+      accept: () => {
+        this.performDelete();
+      }
+    });
+  }
+
+  /**
+   * Effectue la suppression du directeur
+   */
+  private performDelete(): void {
+    if (!this.directeur?.id) return;
+
+    this.loading = true;
+    
+    this.directeurService.deleteDirecteur(this.directeur.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Directeur supprimé avec succès'
+          });
+          
+          // Recharger les données (va utiliser les données par défaut)
+          this.loadDirecteurData();
+        },
+        error: (error) => {
+          this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Erreur lors de la suppression du directeur'
+          });
+        }
+      });
   }
 
   // Méthodes de navigation

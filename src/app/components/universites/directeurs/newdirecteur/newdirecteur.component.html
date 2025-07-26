@@ -1,1 +1,355 @@
-<p>newdirecteur works!</p>
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-title">
+      <i class="pi pi-user-edit"></i>
+      {{ isEditMode ? 'Modifier le Directeur' : 'Ajouter un Directeur' }}
+    </h1>
+    <p class="page-description">
+      {{ isEditMode ? 'Modifiez les informations du directeur actuel' : 'Ajoutez les informations du nouveau directeur' }}
+    </p>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-container">
+  <div class="container">
+    <div style="text-align: center; padding: 2rem 0;">
+      <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="3"></p-progressSpinner>
+      <p style="margin-top: 1rem; color: var(--text-color-secondary);">
+        {{ isEditMode ? 'Chargement des données...' : 'Traitement en cours...' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Form Content -->
+<div *ngIf="!loading" class="form-container">
+  <div class="container">
+    
+    <!-- Formulaire principal -->
+    <form [formGroup]="directeurForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Section Informations personnelles -->
+      <p-card header="Informations personnelles" styleClass="form-card">
+        <div class="form-grid">
+          
+          <!-- Nom -->
+          <div class="form-field">
+            <label for="nom" class="field-label">Nom complet *</label>
+            <input 
+              pInputText 
+              id="nom" 
+              formControlName="nom"
+              placeholder="Nom complet du directeur"
+              [class.ng-invalid]="isFieldInvalid('nom')"
+              class="field-input" />
+            <small *ngIf="isFieldInvalid('nom')" class="field-error">
+              {{ getFieldError('nom') }}
+            </small>
+          </div>
+
+          <!-- Titre -->
+          <div class="form-field">
+            <label for="titre" class="field-label">Titre/Fonction *</label>
+            <input 
+              pInputText 
+              id="titre" 
+              formControlName="titre"
+              placeholder="Ex: Directeur Général de l'IUB"
+              [class.ng-invalid]="isFieldInvalid('titre')"
+              class="field-input" />
+            <small *ngIf="isFieldInvalid('titre')" class="field-error">
+              {{ getFieldError('titre') }}
+            </small>
+          </div>
+
+          <!-- Expérience -->
+          <div class="form-field full-width">
+            <label for="experience" class="field-label">Expérience professionnelle</label>
+            <textarea 
+              pInputTextarea 
+              id="experience" 
+              formControlName="experience"
+              placeholder="Résumé de l'expérience professionnelle"
+              rows="3"
+              class="field-input">
+            </textarea>
+          </div>
+
+        </div>
+      </p-card>
+
+      <!-- Section Contact -->
+      <p-card header="Informations de contact" styleClass="form-card">
+        <div class="form-grid">
+          
+          <!-- Email -->
+          <div class="form-field">
+            <label for="email" class="field-label">Email</label>
+            <input 
+              pInputText 
+              id="email" 
+              formControlName="email"
+              placeholder="email@iub-university.com"
+              [class.ng-invalid]="isFieldInvalid('email')"
+              class="field-input" />
+            <small *ngIf="isFieldInvalid('email')" class="field-error">
+              {{ getFieldError('email') }}
+            </small>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="form-field">
+            <label for="telephone" class="field-label">Téléphone</label>
+            <input 
+              pInputText 
+              id="telephone" 
+              formControlName="telephone"
+              placeholder="+225 XX XX XX XX"
+              class="field-input" />
+          </div>
+
+          <!-- LinkedIn -->
+          <div class="form-field">
+            <label for="linkedinUrl" class="field-label">Profil LinkedIn</label>
+            <input 
+              pInputText 
+              id="linkedinUrl" 
+              formControlName="linkedinUrl"
+              placeholder="https://linkedin.com/in/..."
+              class="field-input" />
+          </div>
+
+          <!-- Adresse -->
+          <div class="form-field full-width">
+            <label for="adresse" class="field-label">Adresse</label>
+            <textarea 
+              pInputTextarea 
+              id="adresse" 
+              formControlName="adresse"
+              placeholder="Adresse du bureau"
+              rows="2"
+              class="field-input">
+            </textarea>
+          </div>
+
+        </div>
+      </p-card>
+
+      <!-- Section Photo -->
+      <p-card header="Photo du directeur" styleClass="form-card">
+        <div class="photo-section">
+          
+          <!-- Indicateur d'upload en cours -->
+          <div class="upload-progress" *ngIf="uploadingPhoto">
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem; color: var(--primary-color);"></i>
+            <p style="margin-top: 0.5rem; color: var(--text-color-light);">Upload en cours...</p>
+          </div>
+
+          <!-- Prévisualisation de la photo -->
+          <div class="photo-preview" *ngIf="photoPreview && !uploadingPhoto">
+            <img [src]="photoPreview" alt="Aperçu de la photo" />
+            <button type="button" 
+                    pButton 
+                    icon="pi pi-times" 
+                    class="p-button-rounded p-button-danger p-button-sm remove-photo-btn"
+                    (click)="onPhotoRemove()">
+            </button>
+            
+            <!-- Indicateur de statut d'upload -->
+            <div class="upload-status" *ngIf="uploadedPhotoUrl">
+              <i class="pi pi-check-circle" style="color: #28a745; margin-right: 0.5rem;"></i>
+              <span style="color: #28a745; font-size: 0.85rem;">Photo uploadée</span>
+            </div>
+          </div>
+
+          <!-- Upload de photo -->
+          <div class="photo-upload" *ngIf="!photoPreview && !uploadingPhoto">
+            <p-fileUpload mode="basic" 
+                          chooseLabel="Choisir une photo" 
+                          accept="image/*" 
+                          maxFileSize="5000000"
+                          (onSelect)="onFileSelect($event)"
+                          [disabled]="uploadingPhoto"
+                          styleClass="upload-btn">
+            </p-fileUpload>
+            <small class="upload-hint">
+              Formats acceptés: JPG, PNG, GIF, WEBP (max 5MB)
+            </small>
+          </div>
+
+          <!-- Zone de drop alternative -->
+          <div class="drop-zone" *ngIf="!photoPreview && !uploadingPhoto">
+            <i class="pi pi-cloud-upload drop-icon"></i>
+            <p class="drop-text">Glissez-déposez une photo ici</p>
+          </div>
+
+        </div>
+      </p-card>
+
+      <!-- Section Diplômes -->
+      <p-card header="Diplômes et qualifications" styleClass="form-card">
+        <div class="diplomes-section">
+          
+          <!-- Liste des diplômes -->
+          <div class="diplomes-list" *ngIf="diplomesArray.length > 0">
+            <div *ngFor="let diplome of diplomesArray.controls; let i = index" class="diplome-item">
+              <input 
+                pInputText 
+                [formControlName]="i"
+                placeholder="Ex: PhD en Management"
+                class="diplome-input" />
+              <button 
+                pButton 
+                type="button" 
+                icon="pi pi-trash"
+                class="p-button-sm p-button-danger p-button-text"
+                (click)="removeDiplome(i)">
+              </button>
+            </div>
+          </div>
+
+          <!-- Bouton ajouter diplôme -->
+          <button 
+            pButton 
+            type="button" 
+            label="Ajouter un diplôme"
+            icon="pi pi-plus"
+            class="p-button-sm p-button-outlined"
+            (click)="addDiplome()">
+          </button>
+
+        </div>
+      </p-card>
+
+      <!-- Section Messages -->
+      <p-card header="Messages du directeur" styleClass="form-card">
+        <div class="messages-section">
+          
+          <!-- Message de bienvenue -->
+          <div class="form-field">
+            <label for="messageBienvenue" class="field-label">Message de bienvenue</label>
+            <textarea 
+              pInputTextarea 
+              id="messageBienvenue" 
+              formControlName="messageBienvenue"
+              placeholder="Message d'accueil pour les visiteurs"
+              rows="4"
+              class="field-input">
+            </textarea>
+          </div>
+
+          <!-- Message vision -->
+          <div class="form-field">
+            <label for="messageVision" class="field-label">Notre vision</label>
+            <textarea 
+              pInputTextarea 
+              id="messageVision" 
+              formControlName="messageVision"
+              placeholder="Vision et mission de l'université"
+              rows="4"
+              class="field-input">
+            </textarea>
+          </div>
+
+          <!-- Message engagements -->
+          <div class="form-field">
+            <label for="messageEngagements" class="field-label">Nos engagements</label>
+            <textarea 
+              pInputTextarea 
+              id="messageEngagements" 
+              formControlName="messageEngagements"
+              placeholder="Engagements et promesses de l'université"
+              rows="4"
+              class="field-input">
+            </textarea>
+          </div>
+
+          <!-- Message aux étudiants -->
+          <div class="form-field">
+            <label for="messageEtudiants" class="field-label">Message aux étudiants</label>
+            <textarea 
+              pInputTextarea 
+              id="messageEtudiants" 
+              formControlName="messageEtudiants"
+              placeholder="Message spécial pour les étudiants"
+              rows="4"
+              class="field-input">
+            </textarea>
+          </div>
+
+        </div>
+      </p-card>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button 
+          pButton 
+          type="button" 
+          label="Annuler"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="cancel()">
+        </button>
+        <button 
+          pButton 
+          type="submit" 
+          [label]="isEditMode ? 'Mettre à jour' : 'Créer'"
+          [icon]="loading ? 'pi pi-spin pi-spinner' : (isEditMode ? 'pi pi-save' : 'pi pi-plus')"
+          [disabled]="directeurForm.invalid || loading || uploadingPhoto">
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- Dialog de conflit -->
+<p-dialog 
+  header="Directeur existant détecté" 
+  [(visible)]="showConflictDialog" 
+  [modal]="true" 
+  [closable]="false"
+  styleClass="conflict-dialog"
+  [style]="{width: '500px'}">
+  
+  <div class="conflict-content">
+    <div class="conflict-icon">
+      <i class="pi pi-exclamation-triangle"></i>
+    </div>
+    
+    <div class="conflict-message">
+      <p>Un directeur est déjà actif dans le système :</p>
+      <div class="current-director" *ngIf="conflictDirecteur">
+        <strong>{{ conflictDirecteur.nom }}</strong><br>
+        <span>{{ conflictDirecteur.titre }}</span>
+      </div>
+      <p>Voulez-vous le remplacer par le nouveau directeur ?</p>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button 
+      pButton 
+      type="button" 
+      label="Annuler" 
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="cancelConflict()">
+    </button>
+    <button 
+      pButton 
+      type="button" 
+      label="Remplacer" 
+      icon="pi pi-check"
+      class="p-button-danger"
+      (click)="forceCreateDirecteur()">
+    </button>
+  </ng-template>
+  
+</p-dialog>
+
+<!-- Messages -->
+<p-toast position="top-right"></p-toast>

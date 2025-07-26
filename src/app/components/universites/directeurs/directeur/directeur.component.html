@@ -5,6 +5,35 @@
     <p class="hero-description">
       Message du Directeur Général de l'International University of Bouake
     </p>
+    
+    <!-- Actions d'administration (si directeur personnalisé) -->
+    <div class="admin-actions" *ngIf="hasCustomDirecteur() && !loading">
+      <button pButton 
+              type="button" 
+              label="Modifier" 
+              icon="pi pi-pencil"
+              class="p-button-sm p-button-outlined admin-btn"
+              (click)="editDirecteur()">
+      </button>
+      <button pButton 
+              type="button" 
+              label="Supprimer" 
+              icon="pi pi-trash"
+              class="p-button-sm p-button-outlined p-button-danger admin-btn"
+              (click)="deleteDirecteur()">
+      </button>
+    </div>
+    
+    <!-- Bouton créer si pas de directeur personnalisé -->
+    <div class="admin-actions" *ngIf="!hasCustomDirecteur() && !loading">
+      <button pButton 
+              type="button" 
+              label="Ajouter un Directeur" 
+              icon="pi pi-plus"
+              class="p-button-sm p-button-outlined admin-btn"
+              (click)="createDirecteur()">
+      </button>
+    </div>
   </div>
 </section>
 
@@ -55,18 +84,56 @@
     <div class="container">
       <div class="director-card">
         <div class="director-photo">
+          
+          <!-- Indicateur de chargement de l'image -->
+          <div class="image-loading" *ngIf="imageLoading">
+            <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4"></p-progressSpinner>
+          </div>
+          
+          <!-- Image du directeur avec gestion d'erreurs -->
           <img 
-            #directorImg
             [src]="getDirecteurPhotoUrl()" 
             [alt]="getDirecteurNom()"
-            (error)="directorImg.src='assets/images/default-director.jpg'" />
+            [style.display]="imageLoading ? 'none' : 'block'"
+            (load)="onImageLoad()"
+            (error)="onImageError($event)"
+            (loadstart)="onImageLoadStart()" />
+          
+          <!-- Badge si directeur par défaut -->
+          <div class="default-badge" *ngIf="!hasCustomDirecteur()">
+            <p-tag value="Configuration par défaut" severity="info" icon="pi pi-info-circle"></p-tag>
+          </div>
+          
+          <!-- Indicateur d'erreur d'image -->
+          <div class="image-error" *ngIf="imageError">
+            <i class="pi pi-exclamation-triangle"></i>
+            <small>Image non disponible</small>
+          </div>
+          
         </div>
+        
         <div class="director-info">
           <h2 class="director-name">{{ getDirecteurNom() }}</h2>
           <h3 class="director-title">{{ getDirecteurTitre() }}</h3>
           <p class="director-experience" *ngIf="getDirecteurExperience()">
             {{ getDirecteurExperience() }}
           </p>
+          
+          <!-- Informations de contact (si disponibles) -->
+          <div class="contact-info" *ngIf="hasCustomDirecteur() && getContactInfo()">
+            <div class="contact-item" *ngIf="getContactInfo().email">
+              <i class="pi pi-envelope"></i>
+              <a [href]="'mailto:' + getContactInfo().email">{{ getContactInfo().email }}</a>
+            </div>
+            <div class="contact-item" *ngIf="getContactInfo().telephone">
+              <i class="pi pi-phone"></i>
+              <span>{{ getContactInfo().telephone }}</span>
+            </div>
+            <div class="contact-item" *ngIf="getContactInfo().linkedinUrl">
+              <i class="pi pi-linkedin"></i>
+              <a [href]="getContactInfo().linkedinUrl" target="_blank">Profil LinkedIn</a>
+            </div>
+          </div>
           
           <div class="director-credentials" *ngIf="getDirecteurDiplomes().length > 0">
             <h4>Qualifications :</h4>
@@ -83,7 +150,7 @@
   <section class="message-section" *ngIf="messageSections.length > 0">
     <div class="container">
       <div class="message-content">
-        <div class="message-block" *ngFor="let section of messageSections">
+        <div class="message-block" *ngFor="let section of messageSections; let i = index">
           <h3 class="message-title">{{ section.titre }}</h3>
           <div class="message-text">
             <p *ngFor="let paragraphe of section.contenu.split('\n\n')" 
@@ -101,6 +168,32 @@
           <p class="signature-title">{{ getDirecteurTitre() }}</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Section informations complémentaires -->
+  <section class="additional-info" *ngIf="hasCustomDirecteur()">
+    <div class="container">
+      <p-card header="Informations administratives" styleClass="info-card">
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="pi pi-calendar"></i>
+            <div>
+              <strong>Dernière mise à jour</strong>
+              <p>{{ directeur?.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-check-circle"></i>
+            <div>
+              <strong>Statut</strong>
+              <p>
+                <p-tag value="Actif" severity="success" icon="pi pi-check"></p-tag>
+              </p>
+            </div>
+          </div>
+        </div>
+      </p-card>
     </div>
   </section>
 
@@ -135,3 +228,13 @@
   </section>
 
 </div>
+
+<!-- Confirm Dialog -->
+<p-confirmDialog 
+  [style]="{width: '450px'}"
+  header="Confirmation"
+  icon="pi pi-exclamation-triangle">
+</p-confirmDialog>
+
+<!-- Toast pour les notifications -->
+<p-toast position="top-right"></p-toast>

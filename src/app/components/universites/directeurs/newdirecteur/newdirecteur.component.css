@@ -1,0 +1,417 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --error-color: #ff6b6b;
+  --success-color: #51cf66;
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Page Header */
+.page-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 3rem 0;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.page-title i {
+  margin-right: 0.5rem;
+}
+
+.page-description {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Loading */
+.loading-container {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form Container */
+.form-container {
+  padding-bottom: 4rem;
+}
+
+/* Cards */
+.form-card {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.form-card ::ng-deep .p-card-header {
+  background: var(--background-color);
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 1.5rem;
+}
+
+.form-card ::ng-deep .p-card-body {
+  padding: 2rem;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Field Styles */
+.field-label {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.field-input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.field-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(184, 84, 80, 0.1);
+}
+
+.field-input.ng-invalid.ng-touched {
+  border-color: var(--error-color);
+}
+
+.field-error {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Photo Section (inspirée des actualités) */
+.photo-section {
+  text-align: center;
+}
+
+.upload-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background: var(--background-color);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.photo-preview {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.photo-preview img {
+  width: 200px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 4px solid white;
+  box-shadow: var(--shadow);
+}
+
+.remove-photo-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 35px !important;
+  height: 35px !important;
+  z-index: 2;
+}
+
+.upload-status {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+}
+
+.photo-upload {
+  margin-bottom: 1rem;
+}
+
+.upload-hint {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--text-color-light);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Zone de drop */
+.drop-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  color: var(--text-color-light);
+  text-align: center;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  background: var(--background-color);
+}
+
+.drop-zone:hover {
+  border-color: var(--primary-color);
+  background: rgba(184, 84, 80, 0.05);
+}
+
+.drop-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color);
+  display: block;
+}
+
+.drop-text {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Diplômes Section */
+.diplomes-section {
+  min-height: 100px;
+}
+
+.diplomes-list {
+  margin-bottom: 1rem;
+}
+
+.diplome-item {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
+}
+
+.diplome-input {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.diplome-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(184, 84, 80, 0.1);
+}
+
+/* Messages Section */
+.messages-section .form-field {
+  margin-bottom: 1.5rem;
+}
+
+.messages-section .form-field:last-child {
+  margin-bottom: 0;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-color);
+  margin-top: 2rem;
+}
+
+/* Conflict Dialog */
+.conflict-dialog ::ng-deep .p-dialog-header {
+  background: var(--error-color);
+  color: white;
+}
+
+.conflict-content {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.conflict-icon {
+  color: var(--error-color);
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.conflict-message {
+  flex: 1;
+}
+
+.current-director {
+  background: var(--background-color);
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 3px solid var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-card ::ng-deep .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .photo-preview img {
+    width: 150px;
+    height: 180px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .conflict-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .diplome-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .diplome-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 2rem 0;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .form-card ::ng-deep .p-card-body {
+    padding: 1rem;
+  }
+}
+
+/* PrimeFaces Overrides pour l'upload */
+::ng-deep .p-fileupload-basic {
+  width: 100%;
+}
+
+::ng-deep .p-fileupload-basic .p-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  border-radius: 8px !important;
+}
+
+::ng-deep .p-fileupload-basic .p-button:hover {
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(90, 124, 89, 0.3) !important;
+}
+
+::ng-deep .upload-btn .p-button {
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-button {
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+::ng-deep .p-button:not(.p-button-text) {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-button:not(.p-button-text):hover {
+  background: #a04a46;
+  border-color: #a04a46;
+}
+
+::ng-deep .p-button.p-button-outlined {
+  background: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+::ng-deep .p-button.p-button-outlined:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+::ng-deep .p-inputtext:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(184, 84, 80, 0.1);
+}
+
+::ng-deep .p-inputtextarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(184, 84, 80, 0.1);
+}
