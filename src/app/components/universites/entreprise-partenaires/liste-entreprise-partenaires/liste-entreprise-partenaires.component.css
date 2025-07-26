@@ -1,4 +1,4 @@
-/* Variables CSS */
+/* Variables CSS corrigées */
 :host {
   --primary-color: #B85450;
   --secondary-color: #5A7C59;
@@ -7,174 +7,100 @@
   --text-color: #2C2C2C;
   --text-color-light: #666666;
   --border-color: #E5E5E5;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
 }
 
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
+/* Styles supplémentaires pour le composant liste entreprise partenaires */
 
-/* Section Title */
-.section-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--text-color);
-  text-align: center;
+/* Section Header avec bouton d'ajout */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 2rem;
-  position: relative;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 3px;
-  background: var(--primary-color);
-  border-radius: 2px;
+.add-btn {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.5rem !important;
+  transition: var(--transition) !important;
+  color: white !important; /* Ajout couleur texte */
 }
 
-/* Hero Section */
-.hero-section {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 4rem 0;
+.add-btn:hover {
+  background: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  transform: translateY(-2px);
+  color: white !important; /* Assurer la couleur au hover */
+}
+
+/* Loading Container */
+.loading-container {
   text-align: center;
+  padding: 4rem 0;
+  color: var(--text-color-light);
 }
 
-.hero-title {
-  font-size: 2.8rem;
-  font-weight: 700;
+.loading-container p {
+  color: var(--text-color) !important; /* Forcer la couleur du texte */
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.no-results-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.no-results-content i {
+  font-size: 3rem;
+  color: var(--accent-color);
   margin-bottom: 1rem;
 }
 
-.hero-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto;
-  opacity: 0.95;
-}
-
-/* Section Statistiques */
-.stats-section {
-  padding: 3rem 0;
-  background: white;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.stat-card {
-  text-align: center;
-  padding: 1.5rem;
-  background: var(--background-color);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  transition: var(--transition);
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-  border-color: var(--primary-color);
-}
-
-.stat-value {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--primary-color);
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  color: var(--text-color-light);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-/* Section Entreprises */
-.entreprises-section {
-  padding: 4rem 0;
-  background: var(--background-color);
-}
-
-/* Filtres par secteur */
-.secteur-filters {
-  margin-bottom: 3rem;
-}
-
-.filter-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  padding: 1rem 1.5rem !important;
-  border-radius: 25px !important;
-  font-weight: 600 !important;
-  transition: var(--transition) !important;
-  background: white !important;
+.no-results-content h3 {
   color: var(--text-color) !important;
-  border: 2px solid var(--border-color) !important;
-  font-size: 0.9rem !important;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
-.filter-btn:hover {
-  border-color: var(--primary-color) !important;
-  transform: translateY(-2px);
+.no-results-content p {
+  color: var(--text-color-light) !important;
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
-.filter-btn.active {
-  background: var(--primary-color) !important;
-  color: white !important;
-  border-color: var(--primary-color) !important;
-}
-
-/* Grille des entreprises */
+/* Entreprises Grid - Ajout des styles manquants */
 .entreprises-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 .entreprise-card {
   background: white;
-  border-radius: 16px;
-  padding: 2rem;
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.entreprise-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
 }
 
 .entreprise-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  border-color: var(--primary-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 /* Header de l'entreprise */
@@ -182,22 +108,14 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
-  flex-wrap: wrap;
-  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.entreprise-info {
-  flex: 1;
-}
-
-.entreprise-nom {
-  font-size: 1.4rem;
+.entreprise-info h3.entreprise-nom {
+  color: var(--text-color) !important;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: var(--text-color);
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.5rem 0;
 }
 
 .entreprise-meta {
@@ -207,75 +125,62 @@
   margin-bottom: 0.5rem;
 }
 
-.entreprise-secteur {
-  background: var(--primary-color);
-  color: white;
-  padding: 0.3rem 0.8rem;
+.entreprise-secteur,
+.entreprise-localisation {
+  background: var(--background-color);
+  color: var(--text-color) !important;
+  padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
 }
 
 .entreprise-taille {
-  background: var(--secondary-color);
-  color: white;
-  padding: 0.3rem 0.8rem;
+  color: white !important;
+  padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.entreprise-localisation {
-  background: var(--accent-color);
-  color: white;
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
 .type-partenariat {
-  color: var(--text-color-light);
-  font-size: 0.9rem;
-  font-style: italic;
+  background: var(--primary-color);
+  color: white !important;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
-.partenariat-duree {
-  background: var(--background-color);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent-color);
-  white-space: nowrap;
+.partenariat-duree span {
+  background: var(--secondary-color);
+  color: white !important;
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
 }
 
 /* Description */
-.entreprise-description {
-  margin-bottom: 1.5rem;
-}
-
 .entreprise-description p {
-  color: var(--text-color-light);
+  color: var(--text-color-light) !important;
   line-height: 1.6;
-  font-size: 1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
 }
 
-/* Sections de contenu */
+/* Sections entreprise */
 .entreprise-section {
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
 }
 
 .entreprise-section h4 {
+  color: var(--text-color) !important;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-color);
   margin-bottom: 0.75rem;
 }
 
-/* Tags des collaborations */
+/* Collaborations tags */
 .collaborations-tags {
   display: flex;
   flex-wrap: wrap;
@@ -283,385 +188,721 @@
 }
 
 .collaboration-tag {
-  background: var(--background-color);
-  color: var(--text-color);
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  border: 1px solid var(--border-color);
-  transition: var(--transition);
-}
-
-.collaboration-tag:hover {
-  background: var(--secondary-color);
-  color: white;
-  border-color: var(--secondary-color);
+  background: var(--accent-color);
+  color: white !important;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 /* Listes */
 .postes-list,
 .avantages-list {
-  list-style: none;
-  padding: 0;
+  margin: 0;
+  padding-left: 1.5rem;
 }
 
 .postes-list li,
 .avantages-list li {
-  padding: 0.4rem 0;
-  padding-left: 1.5rem;
-  position: relative;
-  color: var(--text-color-light);
-  font-size: 0.95rem;
+  color: var(--text-color-light) !important;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
 }
 
-.postes-list li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
+/* Contact Information Section */
+.entreprise-contact {
+  margin-bottom: 1.5rem;
+}
+
+.entreprise-contact h4 {
+  color: var(--text-color) !important;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.contact-info {
+  background: var(--background-color);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.contact-info p {
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color-light) !important;
+  font-size: 0.9rem;
+}
+
+.contact-info strong {
+  color: var(--text-color) !important;
+}
+
+.contact-info i {
   color: var(--primary-color);
-  font-weight: bold;
+  width: 16px;
 }
 
-.avantages-list li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--secondary-color);
-  font-weight: bold;
+.contact-info a {
+  color: var(--primary-color) !important;
+  text-decoration: none;
+  font-weight: 500;
 }
 
-/* Footer de l'entreprise */
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Footer entreprise */
 .entreprise-footer {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--border-color);
-  text-align: center;
 }
 
 .details-btn {
-  background: var(--secondary-color) !important;
-  border-color: var(--secondary-color) !important;
-  border-radius: 20px !important;
-  font-weight: 600 !important;
-  width: 100%;
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
 }
 
 .details-btn:hover {
   background: var(--secondary-color) !important;
   border-color: var(--secondary-color) !important;
-  transform: scale(1.02);
+  transform: translateY(-1px);
 }
 
-/* Section Benefits */
-.benefits-section {
-  padding: 4rem 0;
+/* Filtres secteur */
+.secteur-filters {
+  margin-bottom: 2rem;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem !important;
+  border: 2px solid var(--border-color) !important;
+  background: white !important;
+  color: var(--text-color) !important;
+  border-radius: 25px !important;
+  font-weight: 500 !important;
+  transition: var(--transition) !important;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  background: white !important;
+}
+
+.filter-btn.active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* Toast Messages */
+::ng-deep .p-toast {
+  z-index: 9999;
+}
+
+::ng-deep .p-toast .p-toast-message {
+  margin: 0 0 1rem 0;
+}
+
+/* Progress Spinner */
+::ng-deep .p-progress-spinner {
+  width: 50px;
+  height: 50px;
+}
+
+::ng-deep .p-progress-spinner .p-progress-spinner-circle {
+  stroke: var(--primary-color);
+}
+
+/* Sections globales */
+.hero-section,
+.stats-section,
+.entreprises-section,
+.benefits-section,
+.testimonial-section,
+.process-section,
+.cta-section {
+  padding: 3rem 0;
+}
+
+.section-title {
+  color: var(--text-color) !important;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  color: var(--text-color) !important;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.hero-description {
+  color: var(--text-color-light) !important;
+  font-size: 1.1rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 2rem 1rem;
   background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color) !important;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-color-light) !important;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .add-btn {
+    width: 100%;
+    max-width: 300px;
+    align-self: center;
+  }
+  
+  .contact-info p {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .entreprises-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .filter-buttons {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-container {
+    padding: 2rem 0;
+  }
+  
+  .no-results {
+    padding: 2rem 0;
+  }
+  
+  .no-results-content i {
+    font-size: 2rem;
+  }
+
+  .entreprise-card {
+    padding: 1rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+}
+/* STYLES MANQUANTS À AJOUTER À LA FIN DU FICHIER liste-entreprise-partenaires.component.css */
+
+/* ===== SECTIONS PRINCIPALES ===== */
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero-section .hero-title {
+  color: white !important;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-section .hero-description {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Stats Section */
+.stats-section {
+  background: white;
+  padding: 3rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color) !important;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-color-light) !important;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Entreprises Section */
+.entreprises-section {
+  background: var(--background-color);
+  padding: 4rem 0;
+  min-height: 400px;
+}
+
+/* ===== SECTION AVANTAGES (BENEFITS) ===== */
+.benefits-section {
+  background: white;
+  padding: 4rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.benefits-section .section-title {
+  color: var(--text-color) !important;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 .benefit-item {
   text-align: center;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
   background: var(--background-color);
   border-radius: 12px;
   border: 1px solid var(--border-color);
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
 .benefit-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow);
-  border-color: var(--primary-color);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
 }
 
 .benefit-icon {
-  width: 70px;
-  height: 70px;
-  background: var(--primary-color);
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: white;
-  font-size: 1.8rem;
+  box-shadow: 0 4px 15px rgba(184, 84, 80, 0.3);
+}
+
+.benefit-icon i {
+  font-size: 1.5rem;
+  color: white !important;
 }
 
 .benefit-item h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-color);
+  color: var(--text-color) !important;
+  font-size: 1.3rem;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .benefit-item p {
-  color: var(--text-color-light);
-  line-height: 1.5;
+  color: var(--text-color-light) !important;
+  line-height: 1.6;
   font-size: 0.95rem;
+  margin: 0;
 }
 
-/* Section Testimonial */
+/* ===== SECTION TÉMOIGNAGE ===== */
 .testimonial-section {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
   padding: 4rem 0;
-  background: var(--background-color);
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
 }
 
 .testimonial-content {
+  position: relative;
+  z-index: 2;
   max-width: 800px;
   margin: 0 auto;
-  text-align: center;
-  background: white;
-  padding: 3rem;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border-color);
-  position: relative;
+  padding: 0 2rem;
 }
 
 .quote-icon {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  background: var(--primary-color);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.2rem;
+  margin-bottom: 2rem;
 }
 
-blockquote {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: var(--text-color);
+.quote-icon i {
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.testimonial-content blockquote {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  margin: 0 0 2rem 0;
   font-style: italic;
-  margin: 2rem 0;
-  border: none;
-  padding: 0;
+  color: white !important;
+  position: relative;
 }
 
 .testimonial-author {
-  color: var(--primary-color);
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1rem;
   font-weight: 600;
-  margin-top: 1.5rem;
 }
 
-/* Section Processus */
+/* ===== SECTION PROCESSUS ===== */
 .process-section {
+  background: var(--background-color);
   padding: 4rem 0;
-  background: white;
+  position: relative;
+  z-index: 1;
+}
+
+.process-section .section-title {
+  color: var(--text-color) !important;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .process-steps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  margin-top: 2rem;
+  position: relative;
 }
 
 .process-step {
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
   padding: 2rem;
-  background: var(--background-color);
-  border-radius: 16px;
+  background: white;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: var(--transition);
   position: relative;
 }
 
 .process-step:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow);
-  border-color: var(--primary-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .step-number {
-  width: 50px;
+  min-width: 50px;
   height: 50px;
-  background: var(--primary-color);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white !important;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin: 0 auto 1.5rem;
   box-shadow: 0 4px 15px rgba(184, 84, 80, 0.3);
+  flex-shrink: 0;
 }
 
 .step-content h4 {
+  color: var(--text-color) !important;
   font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
 }
 
 .step-content p {
-  color: var(--text-color-light);
-  line-height: 1.5;
+  color: var(--text-color-light) !important;
+  line-height: 1.6;
+  margin: 0;
   font-size: 0.95rem;
 }
 
-/* Section CTA */
+/* ===== SECTION CTA ===== */
 .cta-section {
-  padding: 4rem 0;
-  background: var(--accent-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
+  padding: 4rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+  opacity: 0.4;
 }
 
 .cta-section h2 {
+  color: white !important;
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
 }
 
 .cta-section p {
+  color: rgba(255, 255, 255, 0.9) !important;
   font-size: 1.1rem;
   margin-bottom: 2rem;
-  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .cta-buttons {
   display: flex;
-  gap: 1rem;
   justify-content: center;
+  gap: 1rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
 }
 
-/* Responsive Design */
+.cta-buttons button {
+  min-width: 180px;
+  padding: 0.875rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  border-radius: 25px !important;
+  transition: var(--transition) !important;
+}
+
+.cta-buttons button:first-child {
+  background: white !important;
+  color: var(--primary-color) !important;
+  border: 2px solid white !important;
+}
+
+.cta-buttons button:first-child:hover {
+  background: transparent !important;
+  color: white !important;
+  border-color: white !important;
+  transform: translateY(-2px);
+}
+
+.cta-buttons button.p-button-outlined {
+  background: transparent !important;
+  color: white !important;
+  border: 2px solid white !important;
+}
+
+.cta-buttons button.p-button-outlined:hover {
+  background: white !important;
+  color: var(--primary-color) !important;
+  transform: translateY(-2px);
+}
+
+/* ===== CONTAINER GLOBAL ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .container {
-    padding: 0 1rem;
+  .hero-section {
+    padding: 2rem 0;
   }
-
-  .hero-title {
-    font-size: 2.2rem;
+  
+  .hero-section .hero-title {
+    font-size: 2rem;
   }
-
-  .hero-description {
-    font-size: 1rem;
+  
+  .benefits-section,
+  .process-section,
+  .testimonial-section,
+  .cta-section {
+    padding: 2rem 0;
   }
-
-  .section-title {
-    font-size: 1.8rem;
+  
+  .benefits-section .section-title,
+  .process-section .section-title {
+    font-size: 1.5rem;
   }
-
-  .entreprises-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .entreprise-card {
-    padding: 1.5rem;
-  }
-
-  .entreprise-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .partenariat-duree {
-    text-align: center;
-    align-self: center;
-  }
-
-  .filter-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .filter-btn {
-    width: 100%;
-    max-width: 250px;
-  }
-
+  
   .benefits-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-
+  
   .process-steps {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-
+  
+  .process-step {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .testimonial-content blockquote {
+    font-size: 1.1rem;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+  
   .cta-buttons {
     flex-direction: column;
     align-items: center;
   }
-
+  
   .cta-buttons button {
     width: 100%;
     max-width: 300px;
   }
-
-  .testimonial-content {
-    padding: 2rem;
-    margin: 0 1rem;
-  }
 }
 
 @media (max-width: 480px) {
-  .hero-title {
+  .hero-section .hero-title {
     font-size: 1.8rem;
   }
-
-  .entreprise-card {
-    padding: 1.25rem;
+  
+  .benefit-item,
+  .process-step {
+    padding: 1.5rem;
   }
-
-  .entreprise-nom {
-    font-size: 1.2rem;
+  
+  .benefits-section .section-title,
+  .process-section .section-title {
+    font-size: 1.3rem;
   }
-
-  .entreprise-meta {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .collaborations-tags {
-    flex-direction: column;
-  }
-
-  .collaboration-tag {
-    text-align: center;
-  }
-
+  
   .cta-section h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
-
-  blockquote {
-    font-size: 1.1rem;
+  
+  .testimonial-content {
+    padding: 0 1rem;
   }
-
-  .filter-btn {
-    font-size: 0.85rem !important;
-    padding: 0.8rem 1.2rem !important;
-  }
-}
-
-/* Animation d'apparition des cartes */
-.entreprise-card {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .testimonial-content blockquote {
+    font-size: 1rem;
   }
 }

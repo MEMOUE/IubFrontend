@@ -1,0 +1,421 @@
+/* Variables CSS */
+:host {
+  --primary-color: #B85450;
+  --secondary-color: #5A7C59;
+  --accent-color: #6B6B6B;
+  --background-color: #FAFAFA;
+  --text-color: #2C2C2C;
+  --text-color-light: #666666;
+  --border-color: #E5E5E5;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Container principal */
+.detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 200px);
+}
+
+/* Loading */
+.loading-container {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--text-color-light);
+}
+
+.loading-container p-progressspinner {
+  margin-bottom: 1rem;
+}
+
+/* Header */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.breadcrumb {
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Hero Section */
+.entreprise-hero {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.hero-content {
+  text-align: center;
+}
+
+.entreprise-nom {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.entreprise-meta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.type-partenariat,
+.duree-partenariat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  opacity: 0.95;
+}
+
+.type-partenariat i,
+.duree-partenariat i {
+  font-size: 1.2rem;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Cards */
+::ng-deep .info-card,
+::ng-deep .contact-card {
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+::ng-deep .info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .info-card .p-card-header {
+  background: var(--background-color);
+  color: var(--text-color);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.1rem;
+}
+
+::ng-deep .contact-card {
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+}
+
+::ng-deep .contact-card .p-card-header {
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+}
+
+/* Description */
+.description-text {
+  line-height: 1.7;
+  color: var(--text-color);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+::ng-deep .collaboration-chip {
+  background: var(--secondary-color) !important;
+  color: white !important;
+  border-radius: 16px !important;
+  transition: var(--transition);
+}
+
+::ng-deep .collaboration-chip:hover {
+  transform: scale(1.05);
+}
+
+::ng-deep .secteur-chip {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+::ng-deep .taille-chip {
+  border-radius: 16px !important;
+}
+
+::ng-deep .localisation-chip {
+  background: var(--accent-color) !important;
+  color: white !important;
+}
+
+/* Listes */
+.postes-list,
+.avantages-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.postes-list li,
+.avantages-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+.postes-list li:last-child,
+.avantages-list li:last-child {
+  border-bottom: none;
+}
+
+.postes-list li:hover,
+.avantages-list li:hover {
+  background: var(--background-color);
+  padding-left: 0.5rem;
+  border-radius: 8px;
+}
+
+.postes-list li i {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.avantages-list li i {
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+/* Contact Items */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.contact-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-info label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.contact-info span {
+  color: var(--text-color-light);
+  font-size: 1rem;
+}
+
+.contact-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+/* Footer */
+.detail-footer {
+  border-top: 2px solid var(--border-color);
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.primary-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Not Found */
+.not-found {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.not-found-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.not-found-content i {
+  font-size: 4rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.not-found-content h2 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.not-found-content p {
+  color: var(--text-color-light);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Toast Messages */
+::ng-deep .p-toast {
+  z-index: 9999;
+}
+
+/* Progress Spinner */
+::ng-deep .p-progress-spinner {
+  width: 60px;
+  height: 60px;
+}
+
+::ng-deep .p-progress-spinner .p-progress-spinner-circle {
+  stroke: var(--primary-color);
+}
+
+/* Divider */
+::ng-deep .p-divider {
+  margin: 1rem 0;
+}
+
+::ng-deep .p-divider .p-divider-content {
+  background: transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .detail-container {
+    padding: 1rem;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    justify-content: center;
+  }
+
+  .entreprise-hero {
+    padding: 2rem 1rem;
+  }
+
+  .entreprise-nom {
+    font-size: 2rem;
+  }
+
+  .entreprise-meta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footer-actions {
+    flex-direction: column;
+  }
+
+  .primary-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .contact-info {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .entreprise-nom {
+    font-size: 1.8rem;
+  }
+
+  .contact-item {
+    padding: 0.75rem 0;
+  }
+
+  .not-found-content i {
+    font-size: 3rem;
+  }
+}
+
+/* Animation */
+.detail-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

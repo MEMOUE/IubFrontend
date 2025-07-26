@@ -23,17 +23,6 @@
 <!-- Section Outils et Filtres -->
 <section class="tools-section">
   <div class="container">
-    <div class="tools-header">
-      <h2 class="section-title">Actualités</h2>
-      <button pButton 
-              type="button" 
-              label="Nouvelle Actualité" 
-              icon="pi pi-plus"
-              class="create-btn"
-              (click)="navigateToNew()">
-      </button>
-    </div>
-
     <!-- Filtres -->
     <div class="filters-section">
       <div class="filters-row">
@@ -119,41 +108,41 @@
           <!-- Actions -->
           <div class="actualite-actions">
             <div class="primary-actions">
+
               <button pButton 
-                      type="button" 
-                      icon="pi pi-eye"
-                      class="p-button-text p-button-rounded action-btn view-btn"
-                      pTooltip="Voir les détails"
-                      tooltipPosition="top"
-                      (click)="navigateToDetail(actualite.id!)">
-              </button>
+                    type="button" 
+                    label="Détails" 
+                    icon="pi pi-info-circle"
+                    class="p-button-outlined details-btn"
+                    (click)="navigateToDetail(actualite.id!)">
+            </button>
               
-              <button pButton 
+             <!--  <button pButton 
                       type="button" 
                       icon="pi pi-pencil"
                       class="p-button-text p-button-rounded action-btn edit-btn"
                       pTooltip="Modifier"
                       tooltipPosition="top"
                       (click)="navigateToEdit(actualite.id!)">
-              </button>
+              </button> -->
               
-              <button pButton 
+              <!-- <button pButton 
                       type="button" 
                       [icon]="actualite.publie ? 'pi pi-eye-slash' : 'pi pi-eye'"
                       class="p-button-text p-button-rounded action-btn publish-btn"
                       [pTooltip]="actualite.publie ? 'Dépublier' : 'Publier'"
                       tooltipPosition="top"
                       (click)="togglePublication(actualite)">
-              </button>
+              </button> -->
               
-              <button pButton 
+              <!-- <button pButton 
                       type="button" 
                       icon="pi pi-trash"
                       class="p-button-text p-button-rounded action-btn delete-btn"
                       pTooltip="Supprimer"
                       tooltipPosition="top"
                       (click)="confirmDelete(actualite)">
-              </button>
+              </button> -->
             </div>
           </div>
         </div>

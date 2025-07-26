@@ -1,3 +1,6 @@
+<!-- Toast Messages -->
+<p-toast></p-toast>
+
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="container">
@@ -24,43 +27,55 @@
 <!-- Section Entreprises -->
 <section class="entreprises-section">
   <div class="container">
+    <!-- Header avec bouton d'ajout -->
+    <div class="section-header">
+      <h2 class="section-title">Entreprises par Secteur</h2>
+      <button pButton 
+              type="button" 
+              label="Ajouter une entreprise" 
+              icon="pi pi-plus"
+              class="add-btn"
+              (click)="ajouterEntreprise()">
+      </button>
+    </div>
+
     <!-- Filtres par secteur -->
     <div class="secteur-filters">
-      <h2 class="section-title">Entreprises par Secteur</h2>
       <div class="filter-buttons">
         <button pButton 
                 type="button" 
-                label="Télécommunications" 
-                icon="pi pi-mobile"
-                [class]="'filter-btn ' + (secteurActif === 'telecoms' ? 'active' : '')"
-                (click)="changerSecteur('telecoms')">
+                [label]="secteur.label"
+                [icon]="secteur.icon"
+                *ngFor="let secteur of secteurs"
+                [class]="'filter-btn ' + (secteurActif === secteur.key ? 'active' : '')"
+                (click)="changerSecteur(secteur.key)">
         </button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-container" *ngIf="loading">
+      <p-progressSpinner></p-progressSpinner>
+      <p>Chargement des entreprises partenaires...</p>
+    </div>
+
+    <!-- Message si aucune entreprise -->
+    <div class="no-results" *ngIf="!loading && getEntreprisesActives().length === 0">
+      <div class="no-results-content">
+        <i class="pi pi-info-circle"></i>
+        <h3>Aucune entreprise trouvée</h3>
+        <p>Aucune entreprise ne correspond aux critères sélectionnés.</p>
         <button pButton 
                 type="button" 
-                label="Banque & Finance" 
-                icon="pi pi-credit-card"
-                [class]="'filter-btn ' + (secteurActif === 'banque' ? 'active' : '')"
-                (click)="changerSecteur('banque')">
-        </button>
-        <button pButton 
-                type="button" 
-                label="Technologies" 
-                icon="pi pi-desktop"
-                [class]="'filter-btn ' + (secteurActif === 'technologie' ? 'active' : '')"
-                (click)="changerSecteur('technologie')">
-        </button>
-        <button pButton 
-                type="button" 
-                label="Industrie" 
-                icon="pi pi-cog"
-                [class]="'filter-btn ' + (secteurActif === 'industrie' ? 'active' : '')"
-                (click)="changerSecteur('industrie')">
+                label="Voir toutes les entreprises" 
+                icon="pi pi-refresh"
+                (click)="changerSecteur('tous')">
         </button>
       </div>
     </div>
 
     <!-- Liste des entreprises -->
-    <div class="entreprises-grid">
+    <div class="entreprises-grid" *ngIf="!loading && getEntreprisesActives().length > 0">
       <div class="entreprise-card" *ngFor="let entreprise of getEntreprisesActives()">
         <!-- Header de l'entreprise -->
         <div class="entreprise-header">
@@ -68,23 +83,28 @@
             <h3 class="entreprise-nom">{{ entreprise.nom }}</h3>
             <div class="entreprise-meta">
               <span class="entreprise-secteur">{{ entreprise.secteur }}</span>
-              <span class="entreprise-taille">{{ entreprise.taille }}</span>
+              <span class="entreprise-taille" 
+                    [style.background-color]="getTailleColor(entreprise.taille)">
+                {{ entreprise.taille }}
+              </span>
               <span class="entreprise-localisation">{{ entreprise.localisation }}</span>
             </div>
-            <span class="type-partenariat">{{ entreprise.typePartenariat }}</span>
+            <span class="type-partenariat" *ngIf="entreprise.typePartenariat">
+              {{ entreprise.typePartenariat }}
+            </span>
           </div>
-          <div class="partenariat-duree">
-            <span>{{ entreprise.dureePartenariat }}</span>
+          <div class="partenariat-duree" *ngIf="entreprise.dureePartenariat">
+            <span>{{ formatDureePartenariat(entreprise.dureePartenariat) }}</span>
           </div>
         </div>
 
         <!-- Description -->
-        <div class="entreprise-description">
+        <div class="entreprise-description" *ngIf="entreprise.description">
           <p>{{ entreprise.description }}</p>
         </div>
 
         <!-- Collaborations -->
-        <div class="entreprise-section">
+        <div class="entreprise-section" *ngIf="entreprise.collaborations && entreprise.collaborations.length > 0">
           <h4>Types de collaboration :</h4>
           <div class="collaborations-tags">
             <span class="collaboration-tag" *ngFor="let collaboration of entreprise.collaborations">
@@ -94,7 +114,7 @@
         </div>
 
         <!-- Postes disponibles -->
-        <div class="entreprise-section">
+        <div class="entreprise-section" *ngIf="entreprise.postes && entreprise.postes.length > 0">
           <h4>Postes proposés à nos diplômés :</h4>
           <ul class="postes-list">
             <li *ngFor="let poste of entreprise.postes">{{ poste }}</li>
@@ -102,11 +122,32 @@
         </div>
 
         <!-- Avantages -->
-        <div class="entreprise-section">
+        <div class="entreprise-section" *ngIf="entreprise.avantages && entreprise.avantages.length > 0">
           <h4>Avantages pour nos étudiants :</h4>
           <ul class="avantages-list">
             <li *ngFor="let avantage of entreprise.avantages">{{ avantage }}</li>
           </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="entreprise-contact" *ngIf="entreprise.emailContact || entreprise.responsableContact || entreprise.siteWeb">
+          <h4>Contact :</h4>
+          <div class="contact-info">
+            <p *ngIf="entreprise.responsableContact">
+              <i class="pi pi-user"></i>
+              <strong>Responsable :</strong> {{ entreprise.responsableContact }}
+            </p>
+            <p *ngIf="entreprise.emailContact">
+              <i class="pi pi-envelope"></i>
+              <strong>Email :</strong> 
+              <a [href]="'mailto:' + entreprise.emailContact">{{ entreprise.emailContact }}</a>
+            </p>
+            <p *ngIf="entreprise.siteWeb">
+              <i class="pi pi-globe"></i>
+              <strong>Site web :</strong> 
+              <a [href]="entreprise.siteWeb" target="_blank">{{ entreprise.siteWeb }}</a>
+            </p>
+          </div>
         </div>
 
         <!-- Footer avec action -->
@@ -116,7 +157,7 @@
                   label="Plus d'informations" 
                   icon="pi pi-arrow-right"
                   class="details-btn"
-                  (click)="voirDetails(entreprise.id)">
+                  (click)="voirDetails(entreprise.id!)">
           </button>
         </div>
       </div>

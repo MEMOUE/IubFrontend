@@ -8,80 +8,130 @@
   </div>
 </section>
 
-<!-- Section Présentation du Directeur -->
-<section class="director-presentation">
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-container">
   <div class="container">
-    <div class="director-card">
-      <div class="director-photo">
-        <img [src]="directeur.photo" [alt]="directeur.nom" />
-      </div>
-      <div class="director-info">
-        <h2 class="director-name">{{ directeur.nom }}</h2>
-        <h3 class="director-title">{{ directeur.titre }}</h3>
-        <p class="director-experience">{{ directeur.experience }}</p>
-        
-        <div class="director-credentials">
-          <h4>Qualifications :</h4>
-          <ul>
-            <li *ngFor="let diplome of directeur.diplomes">{{ diplome }}</li>
-          </ul>
-        </div>
+    <div style="text-align: center; padding: 4rem 0;">
+      <p-progressSpinner 
+        styleClass="w-4rem h-4rem" 
+        strokeWidth="3" 
+        fill="var(--surface-ground)" 
+        animationDuration=".5s">
+      </p-progressSpinner>
+      <p style="margin-top: 1rem; color: var(--text-color-secondary);">
+        Chargement des informations...
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="error && !loading" class="error-container">
+  <div class="container">
+    <div style="padding: 2rem 0;">
+      <p-message 
+        severity="warn" 
+        [text]="error"
+        [closable]="false">
+      </p-message>
+      <div style="text-align: center; margin-top: 1rem;">
+        <button 
+          pButton 
+          type="button" 
+          label="Réessayer" 
+          icon="pi pi-refresh"
+          (click)="refreshData()">
+        </button>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Section Message -->
-<section class="message-section">
-  <div class="container">
-    <div class="message-content">
-      <div class="message-block" *ngFor="let section of messageSections">
-        <h3 class="message-title">{{ section.titre }}</h3>
-        <div class="message-text">
-          <p *ngFor="let paragraphe of section.contenu.split('\n\n')">
-            {{ paragraphe }}
+<!-- Content - Affiché quand les données sont chargées -->
+<div *ngIf="!loading && !error">
+  
+  <!-- Section Présentation du Directeur -->
+  <section class="director-presentation">
+    <div class="container">
+      <div class="director-card">
+        <div class="director-photo">
+          <img 
+            #directorImg
+            [src]="getDirecteurPhotoUrl()" 
+            [alt]="getDirecteurNom()"
+            (error)="directorImg.src='assets/images/default-director.jpg'" />
+        </div>
+        <div class="director-info">
+          <h2 class="director-name">{{ getDirecteurNom() }}</h2>
+          <h3 class="director-title">{{ getDirecteurTitre() }}</h3>
+          <p class="director-experience" *ngIf="getDirecteurExperience()">
+            {{ getDirecteurExperience() }}
           </p>
+          
+          <div class="director-credentials" *ngIf="getDirecteurDiplomes().length > 0">
+            <h4>Qualifications :</h4>
+            <ul>
+              <li *ngFor="let diplome of getDirecteurDiplomes()">{{ diplome }}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    
-    <!-- Signature -->
-    <div class="signature-section">
-      <div class="signature">
-        <p class="signature-text">Cordialement,</p>
-        <p class="signature-name">{{ directeur.nom }}</p>
-        <p class="signature-title">{{ directeur.titre }}</p>
+  </section>
+
+  <!-- Section Message -->
+  <section class="message-section" *ngIf="messageSections.length > 0">
+    <div class="container">
+      <div class="message-content">
+        <div class="message-block" *ngFor="let section of messageSections">
+          <h3 class="message-title">{{ section.titre }}</h3>
+          <div class="message-text">
+            <p *ngFor="let paragraphe of section.contenu.split('\n\n')" 
+               [innerHTML]="paragraphe">
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Signature -->
+      <div class="signature-section">
+        <div class="signature">
+          <p class="signature-text">Cordialement,</p>
+          <p class="signature-name">{{ getDirecteurNom() }}</p>
+          <p class="signature-title">{{ getDirecteurTitre() }}</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Call to Action -->
-<section class="cta-section">
-  <div class="container">
-    <h2>Découvrez l'IUB</h2>
-    <p>Explorez nos programmes et rejoignez notre communauté d'excellence</p>
-    <div class="cta-buttons">
-      <button pButton 
-              type="button" 
-              label="Nos Formations" 
-              icon="pi pi-book"
-              (click)="navigateToFormations()">
-      </button>
-      <button pButton 
-              type="button" 
-              label="En Savoir Plus" 
-              icon="pi pi-info-circle"
-              class="p-button-outlined"
-              (click)="navigateToPresentation()">
-      </button>
-      <button pButton 
-              type="button" 
-              label="Nous Contacter" 
-              icon="pi pi-phone"
-              class="p-button-text"
-              (click)="navigateToContact()">
-      </button>
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Découvrez l'IUB</h2>
+      <p>Explorez nos programmes et rejoignez notre communauté d'excellence</p>
+      <div class="cta-buttons">
+        <button pButton 
+                type="button" 
+                label="Nos Formations" 
+                icon="pi pi-book"
+                (click)="navigateToFormations()">
+        </button>
+        <button pButton 
+                type="button" 
+                label="En Savoir Plus" 
+                icon="pi pi-info-circle"
+                class="p-button-outlined"
+                (click)="navigateToPresentation()">
+        </button>
+        <button pButton 
+                type="button" 
+                label="Nous Contacter" 
+                icon="pi pi-phone"
+                class="p-button-text"
+                (click)="navigateToContact()">
+        </button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+</div>

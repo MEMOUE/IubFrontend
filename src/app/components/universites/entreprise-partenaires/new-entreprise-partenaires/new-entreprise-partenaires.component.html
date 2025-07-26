@@ -1,1 +1,262 @@
-<p>new-entreprise-partenaires works!</p>
+<!-- Toast Messages -->
+<p-toast></p-toast>
+
+<!-- Container principal -->
+<div class="form-container">
+  
+  <!-- Header -->
+  <div class="form-header">
+    <div class="breadcrumb">
+      <button pButton 
+              type="button" 
+              label="Retour" 
+              icon="pi pi-arrow-left"
+              class="p-button-text"
+              (click)="annuler()">
+      </button>
+    </div>
+    <h1 class="form-title">{{ getPageTitle() }}</h1>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="loading && isEditMode">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Chargement des données...</p>
+  </div>
+
+  <!-- Formulaire -->
+  <form [formGroup]="entrepriseForm" (ngSubmit)="onSubmit()" *ngIf="!loading || !isEditMode">
+    
+    <!-- Informations générales -->
+    <p-card header="Informations générales" styleClass="form-card">
+      <div class="form-grid">
+        
+        <!-- Nom de l'entreprise -->
+        <div class="form-field">
+          <label for="nom" class="field-label">
+            Nom de l'entreprise <span class="required">*</span>
+          </label>
+          <input pInputText 
+                 id="nom"
+                 formControlName="nom"
+                 placeholder="Ex: Orange Côte d'Ivoire"
+                 [class.ng-invalid]="hasError('nom')"
+                 class="form-input">
+          <small class="error-message" *ngIf="hasError('nom')">
+            {{ getErrorMessage('nom') }}
+          </small>
+        </div>
+
+        <!-- Secteur -->
+        <div class="form-field">
+          <label for="secteur" class="field-label">
+            Secteur d'activité <span class="required">*</span>
+          </label>
+          <p-dropdown formControlName="secteur"
+                      [options]="secteurOptions"
+                      placeholder="Sélectionner un secteur"
+                      styleClass="form-dropdown"
+                      [class.ng-invalid]="hasError('secteur')">
+          </p-dropdown>
+          <small class="error-message" *ngIf="hasError('secteur')">
+            {{ getErrorMessage('secteur') }}
+          </small>
+        </div>
+
+        <!-- Taille -->
+        <div class="form-field">
+          <label for="taille" class="field-label">
+            Taille de l'entreprise <span class="required">*</span>
+          </label>
+          <p-dropdown formControlName="taille"
+                      [options]="tailleOptions"
+                      placeholder="Sélectionner la taille"
+                      styleClass="form-dropdown"
+                      [class.ng-invalid]="hasError('taille')">
+          </p-dropdown>
+          <small class="error-message" *ngIf="hasError('taille')">
+            {{ getErrorMessage('taille') }}
+          </small>
+        </div>
+
+        <!-- Localisation -->
+        <div class="form-field">
+          <label for="localisation" class="field-label">
+            Localisation <span class="required">*</span>
+          </label>
+          <input pInputText 
+                 id="localisation"
+                 formControlName="localisation"
+                 placeholder="Ex: Abidjan, Côte d'Ivoire"
+                 [class.ng-invalid]="hasError('localisation')"
+                 class="form-input">
+          <small class="error-message" *ngIf="hasError('localisation')">
+            {{ getErrorMessage('localisation') }}
+          </small>
+        </div>
+
+        <!-- Type de partenariat -->
+        <div class="form-field">
+          <label for="typePartenariat" class="field-label">
+            Type de partenariat
+          </label>
+          <p-dropdown formControlName="typePartenariat"
+                      [options]="typePartenaireOptions"
+                      placeholder="Sélectionner le type"
+                      styleClass="form-dropdown">
+          </p-dropdown>
+        </div>
+
+        <!-- Durée du partenariat -->
+        <div class="form-field">
+          <label for="dureePartenariat" class="field-label">
+            Durée du partenariat
+          </label>
+          <input pInputText 
+                 id="dureePartenariat"
+                 formControlName="dureePartenariat"
+                 placeholder="Ex: Depuis 2015"
+                 class="form-input">
+        </div>
+
+      </div>
+
+      <!-- Description -->
+      <div class="form-field full-width">
+        <label for="description" class="field-label">
+          Description de l'entreprise
+        </label>
+        <textarea pInputTextarea 
+                  id="description"
+                  formControlName="description"
+                  placeholder="Décrivez l'entreprise, ses activités principales, sa position sur le marché..."
+                  rows="4"
+                  [class.ng-invalid]="hasError('description')"
+                  class="form-textarea">
+        </textarea>
+        <small class="error-message" *ngIf="hasError('description')">
+          {{ getErrorMessage('description') }}
+        </small>
+      </div>
+    </p-card>
+
+    <!-- Collaboration et Opportunités -->
+    <p-card header="Collaboration et Opportunités" styleClass="form-card">
+      
+      <!-- Types de collaboration -->
+      <div class="form-field full-width">
+        <label for="collaborations" class="field-label">
+          Types de collaboration
+        </label>
+        <p-multiSelect formControlName="collaborations"
+                       [options]="collaborationOptions"
+                       placeholder="Sélectionner les types de collaboration"
+                       styleClass="form-multiselect">
+        </p-multiSelect>
+        <small class="field-help">
+          Sélectionnez tous les types de collaboration possibles avec cette entreprise
+        </small>
+      </div>
+
+      <!-- Postes proposés -->
+      <div class="form-field full-width">
+        <label for="postes" class="field-label">
+          Postes proposés aux diplômés
+        </label>
+        <p-chips formControlName="postes"
+                 placeholder="Tapez un poste et appuyez sur Entrée"
+                 styleClass="form-chips">
+        </p-chips>
+        <small class="field-help">
+          Ajoutez les postes que cette entreprise propose généralement à nos diplômés
+        </small>
+      </div>
+
+      <!-- Avantages -->
+      <div class="form-field full-width">
+        <label for="avantages" class="field-label">
+          Avantages pour les étudiants
+        </label>
+        <p-chips formControlName="avantages"
+                 placeholder="Tapez un avantage et appuyez sur Entrée"
+                 styleClass="form-chips">
+        </p-chips>
+        <small class="field-help">
+          Listez les avantages spécifiques que cette entreprise offre à nos étudiants
+        </small>
+      </div>
+
+    </p-card>
+
+    <!-- Informations de contact -->
+    <p-card header="Informations de contact" styleClass="form-card">
+      <div class="form-grid">
+        
+        <!-- Email de contact -->
+        <div class="form-field">
+          <label for="emailContact" class="field-label">
+            Email de contact
+          </label>
+          <input pInputText 
+                 id="emailContact"
+                 formControlName="emailContact"
+                 type="email"
+                 placeholder="contact@entreprise.com"
+                 [class.ng-invalid]="hasError('emailContact')"
+                 class="form-input">
+          <small class="error-message" *ngIf="hasError('emailContact')">
+            {{ getErrorMessage('emailContact') }}
+          </small>
+        </div>
+
+        <!-- Responsable contact -->
+        <div class="form-field">
+          <label for="responsableContact" class="field-label">
+            Responsable contact
+          </label>
+          <input pInputText 
+                 id="responsableContact"
+                 formControlName="responsableContact"
+                 placeholder="Nom du responsable"
+                 class="form-input">
+        </div>
+
+        <!-- Site web -->
+        <div class="form-field full-width">
+          <label for="siteWeb" class="field-label">
+            Site web de l'entreprise
+          </label>
+          <input pInputText 
+                 id="siteWeb"
+                 formControlName="siteWeb"
+                 type="url"
+                 placeholder="https://www.entreprise.com"
+                 class="form-input">
+        </div>
+
+      </div>
+    </p-card>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button pButton 
+              type="button"
+              label="Annuler" 
+              icon="pi pi-times"
+              class="p-button-outlined"
+              (click)="annuler()"
+              [disabled]="loading">
+      </button>
+      
+      <button pButton 
+              type="submit"
+              [label]="getSubmitButtonText()" 
+              icon="pi pi-check"
+              [loading]="loading"
+              [disabled]="entrepriseForm.invalid">
+      </button>
+    </div>
+
+  </form>
+
+</div>
