@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { AccueilComponent } from './components/accueil/accueil.component';
 import { PresentationComponent } from './components/universites/presentation/presentation.component';
-import { DirecteurComponent } from './components/universites/directeur/directeur.component';
+import { DirecteurComponent } from './components/universites/directeurs/directeur/directeur.component';
 import { TemoingnageComponent } from './components/universites/temoingnage/temoingnage.component';
 import { ListepartenairesComponent } from './components/universites/ecoles-partenaires/listepartenaires/listepartenaires.component';
 import { DetailspartenairesComponent } from './components/universites/ecoles-partenaires/detailspartenaires/detailspartenaires.component';

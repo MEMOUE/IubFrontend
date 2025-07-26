@@ -9,7 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 
 // Services
-import { DirecteurService, Directeur } from '../../../core/services/directeur.service';
+import { DirecteurService, Directeur } from '../../../../core/services/directeur.service';
 
 interface MessageSection {
   titre: string;
