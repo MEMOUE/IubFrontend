@@ -29,6 +29,12 @@
   --shadow-color: rgba(184, 84, 80, 0.1); /* Ombre avec ton brique */
   --shadow-color-heavy: rgba(184, 84, 80, 0.2);
   
+  /* Nouvelles couleurs pour l'authentification */
+  --success-color: #27AE60;
+  --danger-color: #E74C3C;
+  --warning-color: #F39C12;
+  --info-color: #3498DB;
+  
   --transition: all 0.3s ease;
 }
 
@@ -197,7 +203,32 @@
   box-shadow: 0 4px 15px var(--shadow-color) !important;
 }
 
-/* Bouton admin */
+/* ===== NOUVEAUX STYLES POUR L'AUTHENTIFICATION ===== */
+
+/* Section utilisateur connecté */
+.admin-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 1rem;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.admin-user-name {
+  font-weight: 600;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.admin-user-role {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Boutons admin */
 .admin-btn {
   background: rgba(90, 124, 89, 0.2) !important;
   border: 2px solid var(--secondary-color-light) !important;
@@ -205,6 +236,7 @@
   transition: var(--transition);
   border-radius: 10px !important;
   backdrop-filter: blur(10px);
+  margin-left: 0.5rem;
 }
 
 .admin-btn:hover {
@@ -212,6 +244,92 @@
   border-color: var(--secondary-color-dark) !important;
   transform: scale(1.05) rotate(5deg);
   box-shadow: 0 6px 20px rgba(90, 124, 89, 0.4);
+}
+
+/* Bouton de déconnexion spécifique */
+.admin-btn-logout {
+  background: rgba(231, 76, 60, 0.2) !important;
+  border-color: var(--danger-color) !important;
+}
+
+.admin-btn-logout:hover {
+  background: var(--danger-color) !important;
+  border-color: #C0392B !important;
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* Bouton paramètres */
+.admin-btn-settings {
+  background: rgba(52, 152, 219, 0.2) !important;
+  border-color: var(--info-color) !important;
+}
+
+.admin-btn-settings:hover {
+  background: var(--info-color) !important;
+  border-color: #2980B9 !important;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* Informations utilisateur mobile */
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 2px solid var(--border-color);
+}
+
+.mobile-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.mobile-user-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mobile-user-name {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.mobile-user-role {
+  font-size: 0.8rem;
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-logout-btn {
+  color: var(--danger-color) !important;
+  padding: 0.5rem !important;
+}
+
+.mobile-logout-btn:hover {
+  background: var(--danger-color) !important;
+  color: white !important;
+}
+
+/* Séparateur mobile */
+.mobile-menu-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.5rem 0;
 }
 
 /* Menu mobile toggle */
@@ -388,6 +506,10 @@
     height: 40px;
     width: 40px;
   }
+
+  .admin-user-info {
+    display: none;
+  }
 }
 
 @media (max-width: 576px) {
@@ -410,6 +532,16 @@
   
   .header-container {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  }
+
+  .mobile-user-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .mobile-user-details {
+    align-items: center;
   }
 }
 
@@ -434,12 +566,27 @@
   }
 }
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .main-content {
   animation: fadeInUp 0.6s ease-out;
 }
 
 .header-container {
   animation: buildingPulse 3s infinite;
+}
+
+.admin-user-info {
+  animation: slideInRight 0.5s ease-out;
 }
 
 /* Amélioration de l'accessibilité */
@@ -490,4 +637,35 @@
 
 .construction-animation {
   animation: buildingConstruction 0.6s ease-out forwards;
+}
+
+/* Styles pour les notifications de déconnexion */
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-success {
+  background: linear-gradient(135deg, var(--success-color), #2ECC71);
+  border: none;
+  color: white;
+}
+
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-error {
+  background: linear-gradient(135deg, var(--danger-color), #E67E22);
+  border: none;
+  color: white;
+}
+
+/* Styles pour le dialog de confirmation */
+:host ::ng-deep .p-confirm-dialog .p-dialog-header {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-content {
+  padding: 2rem;
+  background: var(--background-color);
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-footer {
+  background: var(--background-secondary);
+  border-radius: 0 0 12px 12px;
+  padding: 1rem 2rem;
 }

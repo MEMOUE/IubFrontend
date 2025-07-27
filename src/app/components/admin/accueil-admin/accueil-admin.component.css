@@ -10,29 +10,153 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ===== HEADER AVEC INFORMATIONS UTILISATEUR ===== */
 .dashboard-header {
-  text-align: center;
-  margin-bottom: 3rem;
   background: white;
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c);
+}
+
+.user-welcome-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.user-avatar {
+  font-size: 4rem;
+  color: #3498db;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
 }
 
 .dashboard-title {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: #2c3e50;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 1rem 0;
   font-weight: 700;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
 }
 
 .dashboard-title i {
   color: #3498db;
-  font-size: 2.2rem;
+  font-size: 2rem;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.user-role {
+  font-size: 1rem;
+  color: #3498db;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Actions utilisateur */
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.refresh-btn {
+  color: #3498db !important;
+}
+
+.refresh-btn:hover {
+  background: #3498db !important;
+  color: white !important;
+}
+
+.info-btn {
+  color: #f39c12 !important;
+}
+
+.info-btn:hover {
+  background: #f39c12 !important;
+  color: white !important;
+}
+
+.logout-btn {
+  color: #e74c3c !important;
+}
+
+.logout-btn:hover {
+  background: #e74c3c !important;
+  color: white !important;
+}
+
+/* Indicateurs d'état */
+.status-indicators {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+}
+
+.status-badge.connected {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  animation: pulse 2s infinite;
+}
+
+.status-badge.first-login {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.status-badge.super-admin {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .dashboard-subtitle {
@@ -40,8 +164,10 @@
   font-size: 1.1rem;
   margin: 0;
   font-weight: 400;
+  text-align: center;
 }
 
+/* ===== GRILLE DES CARTES ===== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -84,6 +210,7 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Icônes des cartes */
 .card-icon {
   width: 70px;
   height: 70px;
@@ -116,7 +243,7 @@
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 }
 
-.card-icon.stats {
+.card-icon.consultation {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }
 
@@ -149,15 +276,63 @@
   transform: translateX(5px);
 }
 
-.analytics {
-  grid-column: span 2;
+/* Carte de consultation spéciale */
+.consultation-card {
+  border: 2px solid #3498db;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
 }
 
+.consultation-card:hover {
+  border-color: #2980b9;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* ===== SECTION D'AIDE ===== */
+.help-section {
+  margin-top: 3rem;
+}
+
+.help-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: 2px solid #ecf0f1;
+}
+
+.help-card h3 {
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.help-card h3 i {
+  color: #3498db;
+  margin-right: 0.5rem;
+}
+
+.help-card p {
+  color: #7f8c8d;
+  margin: 0 0 1.5rem 0;
+  font-size: 1rem;
+}
+
+.help-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== ACTIONS RAPIDES (cachées pour l'instant) ===== */
 .quick-actions {
   background: white;
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
 }
 
 .quick-actions h2 {
@@ -201,8 +376,8 @@
   font-size: 0.9rem;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ===== DESIGN RESPONSIVE ===== */
+@media (max-width: 992px) {
   .admin-dashboard {
     padding: 1rem;
   }
@@ -216,22 +391,27 @@
     padding: 1.5rem;
   }
   
-  .dashboard-title {
-    font-size: 2rem;
+  .user-welcome-section {
     flex-direction: column;
-    gap: 0.5rem;
+    text-align: center;
+    gap: 1rem;
   }
   
-  .analytics {
-    grid-column: span 1;
+  .user-actions {
+    justify-content: center;
   }
   
-  .quick-actions-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .status-indicators {
+    justify-content: center;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+    justify-content: center;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .dashboard-card {
     flex-direction: column;
     text-align: center;
@@ -242,6 +422,164 @@
   }
   
   .dashboard-card:hover .card-arrow {
-    transform: rotate(90deg) translateX(5px);
+    transform: rotate(90deg) translateY(-5px);
   }
+  
+  .user-welcome-section {
+    gap: 1rem;
+  }
+  
+  .user-avatar {
+    font-size: 3rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .help-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 0.5rem;
+  }
+  
+  .dashboard-header {
+    padding: 1.5rem;
+  }
+  
+  .user-name {
+    font-size: 1.2rem;
+  }
+  
+  .user-role {
+    font-size: 0.9rem;
+  }
+  
+  .user-email {
+    font-size: 0.8rem;
+  }
+  
+  .status-indicators {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .status-badge {
+    width: 100%;
+    justify-content: center;
+    max-width: 200px;
+  }
+}
+
+/* ===== ANIMATIONS PERSONNALISÉES ===== */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dashboard-header {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+.dashboard-card {
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* ===== STYLES POUR LES NOTIFICATIONS PRIMENG ===== */
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-success {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border: none;
+  color: white;
+}
+
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border: none;
+  color: white;
+}
+
+:host ::ng-deep .p-toast .p-toast-message.p-toast-message-info {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border: none;
+  color: white;
+}
+
+/* ===== STYLES POUR LE DIALOG DE CONFIRMATION ===== */
+:host ::ng-deep .p-confirm-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border-radius: 12px 12px 0 0;
+  border: none;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-content {
+  padding: 2rem;
+  background: white;
+  border: none;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-dialog-footer {
+  background: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+  padding: 1rem 2rem;
+  border: none;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button.p-button-danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border: none;
+}
+
+:host ::ng-deep .p-confirm-dialog .p-button.p-button-text {
+  color: #7f8c8d;
+}
+
+/* ===== EFFETS DE SURVOL AVANCÉS ===== */
+.dashboard-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.dashboard-card:hover::after {
+  width: 200px;
+  height: 200px;
 }

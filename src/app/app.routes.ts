@@ -20,12 +20,15 @@ import { AccueilAdminComponent } from './components/admin/accueil-admin/accueil-
 import { DetailActualiteComponent } from './components/actualites/detail-actualite/detail-actualite.component';
 import { NewdirecteurComponent } from './components/universites/directeurs/newdirecteur/newdirecteur.component';
 
+// Imports des guards
+import { AuthGuard, NoAuthGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
     // Route par défaut - Page d'accueil
     { path: '', redirectTo: '/accueil', pathMatch: 'full' },
     { path: 'accueil', component: AccueilComponent },
     
-    // Routes Université
+    // Routes Université (publiques)
     { path: 'universite/presentation', component: PresentationComponent },
     { path: 'universite/directeur', component: DirecteurComponent },
     { path: 'universite/temoingnages', component: TemoingnageComponent },
@@ -33,39 +36,85 @@ export const routes: Routes = [
     // Routes Écoles Partenaires
     { path: 'universite/ecoles-partenaires', component: ListepartenairesComponent },
     { path: 'universite/ecoles-partenaires/details/:id', component: DetailspartenairesComponent },
-    { path: 'universite/ecoles-partenaires/nouveau', component: NewpartenairesComponent },
-    {path: 'universite/ecoles-partenaires/modifier/:id', component: NewpartenairesComponent },
+    { 
+        path: 'universite/ecoles-partenaires/nouveau', 
+        component: NewpartenairesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
+    {
+        path: 'universite/ecoles-partenaires/modifier/:id', 
+        component: NewpartenairesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     
     // Routes Entreprises Partenaires
     { path: 'universite/entreprises-partenaires', component: ListeEntreprisePartenairesComponent },
     { path: 'universite/entreprises-partenaires/details/:id', component: DetailEntreprisePartenairesComponent },
-    { path: 'universite/entreprises-partenaires/nouveau', component: NewEntreprisePartenairesComponent },
-    { path: 'universite/entreprises-partenaires/modifier/:id', component: NewEntreprisePartenairesComponent },
+    { 
+        path: 'universite/entreprises-partenaires/nouveau', 
+        component: NewEntreprisePartenairesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
+    { 
+        path: 'universite/entreprises-partenaires/modifier/:id', 
+        component: NewEntreprisePartenairesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     
     // Routes Formations
     { path: 'formations', component: ListeformationComponent },
     { path: 'formations/details/:id', component: DetailsformationComponent },
-    { path: 'formations/nouveau', component: NewformationComponent },
+    { 
+        path: 'formations/nouveau', 
+        component: NewformationComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     
     // Routes Actualités
     { path: 'actualites', component: ListeactualitesComponent },
-    { path: 'actualites/nouveau', component: NewactualitesComponent },
+    { 
+        path: 'actualites/nouveau', 
+        component: NewactualitesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     { path: 'actualites/details/:id', component: DetailActualiteComponent },
-    { path: 'actualites/modifier/:id', component: NewactualitesComponent },
+    { 
+        path: 'actualites/modifier/:id', 
+        component: NewactualitesComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     
-    // Route Contacts
+    // Route Contacts (publique)
     { path: 'contacts', component: ContactsComponent },
     
-    // Routes Admin
-    { path: 'admin/login', component: LoginComponent },
-    { path: 'admin', component: AccueilAdminComponent },
-    { path: 'admin/accueil', component: AccueilAdminComponent },
+    // Routes Admin avec protection
+    { 
+        path: 'admin/login', 
+        component: LoginComponent,
+        canActivate: [NoAuthGuard]  // 🔒 Rediriger si déjà connecté
+    },
+    { 
+        path: 'admin', 
+        component: AccueilAdminComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection obligatoire
+    },
+    { 
+        path: 'admin/dashboard', 
+        component: AccueilAdminComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection obligatoire
+    },
 
-    // Route pour le directeur
-    { path: 'universite/directeur', component: DirecteurComponent },
-    { path: 'universite/directeur/nouveau', component: NewdirecteurComponent },
-    {path: 'universite/directeur/modifier/:id', component: NewdirecteurComponent },
-
+    // Routes pour le directeur avec protection
+    { 
+        path: 'universite/directeur/nouveau', 
+        component: NewdirecteurComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
+    {
+        path: 'universite/directeur/modifier/:id', 
+        component: NewdirecteurComponent,
+        canActivate: [AuthGuard]  // 🔒 Protection ajoutée
+    },
     
     // Route wildcard - doit être en dernier
     { path: '**', redirectTo: '/accueil' }

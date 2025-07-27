@@ -1,7 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject, signal, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 // PrimeFaces imports
 import { MenubarModule } from 'primeng/menubar';
@@ -10,9 +11,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { MenuItem } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
-// Import du composant Footer
+// Import du composant Footer et services
 import { FooterComponent } from './components/footer/footer.component';
+import { AuthService, UserSession } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -24,27 +28,37 @@ import { FooterComponent } from './components/footer/footer.component';
     ButtonModule,
     TooltipModule,
     ToastModule,
-    FooterComponent  // Ajout du FooterComponent
+    ConfirmDialogModule,
+    FooterComponent
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'iubFrontend';
+  
+  // Injection des dépendances
+  private router = inject(Router);
+  private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
+  private authService = inject(AuthService);
+  private destroy$ = new Subject<void>();
   
   // Variables pour la gestion du menu
   menuItems: MenuItem[] = [];
   mobileMenuVisible = false;
   activeSubmenu: string | null = null;
 
-  constructor(
-    private router: Router,
-    private messageService: MessageService
-  ) {
+  // Signals pour l'état d'authentification
+  isAuthenticated = signal(false);
+  currentUser = signal<UserSession | null>(null);
+
+  constructor() {
     // Fermer le menu mobile lors de la navigation
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.closeMobileMenu();
     });
@@ -52,6 +66,27 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.initializeMenuItems();
+    this.initializeAuthState();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Initialisation de l'état d'authentification
+  private initializeAuthState() {
+    // S'abonner aux changements d'état d'authentification
+    this.authService.currentUser$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(user => {
+      this.isAuthenticated.set(!!user);
+      this.currentUser.set(user);
+    });
+
+    // Initialiser avec l'état actuel
+    this.isAuthenticated.set(this.authService.isLoggedIn());
+    this.currentUser.set(this.authService.getCurrentUser());
   }
 
   // Initialisation des éléments de menu
@@ -115,6 +150,17 @@ export class AppComponent implements OnInit {
     ];
   }
 
+  // Navigation vers l'administration ou déconnexion
+  onAdminButtonClick() {
+    if (this.isAuthenticated()) {
+      // Si connecté, afficher le menu utilisateur ou se déconnecter directement
+      this.confirmLogout();
+    } else {
+      // Si pas connecté, aller vers la page de connexion
+      this.navigateToAdmin();
+    }
+  }
+
   // Navigation vers l'administration
   navigateToAdmin() {
     this.router.navigate(['/admin/login']);
@@ -123,6 +169,57 @@ export class AppComponent implements OnInit {
       summary: 'Administration',
       detail: 'Redirection vers l\'espace administrateur'
     });
+  }
+
+  // Navigation vers le dashboard admin
+  navigateToDashboard() {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
+  // Confirmation de déconnexion
+  confirmLogout() {
+    const user = this.currentUser();
+    const userName = user ? `${user.prenom} ${user.nom}` : 'Administrateur';
+
+    this.confirmationService.confirm({
+      message: `Êtes-vous sûr de vouloir vous déconnecter, ${userName} ?`,
+      header: 'Confirmation de déconnexion',
+      icon: 'pi pi-sign-out',
+      acceptLabel: 'Oui, déconnecter',
+      rejectLabel: 'Annuler',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.logout();
+      },
+      reject: () => {
+        // L'utilisateur a annulé
+      }
+    });
+  }
+
+  // Déconnexion
+  logout() {
+    const user = this.currentUser();
+    const userName = user ? `${user.prenom} ${user.nom}` : 'Administrateur';
+
+    try {
+      this.authService.logout();
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Déconnexion réussie',
+        detail: `Au revoir ${userName} ! Vous avez été déconnecté avec succès.`,
+        life: 3000
+      });
+    } catch (error) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Une erreur est survenue lors de la déconnexion',
+        life: 5000
+      });
+    }
   }
 
   // Gestion du menu mobile
@@ -186,5 +283,26 @@ export class AppComponent implements OnInit {
 
   isSubmenuActive(routes: string[]): boolean {
     return routes.some(route => this.router.url.startsWith(route));
+  }
+
+  // Obtenir l'icône du bouton admin selon l'état
+  getAdminButtonIcon(): string {
+    return this.isAuthenticated() ? 'pi pi-sign-out' : 'pi pi-user';
+  }
+
+  // Obtenir le tooltip du bouton admin selon l'état
+  getAdminButtonTooltip(): string {
+    if (this.isAuthenticated()) {
+      const user = this.currentUser();
+      return user ? `Déconnecter ${user.prenom} ${user.nom}` : 'Se déconnecter';
+    }
+    return 'Administration';
+  }
+
+  // Obtenir le style du bouton admin selon l'état
+  getAdminButtonClass(): string {
+    return this.isAuthenticated() 
+      ? 'p-button-text p-button-rounded admin-btn admin-btn-logout' 
+      : 'p-button-text p-button-rounded admin-btn';
   }
 }
