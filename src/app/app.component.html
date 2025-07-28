@@ -17,13 +17,14 @@
           <span></span>
         </ng-template>
         <ng-template pTemplate="end">
+          <div class="auth-section">
           <!-- Affichage conditionnel selon l'état de connexion -->
           @if (isAuthenticated()) {
             <!-- Utilisateur connecté : afficher info + bouton déconnexion -->
-            <div class="admin-user-info">
+            <!-- <div class="admin-user-info">
               <span class="admin-user-name">{{ currentUser()?.prenom }} {{ currentUser()?.nom }}</span>
               <span class="admin-user-role">{{ currentUser()?.role }}</span>
-            </div>
+            </div> -->
             <button pButton pRipple type="button" 
                     [icon]="getAdminButtonIcon()" 
                     [class]="getAdminButtonClass()"
@@ -48,6 +49,7 @@
                     tooltipPosition="bottom">
             </button>
           }
+          </div>
         </ng-template>
       </p-menubar>
     </nav>
