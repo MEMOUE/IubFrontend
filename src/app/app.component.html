@@ -86,7 +86,7 @@
         <div class="mobile-menu-separator"></div>
       }
 
-      <a routerLink="/accueil" class="mobile-menu-item" (click)="closeMobileMenu()">
+      <a href="/accueil" class="mobile-menu-item" (click)="closeMobileMenu()">
         <i class="pi pi-home"></i>
         <span>Accueil</span>
       </a>
@@ -97,35 +97,35 @@
           <i class="pi pi-chevron-down" [class.rotated]="activeSubmenu === 'universite'"></i>
         </div>
         <div class="mobile-submenu-content" [class.active]="activeSubmenu === 'universite'">
-          <a routerLink="/universite/presentation" class="mobile-submenu-item" (click)="closeMobileMenu()">
+          <a href="/universite/presentation" class="mobile-submenu-item" (click)="closeMobileMenu()">
             Qui Sommes Nous ?
           </a>
-          <a routerLink="/universite/directeur" class="mobile-submenu-item" (click)="closeMobileMenu()">
+          <a href="/universite/directeur" class="mobile-submenu-item" (click)="closeMobileMenu()">
             Les Mots du Directeur
           </a>
-          <a routerLink="/universite/temoingnages" class="mobile-submenu-item" (click)="closeMobileMenu()">
+          <a href="/universite/temoingnages" class="mobile-submenu-item" (click)="closeMobileMenu()">
             Témoignages
           </a>
-          <a routerLink="/universite/ecoles-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
+          <a href="/universite/ecoles-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
             Écoles Partenaires
           </a>
-          <a routerLink="/universite/entreprises-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
+          <a href="/universite/entreprises-partenaires" class="mobile-submenu-item" (click)="closeMobileMenu()">
             Entreprises Partenaires
           </a>
         </div>
       </div>
 
-      <a routerLink="/formations" class="mobile-menu-item" (click)="closeMobileMenu()">
+      <a href="/formations" class="mobile-menu-item" (click)="closeMobileMenu()">
         <i class="pi pi-book"></i>
         <span>Formations</span>
       </a>
       
-      <a routerLink="/actualites" class="mobile-menu-item" (click)="closeMobileMenu()">
+      <a href="/actualites" class="mobile-menu-item" (click)="closeMobileMenu()">
         <i class="pi pi-calendar"></i>
         <span>Actualités</span>
       </a>
       
-      <a routerLink="/contacts" class="mobile-menu-item" (click)="closeMobileMenu()">
+      <a href="/contacts" class="mobile-menu-item" (click)="closeMobileMenu()">
         <i class="pi pi-phone"></i>
         <span>Contacts</span>
       </a>
@@ -133,13 +133,13 @@
       <!-- Actions admin en mode mobile -->
       @if (isAuthenticated()) {
         <div class="mobile-menu-separator"></div>
-        <a routerLink="/admin/dashboard" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <a href="/admin/dashboard" class="mobile-menu-item" (click)="closeMobileMenu()">
           <i class="pi pi-cog"></i>
           <span>Tableau de bord</span>
         </a>
       } @else {
         <div class="mobile-menu-separator"></div>
-        <a routerLink="/admin/login" class="mobile-menu-item" (click)="closeMobileMenu()">
+        <a href="/admin/login" class="mobile-menu-item" (click)="closeMobileMenu()">
           <i class="pi pi-user"></i>
           <span>Administration</span>
         </a>

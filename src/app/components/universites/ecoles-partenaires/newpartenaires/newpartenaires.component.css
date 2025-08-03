@@ -64,7 +64,7 @@
 }
 
 .back-btn:hover {
-  background: rgba(184, 84, 80, 0.1) !important;
+  background: rgba(147, 144, 144, 0.1) !important;
   color: var(--primary-color) !important;
 }
 
