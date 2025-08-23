@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 // PrimeFaces imports
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
@@ -16,6 +15,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { MessageService } from 'primeng/api';
+import { ContactService, ContactRequest } from '../../core/services/contact.service';
 
 // Interface pour les messages
 interface Message {
@@ -44,7 +44,6 @@ interface SocialLink {
 interface Department {
   label: string;
   value: string;
-  email: string;
 }
 
 @Component({
@@ -109,15 +108,15 @@ export class ContactsComponent implements OnInit, OnDestroy {
     }
   ];
 
-  // Départements/Services
+  // Départements/Services - Correspond au backend
   departments: Department[] = [
-    { label: 'Admissions', value: 'admissions', email: 'admissions@iub-university.com' },
-    { label: 'Scolarité', value: 'scolarite', email: 'scolarite@iub-university.com' },
-    { label: 'Recherche', value: 'recherche', email: 'recherche@iub-university.com' },
-    { label: 'Partenariats', value: 'partenariats', email: 'partenariats@iub-university.com' },
-    { label: 'Support Technique', value: 'support', email: 'support@iub-university.com' },
-    { label: 'Direction', value: 'direction', email: 'direction@iub-university.com' },
-    { label: 'Autre', value: 'autre', email: 'contact@iub-university.com' }
+    { label: 'Admissions', value: 'Admissions' },
+    { label: 'Scolarité', value: 'Scolarité' },
+    { label: 'Recherche', value: 'Recherche' },
+    { label: 'Partenariats', value: 'Partenariats' },
+    { label: 'Support Technique', value: 'Support Technique' },
+    { label: 'Direction', value: 'Direction' },
+    { label: 'Autre', value: 'Autre' }
   ];
 
   // Réseaux sociaux
@@ -169,7 +168,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private contactService: ContactService
   ) {
     this.contactForm = this.createContactForm();
   }
@@ -199,23 +199,69 @@ export class ContactsComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.contactForm.valid) {
       this.isSubmitting = true;
-      
-      // Simulation d'envoi (remplacer par l'appel API réel)
-      setTimeout(() => {
-        this.isSubmitting = false;
-        
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Message envoyé',
-          detail: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
-          life: 5000
-        });
 
-        // Reset du formulaire
-        this.contactForm.reset();
-        this.messages = [];
-        
-      }, 2000);
+      const contactData: ContactRequest = {
+        firstName: this.contactForm.value.firstName.trim(),
+        lastName: this.contactForm.value.lastName.trim(),
+        email: this.contactForm.value.email.trim(),
+        phone: this.contactForm.value.phone?.trim() || undefined,
+        department: this.contactForm.value.department,
+        subject: this.contactForm.value.subject.trim(),
+        message: this.contactForm.value.message.trim()
+      };
+
+      console.log('📧 Envoi du message de contact:', contactData);
+
+      this.contactService.sendMessage(contactData).subscribe({
+        next: (response) => {
+          console.log('✅ Réponse reçue:', response);
+          this.isSubmitting = false;
+
+          if (response.success) {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Message envoyé',
+              detail: response.message || 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+              life: 5000
+            });
+
+            // Reset du formulaire
+            this.contactForm.reset();
+            this.messages = [];
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: response.message || 'Erreur lors de l\'envoi du message',
+              life: 5000
+            });
+          }
+        },
+        error: (error) => {
+          console.error('❌ Erreur lors de l\'envoi:', error);
+          this.isSubmitting = false;
+
+          let errorMessage = 'Une erreur est survenue lors de l\'envoi du message';
+
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur d\'envoi',
+            detail: errorMessage,
+            life: 5000
+          });
+
+          // Afficher les erreurs de validation si disponibles
+          if (error.status === 400 && error.error?.errors) {
+            this.showValidationErrors();
+          }
+        }
+      });
     } else {
       this.markFormGroupTouched();
       this.showValidationErrors();
@@ -235,30 +281,40 @@ export class ContactsComponent implements OnInit, OnDestroy {
   // Afficher les erreurs de validation
   private showValidationErrors() {
     this.messages = [];
-    
+
+    const errors = [];
+
     if (this.contactForm.get('firstName')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'Le prénom est requis' });
+      errors.push('Le prénom est requis');
     }
     if (this.contactForm.get('lastName')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'Le nom est requis' });
+      errors.push('Le nom est requis');
     }
     if (this.contactForm.get('email')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'L\'email est requis' });
+      errors.push('L\'email est requis');
     }
     if (this.contactForm.get('email')?.errors?.['email']) {
-      this.messages.push({ severity: 'error', detail: 'Format d\'email invalide' });
+      errors.push('Format d\'email invalide');
     }
     if (this.contactForm.get('department')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'Veuillez sélectionner un département' });
+      errors.push('Veuillez sélectionner un département');
     }
     if (this.contactForm.get('subject')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'Le sujet est requis' });
+      errors.push('Le sujet est requis');
     }
     if (this.contactForm.get('message')?.errors?.['required']) {
-      this.messages.push({ severity: 'error', detail: 'Le message est requis' });
+      errors.push('Le message est requis');
     }
     if (this.contactForm.get('message')?.errors?.['minlength']) {
-      this.messages.push({ severity: 'error', detail: 'Le message doit contenir au moins 20 caractères' });
+      errors.push('Le message doit contenir au moins 20 caractères');
+    }
+
+    if (errors.length > 0) {
+      this.messages.push({
+        severity: 'error',
+        summary: 'Erreurs de validation',
+        detail: errors.join(', ')
+      });
     }
   }
 

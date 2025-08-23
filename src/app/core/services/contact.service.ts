@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiService } from './api.service';
-import { ContactMessage, CreateContactDto } from '../../shared/models/contact.model';
+import { environment } from '../../environments/environment';
+
+export interface ContactRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  department: string;
+  subject: string;
+  message: string;
+}
+
+export interface ContactResponse {
+  success: boolean;
+  message: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  private readonly endpoint = 'contacts';
+  private readonly apiUrl = `${environment.apiUrl}/contact`;
 
-  constructor(private apiService: ApiService) {}
+  constructor(private http: HttpClient) {}
 
-  sendMessage(message: CreateContactDto): Observable<ContactMessage> {
-    return this.apiService.post<ContactMessage>(this.endpoint, message);
-  }
-
-  getMessages(): Observable<ContactMessage[]> {
-    return this.apiService.get<ContactMessage[]>(this.endpoint);
-  }
-
-  getMessageById(id: number): Observable<ContactMessage> {
-    return this.apiService.get<ContactMessage>(`${this.endpoint}/${id}`);
-  }
-
-  markAsRead(id: number): Observable<ContactMessage> {
-    return this.apiService.put<ContactMessage>(`${this.endpoint}/${id}/read`, {});
-  }
-
-  replyToMessage(id: number, reply: string): Observable<any> {
-    return this.apiService.post<any>(`${this.endpoint}/${id}/reply`, { reply });
+  /**
+   * Envoie un message de contact via l'endpoint backend
+   */
+  sendMessage(contactData: ContactRequest): Observable<ContactResponse> {
+    return this.http.post<ContactResponse>(`${this.apiUrl}/send`, contactData);
   }
 }
