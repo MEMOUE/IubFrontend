@@ -14,6 +14,7 @@ import { DividerModule } from 'primeng/divider';
 
 // Services and models
 import { PartenaireService } from '../../../../core/services/partenaire.service';
+import { AuthService } from '../../../../core/services/auth.service'; // ✅ AJOUT
 import { EntreprisePartenaire } from '../../../../shared/models/partenaire.model';
 
 @Component({
@@ -42,7 +43,8 @@ export class DetailEntreprisePartenairesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private partenaireService: PartenaireService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService // ✅ AJOUT
   ) {}
 
   ngOnInit() {
@@ -52,6 +54,20 @@ export class DetailEntreprisePartenairesComponent implements OnInit {
         this.chargerEntreprise();
       }
     });
+  }
+
+  // ✅ NOUVELLES MÉTHODES : Vérification d'authentification
+  isUserLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  isUserAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+  }
+
+  canAdministrate(): boolean {
+    return this.isUserLoggedIn() && this.isUserAdmin();
   }
 
   // Charger les détails de l'entreprise
@@ -84,6 +100,16 @@ export class DetailEntreprisePartenairesComponent implements OnInit {
 
   // Modifier l'entreprise
   modifierEntreprise() {
+    // ✅ VÉRIFICATION SUPPLÉMENTAIRE (optionnelle, car le bouton est déjà conditionné)
+    if (!this.canAdministrate()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Accès refusé',
+        detail: 'Vous devez être connecté en tant qu\'administrateur pour effectuer cette action.'
+      });
+      return;
+    }
+
     if (this.entreprise?.id) {
       this.router.navigate(['/universite/entreprises-partenaires/modifier', this.entreprise.id]);
     }
@@ -91,6 +117,16 @@ export class DetailEntreprisePartenairesComponent implements OnInit {
 
   // Supprimer l'entreprise
   supprimerEntreprise() {
+    // ✅ VÉRIFICATION SUPPLÉMENTAIRE (optionnelle, car le bouton est déjà conditionné)
+    if (!this.canAdministrate()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Accès refusé',
+        detail: 'Vous devez être connecté en tant qu\'administrateur pour effectuer cette action.'
+      });
+      return;
+    }
+
     if (!this.entreprise?.id) return;
 
     if (confirm('Êtes-vous sûr de vouloir supprimer cette entreprise partenaire ?')) {

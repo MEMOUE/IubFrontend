@@ -96,6 +96,9 @@
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column; /* AJOUT : Structure verticale */
+  height: auto; /* AJOUT : Hauteur automatique mais contrôlée */
 }
 
 .entreprise-card:hover {
@@ -160,17 +163,73 @@
   font-size: 0.8rem;
 }
 
-/* Description */
+/* ===== CORRECTION DESCRIPTION - NOUVELLE SECTION ===== */
+.entreprise-description {
+  margin: 1rem 0;
+  position: relative;
+  flex-shrink: 0; /* Ne pas rétrécir */
+}
+
 .entreprise-description p {
   color: var(--text-color-light) !important;
   line-height: 1.6;
-  margin: 1rem 0;
+  margin: 0;
   font-size: 0.95rem;
+  transition: var(--transition);
+  word-wrap: break-word; /* Casser les mots longs */
+  overflow-wrap: break-word; /* Compatibilité */
 }
+
+/* Description tronquée par défaut */
+.entreprise-description.truncated p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limiter à 3 lignes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 4.8em; /* Fallback pour navigateurs non-webkit */
+}
+
+/* Bouton Voir plus/moins */
+.description-toggle {
+  background: transparent !important;
+  border: none !important;
+  color: var(--primary-color) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  padding: 0.25rem 0 !important;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.description-toggle:hover {
+  color: var(--secondary-color) !important;
+  text-decoration: underline;
+  background: transparent !important;
+  transform: none; /* Pas de mouvement */
+}
+
+.description-toggle:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  background: transparent !important;
+}
+
+.description-toggle i {
+  font-size: 0.75rem !important;
+  transition: var(--transition);
+}
+/* ===== FIN CORRECTION DESCRIPTION ===== */
 
 /* Sections entreprise */
 .entreprise-section {
   margin: 1.5rem 0;
+  flex-shrink: 0; /* Ne pas rétrécir */
 }
 
 .entreprise-section h4 {
@@ -213,6 +272,7 @@
 /* Contact Information Section */
 .entreprise-contact {
   margin-bottom: 1.5rem;
+  flex-shrink: 0; /* Ne pas rétrécir */
 }
 
 .entreprise-contact h4 {
@@ -259,7 +319,7 @@
 
 /* Footer entreprise */
 .entreprise-footer {
-  margin-top: 1.5rem;
+  margin-top: auto; /* MODIFICATION : Pousser le footer en bas */
   padding-top: 1rem;
   border-top: 1px solid var(--border-color);
 }
@@ -403,13 +463,13 @@
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .add-btn {
     width: 100%;
     max-width: 300px;
     align-self: center;
   }
-  
+
   .contact-info p {
     flex-direction: column;
     align-items: flex-start;
@@ -424,17 +484,23 @@
   .filter-buttons {
     justify-content: flex-start;
   }
+
+  /* Description responsive */
+  .entreprise-description.truncated p {
+    -webkit-line-clamp: 2; /* Moins de lignes sur tablette */
+    max-height: 3.2em;
+  }
 }
 
 @media (max-width: 480px) {
   .loading-container {
     padding: 2rem 0;
   }
-  
+
   .no-results {
     padding: 2rem 0;
   }
-  
+
   .no-results-content i {
     font-size: 2rem;
   }
@@ -450,8 +516,21 @@
   .section-title {
     font-size: 1.5rem;
   }
+
+  /* Description mobile */
+  .entreprise-description p {
+    font-size: 0.9rem;
+  }
+
+  .description-toggle {
+    font-size: 0.8rem !important;
+  }
+
+  .entreprise-description.truncated p {
+    -webkit-line-clamp: 2; /* 2 lignes max sur mobile */
+    max-height: 2.8em;
+  }
 }
-/* STYLES MANQUANTS À AJOUTER À LA FIN DU FICHIER liste-entreprise-partenaires.component.css */
 
 /* ===== SECTIONS PRINCIPALES ===== */
 
@@ -827,52 +906,52 @@
   .hero-section {
     padding: 2rem 0;
   }
-  
+
   .hero-section .hero-title {
     font-size: 2rem;
   }
-  
+
   .benefits-section,
   .process-section,
   .testimonial-section,
   .cta-section {
     padding: 2rem 0;
   }
-  
+
   .benefits-section .section-title,
   .process-section .section-title {
     font-size: 1.5rem;
   }
-  
+
   .benefits-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .process-steps {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .process-step {
     flex-direction: column;
     text-align: center;
     gap: 1rem;
   }
-  
+
   .testimonial-content blockquote {
     font-size: 1.1rem;
   }
-  
+
   .cta-section h2 {
     font-size: 1.8rem;
   }
-  
+
   .cta-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .cta-buttons button {
     width: 100%;
     max-width: 300px;
@@ -883,25 +962,25 @@
   .hero-section .hero-title {
     font-size: 1.8rem;
   }
-  
+
   .benefit-item,
   .process-step {
     padding: 1.5rem;
   }
-  
+
   .benefits-section .section-title,
   .process-section .section-title {
     font-size: 1.3rem;
   }
-  
+
   .cta-section h2 {
     font-size: 1.5rem;
   }
-  
+
   .testimonial-content {
     padding: 0 1rem;
   }
-  
+
   .testimonial-content blockquote {
     font-size: 1rem;
   }

@@ -6,7 +6,7 @@
   <div class="container">
     <h1 class="hero-title">Nos Entreprises Partenaires</h1>
     <p class="hero-description">
-      L'IUB collabore avec les leaders du marché pour offrir à nos étudiants des opportunités de stages, 
+      L'IUB collabore avec les leaders du marché pour offrir à nos étudiants des opportunités de stages,
       d'emplois et de formations pratiques. Découvrez nos partenaires qui recrutent nos diplômés.
     </p>
   </div>
@@ -27,14 +27,16 @@
 <!-- Section Entreprises -->
 <section class="entreprises-section">
   <div class="container">
-    <!-- Header avec bouton d'ajout -->
+    <!-- ✅ Header avec bouton d'ajout conditionné -->
     <div class="section-header">
       <h2 class="section-title">Entreprises par Secteur</h2>
-      <button pButton 
-              type="button" 
-              label="Ajouter une entreprise" 
+      <!-- ✅ BOUTON CONDITIONNÉ : Visible seulement si l'utilisateur est connecté et admin -->
+      <button pButton
+              type="button"
+              label="Ajouter une entreprise"
               icon="pi pi-plus"
               class="add-btn"
+              *ngIf="canAdministrate()"
               (click)="ajouterEntreprise()">
       </button>
     </div>
@@ -42,8 +44,8 @@
     <!-- Filtres par secteur -->
     <div class="secteur-filters">
       <div class="filter-buttons">
-        <button pButton 
-                type="button" 
+        <button pButton
+                type="button"
                 [label]="secteur.label"
                 [icon]="secteur.icon"
                 *ngFor="let secteur of secteurs"
@@ -65,9 +67,9 @@
         <i class="pi pi-info-circle"></i>
         <h3>Aucune entreprise trouvée</h3>
         <p>Aucune entreprise ne correspond aux critères sélectionnés.</p>
-        <button pButton 
-                type="button" 
-                label="Voir toutes les entreprises" 
+        <button pButton
+                type="button"
+                label="Voir toutes les entreprises"
                 icon="pi pi-refresh"
                 (click)="changerSecteur('tous')">
         </button>
@@ -83,7 +85,7 @@
             <h3 class="entreprise-nom">{{ entreprise.nom }}</h3>
             <div class="entreprise-meta">
               <span class="entreprise-secteur">{{ entreprise.secteur }}</span>
-              <span class="entreprise-taille" 
+              <span class="entreprise-taille"
                     [style.background-color]="getTailleColor(entreprise.taille)">
                 {{ entreprise.taille }}
               </span>
@@ -139,12 +141,12 @@
             </p>
             <p *ngIf="entreprise.emailContact">
               <i class="pi pi-envelope"></i>
-              <strong>Email :</strong> 
+              <strong>Email :</strong>
               <a [href]="'mailto:' + entreprise.emailContact">{{ entreprise.emailContact }}</a>
             </p>
             <p *ngIf="entreprise.siteWeb">
               <i class="pi pi-globe"></i>
-              <strong>Site web :</strong> 
+              <strong>Site web :</strong>
               <a [href]="entreprise.siteWeb" target="_blank">{{ entreprise.siteWeb }}</a>
             </p>
           </div>
@@ -152,9 +154,9 @@
 
         <!-- Footer avec action -->
         <div class="entreprise-footer">
-          <button pButton 
-                  type="button" 
-                  label="Plus d'informations" 
+          <button pButton
+                  type="button"
+                  label="Plus d'informations"
                   icon="pi pi-arrow-right"
                   class="details-btn"
                   (click)="voirDetails(entreprise.id!)">
@@ -169,7 +171,7 @@
 <section class="benefits-section">
   <div class="container">
     <h2 class="section-title">Avantages de nos Partenariats Entreprises</h2>
-    
+
     <div class="benefits-grid">
       <div class="benefit-item">
         <div class="benefit-icon">
@@ -178,7 +180,7 @@
         <h4>Insertion Professionnelle</h4>
         <p>85% de nos diplômés trouvent un emploi dans les 6 mois grâce à notre réseau d'entreprises partenaires.</p>
       </div>
-      
+
       <div class="benefit-item">
         <div class="benefit-icon">
           <i class="pi pi-users"></i>
@@ -186,7 +188,7 @@
         <h4>Stages Qualifiants</h4>
         <p>Plus de 300 stages par an dans des entreprises leaders pour une expérience professionnelle concrète.</p>
       </div>
-      
+
       <div class="benefit-item">
         <div class="benefit-icon">
           <i class="pi pi-graduation-cap"></i>
@@ -194,7 +196,7 @@
         <h4>Formations Adaptées</h4>
         <p>Programmes co-conçus avec les entreprises pour répondre aux besoins réels du marché du travail.</p>
       </div>
-      
+
       <div class="benefit-item">
         <div class="benefit-icon">
           <i class="pi pi-chart-line"></i>
@@ -214,8 +216,8 @@
         <i class="pi pi-quote-left"></i>
       </div>
       <blockquote>
-        "Grâce au partenariat entre l'IUB et Orange CI, j'ai pu effectuer mon stage de fin d'études 
-        et être recruté directement après ma graduation. L'entreprise connaît la qualité de la formation 
+        "Grâce au partenariat entre l'IUB et Orange CI, j'ai pu effectuer mon stage de fin d'études
+        et être recruté directement après ma graduation. L'entreprise connaît la qualité de la formation
         et fait confiance aux diplômés de l'IUB."
       </blockquote>
       <div class="testimonial-author">
@@ -229,7 +231,7 @@
 <section class="process-section">
   <div class="container">
     <h2 class="section-title">Comment Accéder à ces Opportunités ?</h2>
-    
+
     <div class="process-steps">
       <div class="process-step">
         <div class="step-number">1</div>
@@ -238,7 +240,7 @@
           <p>Postulez aux offres de stages et d'emplois via notre plateforme dédiée</p>
         </div>
       </div>
-      
+
       <div class="process-step">
         <div class="step-number">2</div>
         <div class="step-content">
@@ -246,7 +248,7 @@
           <p>Présélection par l'université en fonction de votre profil et de vos compétences</p>
         </div>
       </div>
-      
+
       <div class="process-step">
         <div class="step-number">3</div>
         <div class="step-content">
@@ -254,7 +256,7 @@
           <p>Entretien direct avec l'entreprise partenaire sur le campus ou en ligne</p>
         </div>
       </div>
-      
+
       <div class="process-step">
         <div class="step-number">4</div>
         <div class="step-content">
@@ -272,15 +274,15 @@
     <h2>Lancez Votre Carrière avec nos Partenaires</h2>
     <p>Découvrez nos formations qui vous préparent aux métiers d'avenir dans ces entreprises leader</p>
     <div class="cta-buttons">
-      <button pButton 
-              type="button" 
-              label="Voir nos Formations" 
+      <button pButton
+              type="button"
+              label="Voir nos Formations"
               icon="pi pi-book"
               (click)="navigateToFormations()">
       </button>
-      <button pButton 
-              type="button" 
-              label="Nous Contacter" 
+      <button pButton
+              type="button"
+              label="Nous Contacter"
               icon="pi pi-phone"
               class="p-button-outlined"
               (click)="navigateToContact()">

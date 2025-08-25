@@ -46,13 +46,13 @@ export class FooterComponent implements OnInit {
     {
       name: 'Facebook',
       icon: 'pi pi-facebook',
-      url: 'https://facebook.com/iub-bouake',
+      url: 'https://www.facebook.com/share/15nvxPiVYC/',
       color: '#1877F2'
     },
     {
       name: 'LinkedIn',
       icon: 'pi pi-linkedin',
-      url: 'https://linkedin.com/school/iub-bouake',
+      url: 'https://www.linkedin.com/company/international-university-of-bouak%C3%A9-iub/',
       color: '#0A66C2'
     },
     {

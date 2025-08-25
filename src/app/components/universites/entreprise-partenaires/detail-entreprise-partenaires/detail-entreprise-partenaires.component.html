@@ -9,29 +9,30 @@
 
 <!-- Contenu principal -->
 <div class="detail-container" *ngIf="!loading && entreprise">
-  <!-- Header avec navigation -->
+  <!-- ✅ Header avec navigation et boutons conditionnés -->
   <div class="detail-header">
     <div class="breadcrumb">
-      <button pButton 
-              type="button" 
-              label="Retour à la liste" 
+      <button pButton
+              type="button"
+              label="Retour à la liste"
               icon="pi pi-arrow-left"
               class="p-button-text"
               (click)="retourListe()">
       </button>
     </div>
 
-    <div class="header-actions">
-      <button pButton 
-              type="button" 
-              label="Modifier" 
+    <!-- ✅ ACTIONS CONDITIONNÉES : Visibles seulement si l'utilisateur est connecté et admin -->
+    <div class="header-actions" *ngIf="canAdministrate()">
+      <button pButton
+              type="button"
+              label="Modifier"
               icon="pi pi-pencil"
               class="p-button-outlined"
               (click)="modifierEntreprise()">
       </button>
-      <button pButton 
-              type="button" 
-              label="Supprimer" 
+      <button pButton
+              type="button"
+              label="Supprimer"
               icon="pi pi-trash"
               class="p-button-outlined p-button-danger"
               (click)="supprimerEntreprise()">
@@ -44,19 +45,19 @@
     <div class="hero-content">
       <div class="entreprise-main-info">
         <h1 class="entreprise-nom">{{ entreprise.nom }}</h1>
-        
+
         <div class="entreprise-meta">
-          <p-chip 
-            [label]="entreprise.secteur" 
+          <p-chip
+            [label]="entreprise.secteur"
             [icon]="getSecteurIcon(entreprise.secteur)"
             styleClass="secteur-chip">
           </p-chip>
-          <p-chip 
+          <p-chip
             [label]="entreprise.taille"
             [style]="{'background-color': getTailleColor(entreprise.taille), 'color': 'white'}"
             styleClass="taille-chip">
           </p-chip>
-          <p-chip 
+          <p-chip
             [label]="entreprise.localisation"
             icon="pi pi-map-marker"
             styleClass="localisation-chip">
@@ -78,20 +79,20 @@
 
   <!-- Grid de contenu -->
   <div class="content-grid">
-    
+
     <!-- Description -->
-    <p-card header="À propos de l'entreprise" 
+    <p-card header="À propos de l'entreprise"
             *ngIf="entreprise.description"
             styleClass="info-card">
       <p class="description-text">{{ entreprise.description }}</p>
     </p-card>
 
     <!-- Types de collaboration -->
-    <p-card header="Types de collaboration" 
+    <p-card header="Types de collaboration"
             *ngIf="entreprise.collaborations && entreprise.collaborations.length > 0"
             styleClass="info-card">
       <div class="tags-container">
-        <p-chip 
+        <p-chip
           *ngFor="let collaboration of entreprise.collaborations"
           [label]="collaboration"
           styleClass="collaboration-chip">
@@ -100,7 +101,7 @@
     </p-card>
 
     <!-- Postes proposés -->
-    <p-card header="Postes proposés à nos diplômés" 
+    <p-card header="Postes proposés à nos diplômés"
             *ngIf="entreprise.postes && entreprise.postes.length > 0"
             styleClass="info-card">
       <ul class="postes-list">
@@ -112,7 +113,7 @@
     </p-card>
 
     <!-- Avantages pour les étudiants -->
-    <p-card header="Avantages pour nos étudiants" 
+    <p-card header="Avantages pour nos étudiants"
             *ngIf="entreprise.avantages && entreprise.avantages.length > 0"
             styleClass="info-card">
       <ul class="avantages-list">
@@ -124,10 +125,10 @@
     </p-card>
 
     <!-- Informations de contact -->
-    <p-card header="Informations de contact" 
+    <p-card header="Informations de contact"
             *ngIf="entreprise.emailContact || entreprise.responsableContact || entreprise.siteWeb"
             styleClass="contact-card">
-      
+
       <div class="contact-item" *ngIf="entreprise.responsableContact">
         <div class="contact-icon">
           <i class="pi pi-user"></i>
@@ -148,13 +149,13 @@
         <div class="contact-info">
           <label>Email</label>
           <span>
-            <a [href]="'mailto:' + entreprise.emailContact" 
+            <a [href]="'mailto:' + entreprise.emailContact"
                class="contact-link">
               {{ entreprise.emailContact }}
             </a>
           </span>
         </div>
-        <button pButton 
+        <button pButton
                 type="button"
                 icon="pi pi-send"
                 class="p-button-text p-button-sm"
@@ -173,14 +174,14 @@
         <div class="contact-info">
           <label>Site web</label>
           <span>
-            <a [href]="entreprise.siteWeb" 
-               target="_blank" 
+            <a [href]="entreprise.siteWeb"
+               target="_blank"
                class="contact-link">
               {{ entreprise.siteWeb }}
             </a>
           </span>
         </div>
-        <button pButton 
+        <button pButton
                 type="button"
                 icon="pi pi-external-link"
                 class="p-button-text p-button-sm"
@@ -192,21 +193,22 @@
 
   </div>
 
-  <!-- Actions footer -->
+  <!-- ✅ Actions footer conditionnées -->
   <div class="detail-footer">
     <div class="footer-actions">
-      <button pButton 
-              type="button" 
-              label="Retour à la liste" 
+      <button pButton
+              type="button"
+              label="Retour à la liste"
               icon="pi pi-arrow-left"
               class="p-button-outlined"
               (click)="retourListe()">
       </button>
-      
-      <div class="primary-actions">
-        <button pButton 
-                type="button" 
-                label="Modifier" 
+
+      <!-- ✅ BOUTONS CONDITIONNÉS : Visibles seulement si l'utilisateur peut administrer -->
+      <div class="primary-actions" *ngIf="canAdministrate()">
+        <button pButton
+                type="button"
+                label="Modifier"
                 icon="pi pi-pencil"
                 (click)="modifierEntreprise()">
         </button>
@@ -222,9 +224,9 @@
     <i class="pi pi-exclamation-triangle"></i>
     <h2>Entreprise non trouvée</h2>
     <p>L'entreprise demandée n'existe pas ou n'est plus disponible.</p>
-    <button pButton 
-            type="button" 
-            label="Retour à la liste" 
+    <button pButton
+            type="button"
+            label="Retour à la liste"
             icon="pi pi-arrow-left"
             (click)="retourListe()">
     </button>

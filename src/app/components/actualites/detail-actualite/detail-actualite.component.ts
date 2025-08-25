@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ActualiteService } from '../../../core/services/actualite.service';
 import { Actualite } from '../../../shared/models/actualite.model';
+import { AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-detail-actualite',
@@ -42,7 +43,8 @@ export class DetailActualiteComponent implements OnInit {
     private router: Router,
     private actualiteService: ActualiteService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -84,8 +86,8 @@ export class DetailActualiteComponent implements OnInit {
     this.actualiteService.getActualitesByCategorie(this.actualite.categorie).subscribe({
       next: (actualites) => {
         this.actualitesSimilaires = actualites
-          .filter(a => 
-            a.id !== this.actualite!.id && 
+          .filter(a =>
+            a.id !== this.actualite!.id &&
             a.publie
           )
           .slice(0, 3); // Limiter à 3 actualités similaires
@@ -141,11 +143,11 @@ export class DetailActualiteComponent implements OnInit {
   togglePublication() {
     if (!this.actualite) return;
 
-    const updatedActualite: Actualite = { 
-      ...this.actualite, 
-      publie: !this.actualite.publie 
+    const updatedActualite: Actualite = {
+      ...this.actualite,
+      publie: !this.actualite.publie
     };
-    
+
     this.actualiteService.updateActualite(this.actualite.id!, updatedActualite).subscribe({
       next: (actualite) => {
         this.actualite = actualite;
@@ -244,19 +246,19 @@ export class DetailActualiteComponent implements OnInit {
 
   isEventUpcoming(): boolean {
     if (!this.actualite || this.actualite.categorie !== 'evenement' || !this.actualite.dateEvenement) return false;
-    
+
     const eventDate = new Date(this.actualite.dateEvenement);
     const now = new Date();
-    
+
     return eventDate > now;
   }
 
   isEventToday(): boolean {
     if (!this.actualite || this.actualite.categorie !== 'evenement' || !this.actualite.dateEvenement) return false;
-    
+
     const eventDate = new Date(this.actualite.dateEvenement);
     const today = new Date();
-    
+
     return eventDate.toDateString() === today.toDateString();
   }
 
@@ -269,4 +271,16 @@ export class DetailActualiteComponent implements OnInit {
       return { label: 'Passé', severity: 'secondary' };
     }
   }
+
+  isUserLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+  canAdministrate(): boolean {
+    return this.isUserLoggedIn() && this.isUserAdmin();
+  }
+  isUserAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+  }
+
 }

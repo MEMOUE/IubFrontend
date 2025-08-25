@@ -8,32 +8,32 @@
 
 <!-- Contenu principal -->
 <div class="actualite-detail-container" *ngIf="!loading && actualite">
-  
+
   <!-- Barre de navigation -->
   <div class="navigation-bar">
     <div class="container">
       <div class="nav-content">
-        <button pButton 
-                type="button" 
-                icon="pi pi-arrow-left" 
+        <button pButton
+                type="button"
+                icon="pi pi-arrow-left"
                 label="Retour à la liste"
                 class="p-button-text p-button-secondary back-btn"
                 (click)="navigateToList()">
         </button>
-        
+
         <div class="nav-actions">
-          <button pButton 
-                  type="button" 
-                  icon="pi pi-share-alt" 
+          <button pButton
+                  type="button"
+                  icon="pi pi-share-alt"
                   class="p-button-text p-button-help share-btn"
                   pTooltip="Partager"
                   tooltipPosition="bottom"
                   (click)="shareActualite()">
           </button>
-          
-          <button pButton 
-                  type="button" 
-                  icon="pi pi-print" 
+
+          <button pButton
+                  type="button"
+                  icon="pi pi-print"
                   class="p-button-text p-button-secondary print-btn"
                   pTooltip="Imprimer"
                   tooltipPosition="bottom"
@@ -50,7 +50,7 @@
       <img [src]="'http://localhost:8080' + actualite.imageUrl" [alt]="actualite.titre">
       <div class="header-overlay"></div>
     </div>
-    
+
     <div class="header-content">
       <div class="container">
         <div class="header-meta">
@@ -58,37 +58,37 @@
                  [severity]="getSeverityForCategory(actualite.categorie || '')"
                  class="category-badge">
           </p-tag>
-          
+
           <p-tag *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement"
                  [value]="getEventStatus().label"
                  [severity]="getEventStatus().severity"
                  class="event-status">
           </p-tag>
         </div>
-        
+
         <h1 class="actualite-title">{{ actualite.titre }}</h1>
-        
+
         <div class="actualite-meta">
           <div class="meta-item">
             <i class="pi pi-calendar"></i>
             <span>{{ formatDate(actualite.datePublication) }}</span>
           </div>
-          
+
           <div class="meta-item" *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement">
             <i class="pi pi-clock"></i>
             <span>{{ formatTime(actualite.dateEvenement) }}</span>
           </div>
-          
+
           <div class="meta-item" *ngIf="actualite.auteur">
             <i class="pi pi-user"></i>
             <span>{{ actualite.auteur }}</span>
           </div>
-          
+
           <div class="meta-item" *ngIf="actualite.nombreVues">
             <i class="pi pi-eye"></i>
             <span>{{ actualite.nombreVues }} vues</span>
           </div>
-          
+
           <div class="meta-item">
             <p-tag [value]="actualite.publie ? 'Publié' : 'Brouillon'"
                    [severity]="actualite.publie ? 'success' : 'warning'">
@@ -103,23 +103,23 @@
   <section class="actualite-content">
     <div class="container">
       <div class="content-grid">
-        
+
         <!-- Contenu principal -->
         <div class="main-content">
           <div class="content-card">
-            
+
             <!-- Description -->
             <div class="description-section">
               <p class="description-text">{{ actualite.description }}</p>
             </div>
-            
+
             <p-divider></p-divider>
-            
+
             <!-- Contenu complet -->
             <div class="full-content" *ngIf="actualite.contenu">
               <div class="content-text" [innerHTML]="actualite.contenu"></div>
             </div>
-            
+
             <!-- Message si pas de contenu complet -->
             <div class="no-content" *ngIf="!actualite.contenu">
               <i class="pi pi-info-circle"></i>
@@ -131,31 +131,31 @@
 
         <!-- Barre latérale -->
         <div class="sidebar-content">
-          
+
           <!-- Actions administrateur -->
-          <div class="admin-actions-card">
+          <div class="admin-actions-card" *ngIf="canAdministrate()">
             <h3 class="card-title">Actions</h3>
-            
+
             <div class="actions-grid">
-              <button pButton 
-                      type="button" 
-                      icon="pi pi-pencil" 
+              <button pButton
+                      type="button"
+                      icon="pi pi-pencil"
                       label="Modifier"
                       class="p-button-outlined edit-action-btn"
                       (click)="navigateToEdit()">
               </button>
-              
-              <button pButton 
-                      type="button" 
+
+              <button pButton
+                      type="button"
                       [icon]="actualite.publie ? 'pi pi-eye-slash' : 'pi pi-eye'"
                       [label]="actualite.publie ? 'Dépublier' : 'Publier'"
                       [class]="actualite.publie ? 'p-button-warning unpublish-btn' : 'p-button-success publish-btn'"
                       (click)="togglePublication()">
               </button>
-              
-              <button pButton 
-                      type="button" 
-                      icon="pi pi-trash" 
+
+              <button pButton
+                      type="button"
+                      icon="pi pi-trash"
                       label="Supprimer"
                       class="p-button-danger delete-action-btn"
                       (click)="confirmDelete()">
@@ -166,18 +166,18 @@
           <!-- Informations supplémentaires -->
           <div class="info-card" *ngIf="actualite.categorie === 'evenement' && actualite.dateEvenement">
             <h3 class="card-title">Détails de l'événement</h3>
-            
+
             <div class="info-items">
               <div class="info-item">
                 <span class="info-label">Date :</span>
                 <span class="info-value">{{ formatDate(actualite.dateEvenement) }}</span>
               </div>
-              
+
               <div class="info-item">
                 <span class="info-label">Heure :</span>
                 <span class="info-value">{{ formatTime(actualite.dateEvenement) }}</span>
               </div>
-              
+
               <div class="info-item">
                 <span class="info-label">Statut :</span>
                 <p-tag [value]="getEventStatus().label"
@@ -196,16 +196,16 @@
   <section class="similar-actualites" *ngIf="actualitesSimilaires.length > 0">
     <div class="container">
       <h2 class="section-title">Actualités similaires</h2>
-      
+
       <div class="similar-grid">
-        <div class="similar-card" 
+        <div class="similar-card"
              *ngFor="let similar of actualitesSimilaires"
              (click)="navigateToActualite(similar.id!)">
-          
+
           <div class="similar-image" *ngIf="similar.imageUrl">
             <img [src]="similar.imageUrl" [alt]="similar.titre">
           </div>
-          
+
           <div class="similar-content">
             <div class="similar-meta">
               <span class="similar-date">{{ formatDate(similar.datePublication) }}</span>
@@ -214,10 +214,10 @@
                      class="similar-category">
               </p-tag>
             </div>
-            
+
             <h3 class="similar-title">{{ similar.titre }}</h3>
             <p class="similar-description">{{ similar.description }}</p>
-            
+
             <div class="similar-action">
               <span class="read-more">Lire la suite</span>
               <i class="pi pi-arrow-right"></i>
@@ -238,9 +238,9 @@
     <p class="error-description">
       L'actualité que vous recherchez n'existe pas ou n'est plus disponible.
     </p>
-    <button pButton 
-            type="button" 
-            label="Retour à la liste" 
+    <button pButton
+            type="button"
+            label="Retour à la liste"
             icon="pi pi-arrow-left"
             class="error-action-btn"
             (click)="navigateToList()">
@@ -252,8 +252,8 @@
 <p-toast position="top-right"></p-toast>
 
 <!-- Dialog de confirmation -->
-<p-confirmDialog 
-  header="Confirmation" 
+<p-confirmDialog
+  header="Confirmation"
   icon="pi pi-exclamation-triangle"
   acceptButtonStyleClass="p-button-danger"
   acceptIcon="pi pi-trash"

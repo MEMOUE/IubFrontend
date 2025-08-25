@@ -5,30 +5,30 @@
     <p class="hero-description">
       Message du Directeur Général de l'International University of Bouake
     </p>
-    
-    <!-- Actions d'administration (si directeur personnalisé) -->
-    <div class="admin-actions" *ngIf="hasCustomDirecteur() && !loading">
-      <button pButton 
-              type="button" 
-              label="Modifier" 
+
+    <!-- ✅ Actions d'administration (si directeur personnalisé ET utilisateur connecté) -->
+    <div class="admin-actions" *ngIf="hasCustomDirecteur() && !loading && canAdministrate()">
+      <button pButton
+              type="button"
+              label="Modifier"
               icon="pi pi-pencil"
               class="p-button-sm p-button-outlined admin-btn"
               (click)="editDirecteur()">
       </button>
-      <button pButton 
-              type="button" 
-              label="Supprimer" 
+      <button pButton
+              type="button"
+              label="Supprimer"
               icon="pi pi-trash"
               class="p-button-sm p-button-outlined p-button-danger admin-btn"
               (click)="deleteDirecteur()">
       </button>
     </div>
-    
-    <!-- Bouton créer si pas de directeur personnalisé -->
-    <div class="admin-actions" *ngIf="!hasCustomDirecteur() && !loading">
-      <button pButton 
-              type="button" 
-              label="Ajouter un Directeur" 
+
+    <!-- ✅ Bouton créer si pas de directeur personnalisé ET utilisateur connecté -->
+    <div class="admin-actions" *ngIf="!hasCustomDirecteur() && !loading && canAdministrate()">
+      <button pButton
+              type="button"
+              label="Ajouter un Directeur"
               icon="pi pi-plus"
               class="p-button-sm p-button-outlined admin-btn"
               (click)="createDirecteur()">
@@ -41,10 +41,10 @@
 <div *ngIf="loading" class="loading-container">
   <div class="container">
     <div style="text-align: center; padding: 4rem 0;">
-      <p-progressSpinner 
-        styleClass="w-4rem h-4rem" 
-        strokeWidth="3" 
-        fill="var(--surface-ground)" 
+      <p-progressSpinner
+        styleClass="w-4rem h-4rem"
+        strokeWidth="3"
+        fill="var(--surface-ground)"
         animationDuration=".5s">
       </p-progressSpinner>
       <p style="margin-top: 1rem; color: var(--text-color-secondary);">
@@ -58,16 +58,16 @@
 <div *ngIf="error && !loading" class="error-container">
   <div class="container">
     <div style="padding: 2rem 0;">
-      <p-message 
-        severity="warn" 
+      <p-message
+        severity="warn"
         [text]="error"
         [closable]="false">
       </p-message>
       <div style="text-align: center; margin-top: 1rem;">
-        <button 
-          pButton 
-          type="button" 
-          label="Réessayer" 
+        <button
+          pButton
+          type="button"
+          label="Réessayer"
           icon="pi pi-refresh"
           (click)="refreshData()">
         </button>
@@ -78,47 +78,47 @@
 
 <!-- Content - Affiché quand les données sont chargées -->
 <div *ngIf="!loading && !error">
-  
+
   <!-- Section Présentation du Directeur -->
   <section class="director-presentation">
     <div class="container">
       <div class="director-card">
         <div class="director-photo">
-          
+
           <!-- Indicateur de chargement de l'image -->
           <div class="image-loading" *ngIf="imageLoading">
             <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4"></p-progressSpinner>
           </div>
-          
+
           <!-- Image du directeur avec gestion d'erreurs -->
-          <img 
-            [src]="getDirecteurPhotoUrl()" 
+          <img
+            [src]="getDirecteurPhotoUrl()"
             [alt]="getDirecteurNom()"
             [style.display]="imageLoading ? 'none' : 'block'"
             (load)="onImageLoad()"
             (error)="onImageError($event)"
             (loadstart)="onImageLoadStart()" />
-          
+
           <!-- Badge si directeur par défaut -->
           <div class="default-badge" *ngIf="!hasCustomDirecteur()">
             <p-tag value="Configuration par défaut" severity="info" icon="pi pi-info-circle"></p-tag>
           </div>
-          
+
           <!-- Indicateur d'erreur d'image -->
           <div class="image-error" *ngIf="imageError">
             <i class="pi pi-exclamation-triangle"></i>
             <small>Image non disponible</small>
           </div>
-          
+
         </div>
-        
+
         <div class="director-info">
           <h2 class="director-name">{{ getDirecteurNom() }}</h2>
           <h3 class="director-title">{{ getDirecteurTitre() }}</h3>
           <p class="director-experience" *ngIf="getDirecteurExperience()">
             {{ getDirecteurExperience() }}
           </p>
-          
+
           <!-- Informations de contact (si disponibles) -->
           <div class="contact-info" *ngIf="hasCustomDirecteur() && getContactInfo()">
             <div class="contact-item" *ngIf="getContactInfo().email">
@@ -134,7 +134,7 @@
               <a [href]="getContactInfo().linkedinUrl" target="_blank">Profil LinkedIn</a>
             </div>
           </div>
-          
+
           <div class="director-credentials" *ngIf="getDirecteurDiplomes().length > 0">
             <h4>Qualifications :</h4>
             <ul>
@@ -153,13 +153,13 @@
         <div class="message-block" *ngFor="let section of messageSections; let i = index">
           <h3 class="message-title">{{ section.titre }}</h3>
           <div class="message-text">
-            <p *ngFor="let paragraphe of section.contenu.split('\n\n')" 
+            <p *ngFor="let paragraphe of section.contenu.split('\n\n')"
                [innerHTML]="paragraphe">
             </p>
           </div>
         </div>
       </div>
-      
+
       <!-- Signature -->
       <div class="signature-section">
         <div class="signature">
@@ -203,22 +203,22 @@
       <h2>Découvrez l'IUB</h2>
       <p>Explorez nos programmes et rejoignez notre communauté d'excellence</p>
       <div class="cta-buttons">
-        <button pButton 
-                type="button" 
-                label="Nos Formations" 
+        <button pButton
+                type="button"
+                label="Nos Formations"
                 icon="pi pi-book"
                 (click)="navigateToFormations()">
         </button>
-        <button pButton 
-                type="button" 
-                label="En Savoir Plus" 
+        <button pButton
+                type="button"
+                label="En Savoir Plus"
                 icon="pi pi-info-circle"
                 class="p-button-outlined"
                 (click)="navigateToPresentation()">
         </button>
-        <button pButton 
-                type="button" 
-                label="Nous Contacter" 
+        <button pButton
+                type="button"
+                label="Nous Contacter"
                 icon="pi pi-phone"
                 class="p-button-text"
                 (click)="navigateToContact()">
@@ -230,7 +230,7 @@
 </div>
 
 <!-- Confirm Dialog -->
-<p-confirmDialog 
+<p-confirmDialog
   [style]="{width: '450px'}"
   header="Confirmation"
   icon="pi pi-exclamation-triangle">

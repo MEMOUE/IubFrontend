@@ -1,3 +1,4 @@
+// src/app/components/universites/directeurs/directeur/directeur.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 // Services
 import { DirecteurService, Directeur } from '../../../../core/services/directeur.service';
+import { AuthService } from '../../../../core/services/auth.service'; // ✅ AJOUT
 
 interface MessageSection {
   titre: string;
@@ -103,7 +105,8 @@ Ensemble, construisons l'avenir !`
     private router: Router,
     private directeurService: DirecteurService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService // ✅ AJOUT
   ) {}
 
   ngOnInit() {
@@ -113,6 +116,22 @@ Ensemble, construisons l'avenir !`
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // ✅ NOUVELLE MÉTHODE : Vérifier si l'utilisateur est connecté
+  isUserLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  // ✅ NOUVELLE MÉTHODE : Vérifier si l'utilisateur est admin
+  isUserAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+  }
+
+  // ✅ NOUVELLE MÉTHODE : Vérifier si l'utilisateur peut administrer
+  canAdministrate(): boolean {
+    return this.isUserLoggedIn() && this.isUserAdmin();
   }
 
   /**
@@ -208,7 +227,7 @@ Ensemble, construisons l'avenir !`
     console.warn('Erreur de chargement de l\'image:', event);
     this.imageError = true;
     this.imageLoading = false;
-    
+
     // Fallback vers l'image par défaut
     event.target.src = 'assets/images/default-director.jpg';
   }
@@ -261,8 +280,8 @@ Ensemble, construisons l'avenir !`
    * Vérifie si un directeur personnalisé existe (pas les données par défaut)
    */
   hasCustomDirecteur(): boolean {
-    return this.directeur !== this.defaultDirecteur && 
-           this.directeur?.nom !== this.defaultDirecteur.nom;
+    return this.directeur !== this.defaultDirecteur &&
+      this.directeur?.nom !== this.defaultDirecteur.nom;
   }
 
   /**
@@ -270,7 +289,7 @@ Ensemble, construisons l'avenir !`
    */
   getContactInfo(): any {
     if (!this.directeur) return null;
-    
+
     return {
       email: this.directeur.email,
       telephone: this.directeur.telephone,
@@ -290,6 +309,16 @@ Ensemble, construisons l'avenir !`
    * Navigue vers l'édition du directeur
    */
   editDirecteur(): void {
+    // ✅ VÉRIFICATION SUPPLÉMENTAIRE (optionnelle, car le bouton est déjà conditionné)
+    if (!this.canAdministrate()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Accès refusé',
+        detail: 'Vous devez être connecté en tant qu\'administrateur pour effectuer cette action.'
+      });
+      return;
+    }
+
     this.router.navigate(['/universite/directeur/nouveau']);
   }
 
@@ -297,6 +326,16 @@ Ensemble, construisons l'avenir !`
    * Navigue vers la création d'un nouveau directeur
    */
   createDirecteur(): void {
+    // ✅ VÉRIFICATION SUPPLÉMENTAIRE (optionnelle, car le bouton est déjà conditionné)
+    if (!this.canAdministrate()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Accès refusé',
+        detail: 'Vous devez être connecté en tant qu\'administrateur pour effectuer cette action.'
+      });
+      return;
+    }
+
     this.router.navigate(['/universite/directeur/nouveau']);
   }
 
@@ -304,6 +343,16 @@ Ensemble, construisons l'avenir !`
    * Supprime le directeur actuel avec confirmation
    */
   deleteDirecteur(): void {
+    // ✅ VÉRIFICATION SUPPLÉMENTAIRE (optionnelle, car le bouton est déjà conditionné)
+    if (!this.canAdministrate()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Accès refusé',
+        detail: 'Vous devez être connecté en tant qu\'administrateur pour effectuer cette action.'
+      });
+      return;
+    }
+
     if (!this.directeur?.id) return;
 
     this.confirmationService.confirm({
@@ -325,7 +374,7 @@ Ensemble, construisons l'avenir !`
     if (!this.directeur?.id) return;
 
     this.loading = true;
-    
+
     this.directeurService.deleteDirecteur(this.directeur.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -335,7 +384,7 @@ Ensemble, construisons l'avenir !`
             summary: 'Succès',
             detail: 'Directeur supprimé avec succès'
           });
-          
+
           // Recharger les données (va utiliser les données par défaut)
           this.loadDirecteurData();
         },
